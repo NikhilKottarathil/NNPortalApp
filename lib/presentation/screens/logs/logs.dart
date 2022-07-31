@@ -92,7 +92,7 @@ class _LogsState extends State<Logs> with SingleTickerProviderStateMixin {
     return FloatingActionBubble(
       items: <Bubble>[
         Bubble(
-          title: "Vehicle Log",
+          title: "Vehicle Log ",
           iconColor: Colors.white,
           bubbleColor: AppColors.primaryBase,
           icon: Icons.add,
@@ -106,22 +106,37 @@ class _LogsState extends State<Logs> with SingleTickerProviderStateMixin {
                 .push(MaterialPageRoute(builder: (_) => AddLog(logType: LogType.vehicleLog,)));
           },
         ),
-        // Bubble(
-        //   title: "Site Log",
-        //   iconColor: Colors.white,
-        //   bubbleColor: AppColors.primaryBase,
-        //   icon: Icons.add,
-        //   titleStyle: Theme.of(context)
-        //       .textTheme
-        //       .button!
-        //       .apply(color: AppColors.textLight),
-        //   onPress: () {
-        //
-        //     Navigator.of(context)
-        //         .push(MaterialPageRoute(builder: (_) => AddLog(logType: LogType.siteLog,)));
-        //     _animationController!.reverse();
-        //   },
-        // ),
+        Bubble(
+          title: "Tool Log    ",
+          iconColor: Colors.white,
+          bubbleColor: AppColors.primaryBase,
+          icon: Icons.add,
+          titleStyle: Theme.of(context)
+              .textTheme
+              .button!
+              .apply(color: AppColors.textLight),
+          onPress: () {
+            _animationController!.reverse();
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (_) => AddLog(logType: LogType.toolLog,)));
+          },
+        ),
+        Bubble(
+          title: "Site Log    ",
+          iconColor: Colors.white,
+          bubbleColor: AppColors.primaryBase,
+          icon: Icons.add,
+          titleStyle: Theme.of(context)
+              .textTheme
+              .button!
+              .apply(color: AppColors.textLight),
+          onPress: () {
+
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (_) => AddLog(logType: LogType.siteLog,)));
+            _animationController!.reverse();
+          },
+        ),
         Bubble(
           title: "Work Log",
           iconColor: Colors.white,

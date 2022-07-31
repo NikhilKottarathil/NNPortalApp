@@ -60,10 +60,11 @@ class JobsDetailsProvider extends ChangeNotifier {
     pageStatus = PageStatus.loading;
     notifyListeners();
 
+
     try {
 
       var response = await getDataRequest(
-          urlAddress: 'JobDescriptions/GetJobDescriptions/${jobModel!.id}',
+          urlAddress: 'JobComments/GetJobComments/${jobModel!.id}',
           isShowLoader: false,
           );
 
@@ -80,31 +81,28 @@ class JobsDetailsProvider extends ChangeNotifier {
       notifyListeners();
     }
   }
-  Future<bool> addDescription(String description) async {
+  Future<bool> addDescription(String description,bool isCompleted) async {
     pageStatus = PageStatus.loading;
     notifyListeners();
 
     try {
-      var format = DateFormat.yMd();
-      var dateString = format.format(DateTime.now());
-      CancelToken cancelToken = CancelToken();
+      var format = DateFormat('yyyy-MM-dd HH:mm:ss');
+      String dateString = format.format(DateTime.now());
 
       Map<String,String> requestBody= {
         'jobId': jobModel!.id.toString(),
-        'staffId': Provider.of<AuthenticationProvider>(
-            MyApp.navigatorKey.currentContext!,
-            listen: false)
-            .userModel!
-            .id.toString(),
-        'description': description,
-        'postedOn':dateString
+        // 'staffId': Provider.of<AuthenticationProvider>(
+        //     MyApp.navigatorKey.currentContext!,
+        //     listen: false)
+        //     .userModel!
+        //     .id.toString(),
+        'comment': description,
+        'status': isCompleted?'Completed':'Pending',
+        'commentOn':dateString
       };
-      var response = await fileUploadWithDio(
-          urlAddress: 'JobDescriptions',
-          cancelToken: cancelToken,
-          requestBody:requestBody, files: [], fileAddresses: [],onUploadProgress: (a,b){
-
-      });
+      var response = await postDataRequest(
+          urlAddress: 'JobComments',
+          requestBody:requestBody,isShowLoader: false);
       jobDescriptionModels.insert(0,JobDescriptionModel.fromJson(response));
 
       pageStatus = PageStatus.loaded;
@@ -118,14 +116,14 @@ class JobsDetailsProvider extends ChangeNotifier {
       return false;
     }
   }
-  Future<bool> updateDescription({required String description,required JobDescriptionModel jobDescriptionModel}) async {
+  Future<bool> updateDescription({required String description,required JobDescriptionModel jobDescriptionModel,required bool isCompleted}) async {
     pageStatus = PageStatus.loading;
     notifyListeners();
 
     try {
-      var format = DateFormat.yMd();
+      var format = DateFormat('yyyy-MM-dd HH:mm:ss');
       var dateString = format.format(DateTime.now());
-      CancelToken cancelToken = CancelToken();
+      // CancelToken cancelToken = CancelToken();
 
       Map<String,String> requestBody= {
         'id': jobDescriptionModel.id.toString(),
@@ -135,16 +133,14 @@ class JobsDetailsProvider extends ChangeNotifier {
             listen: false)
             .userModel!
             .id.toString(),
-        'description': description,
-        'postedOn':dateString
+        'comment': description,
+        'status': isCompleted?'Completed':'Pending',
+        'commentOn':dateString
       };
-      var response = await fileUploadWithDio(
-          urlAddress: 'JobDescriptions/${jobDescriptionModel.id}',
-          cancelToken: cancelToken,
+      var response = await postDataRequest(
+          urlAddress: 'JobComments/${jobDescriptionModel.id}',
           method: 'put',
-          requestBody:requestBody, files: [], fileAddresses: [],onUploadProgress: (a,b){
-
-      });
+          requestBody:requestBody,isShowLoader: false);
       jobDescriptionModels[jobDescriptionModels.indexWhere((element) => element.id==jobDescriptionModel.id)]=JobDescriptionModel.fromJson(response);
 
       pageStatus = PageStatus.loaded;
@@ -168,7 +164,7 @@ class JobsDetailsProvider extends ChangeNotifier {
 
 
       var response = await deleteDataRequest(
-          urlAddress: 'JobDescriptions/${jobDescriptionModel.id}',isShowLoader: false);
+          urlAddress: 'JobComments/${jobDescriptionModel.id}',isShowLoader: false);
       jobDescriptionModels.removeAt(jobDescriptionModels.indexWhere((element) => element.id==jobDescriptionModel.id));
 
       pageStatus = PageStatus.loaded;

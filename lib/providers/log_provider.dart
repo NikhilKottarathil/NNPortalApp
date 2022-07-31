@@ -9,6 +9,7 @@ import 'package:nn_portal/models/job_attachment_model.dart';
 import 'package:nn_portal/models/job_description_model.dart';
 import 'package:nn_portal/models/job_model.dart';
 import 'package:nn_portal/models/log_model.dart';
+import 'package:nn_portal/models/lool_log_model.dart';
 import 'package:nn_portal/models/staff_log_model.dart';
 import 'package:nn_portal/models/tool_model.dart';
 import 'package:nn_portal/models/vehicle_log_model.dart';
@@ -52,7 +53,7 @@ class LogProvider extends ChangeNotifier {
           "startdt": DateFormat('yyyy-MM-dd').format(selectedDate),
         },
         urlAddress: 'Staffs/GetStaffFullLogs',
-        isShowLoader: false,
+        isShowLoader: true,
       );
 
       // print(response);
@@ -68,7 +69,7 @@ class LogProvider extends ChangeNotifier {
             checkOut: checkOutTime,
             locationName: json['locationName'],
             clientName: json['clientName'],
-            logType: LogType.workLog,
+            logType: contentModel.isMain!?LogType.workLog:LogType.siteLog,
             isCompleted: true));
       }
       for (var json in response['vehicleLogs']) {
@@ -86,6 +87,21 @@ class LogProvider extends ChangeNotifier {
             logType: LogType.vehicleLog,
             isCompleted: true));
       }
+ for (var json in response['toolLogs']) {
+        ToolLogModel contentModel = ToolLogModel.fromJson(json);
+        DateTime checkInTime =
+        DateFormat('yyyy-MM-dd HH:mm:ss').parse(contentModel.checkIn!);
+        DateTime checkOutTime =
+        DateFormat('yyyy-MM-dd HH:mm:ss').parse(contentModel.checkOut!);
+        models.add(LogModel(
+            toolLogModel: contentModel,
+            checkIn: checkInTime,
+            checkOut: checkOutTime,
+            locationName: json['locationName'],
+            clientName: json['clientName'],
+            logType: LogType.toolLog,
+            isCompleted: true));
+      }
 
       pageStatus = PageStatus.loaded;
       notifyListeners();
@@ -96,11 +112,13 @@ class LogProvider extends ChangeNotifier {
     }
   }
 
-  Future<bool> addWorkLogs(
-      {required TimeOfDay checkInTime, required TimeOfDay checkOutTime}) async {
+  Future<bool> addLog(
+      {required LogType logType,required TimeOfDay checkInTime, required TimeOfDay checkOutTime, String? vehicleId,
+         String? jobId,String? toolId,LogModel? logModel}) async {
     pageStatus = PageStatus.loading;
     notifyListeners();
 
+    print('addLog $jobId');
     try {
       var format = DateFormat('yyyy-MM-dd HH:mm:ss');
       String checkInDateString = format.format(TimeUtils()
@@ -112,11 +130,43 @@ class LogProvider extends ChangeNotifier {
         'jobId': 0,
         'checkIn': checkInDateString,
         'checkout': checkOutDateString,
-        'isMain': true
       };
+      String apiUrl='Staffs/PostStaffLog';
+      if(logType==LogType.workLog || logType==LogType.siteLog){
+        if(logType==LogType.workLog){
+          requestBody.addAll({'isMain':true});
+        }else{
+          requestBody.addAll({'jobId': jobId,'isMain': false,});
+        }
+        if(logModel==null){
+          apiUrl='Staffs/PostStaffLog';
+        }else{
+          apiUrl='Staffs/PutStaffLog/${logModel.staffLogModel!.id}';
+        }
+      }
+      if(logType==LogType.vehicleLog){
+        requestBody.addAll({'jobId': jobId,'vehicleId': vehicleId,});
+        if(logModel==null){
+          apiUrl='Vehicles/PostVehicleLog';
+        }else{
+          apiUrl='Vehicles/PutVehicleLog/${logModel.vehicleLogModel!.id}';
+        }
+      }
+      if(logType==LogType.toolLog){
+        requestBody.addAll({'jobId': jobId,
+          'toolId': toolId,});
+        if(logModel==null){
+          apiUrl='Tools/PostToolLog';
+        }else{
+          apiUrl='Tools/PutToolLog/${logModel.toolLogModel!.id}';
+        }
+      }
+      print('addLog 2');
+
       var response = await postDataRequest(
-          urlAddress: 'Staffs/PostStaffLog',
+          urlAddress: apiUrl,
           requestBody: requestBody,
+          method: logModel==null?'post':'put',
           isShowLoader: false);
       getLogs();
 
@@ -131,121 +181,6 @@ class LogProvider extends ChangeNotifier {
     }
   }
 
-  Future<bool> updateWorkLogs(
-      {required TimeOfDay checkInTime,
-      required TimeOfDay checkOutTime,
-      required LogModel logModel}) async {
-    pageStatus = PageStatus.loading;
-    notifyListeners();
-
-    try {
-      var format = DateFormat('yyyy-MM-dd HH:mm:ss');
-      String checkInDateString = format.format(TimeUtils()
-          .dateTimeFromTimeAndDate(checkInTime, dateTime: selectedDate));
-      String checkOutDateString = format.format(TimeUtils()
-          .dateTimeFromTimeAndDate(checkOutTime, dateTime: selectedDate));
-
-      Map<String, dynamic> requestBody = {
-        'jobId': 0,
-        'checkIn': checkInDateString,
-        'checkout': checkOutDateString,
-        'isMain': true
-      };
-      var response = await postDataRequest(
-          urlAddress: 'Staffs/PutStaffLog/${logModel.staffLogModel!.id}',
-          requestBody: requestBody,
-          method: 'put',
-          isShowLoader: false);
-      getLogs();
-
-      pageStatus = PageStatus.loaded;
-      notifyListeners();
-      return true;
-    } catch (e) {
-      print(e);
-      pageStatus = PageStatus.failed;
-      notifyListeners();
-      return false;
-    }
-  }
-
-  Future<bool> addVehicleLogs(
-      {required TimeOfDay checkInTime,
-      required TimeOfDay checkOutTime,
-      required String vehicleId,
-      required String jobId}) async {
-    pageStatus = PageStatus.loading;
-    notifyListeners();
-
-    try {
-      var format = DateFormat('yyyy-MM-dd HH:mm:ss');
-      String checkInDateString = format.format(TimeUtils()
-          .dateTimeFromTimeAndDate(checkInTime, dateTime: selectedDate));
-      String checkOutDateString = format.format(TimeUtils()
-          .dateTimeFromTimeAndDate(checkOutTime, dateTime: selectedDate));
-
-      Map<String, dynamic> requestBody = {
-        'jobId': jobId,
-        'vehicleId': vehicleId,
-        'checkIn': checkInDateString,
-        'checkout': checkOutDateString,
-      };
-      var response = await postDataRequest(
-          urlAddress: 'Vehicles/PostVehicleLog',
-          requestBody: requestBody,
-          isShowLoader: false);
-      getLogs();
-
-      pageStatus = PageStatus.loaded;
-      notifyListeners();
-      return true;
-    } catch (e) {
-      print(e);
-      pageStatus = PageStatus.failed;
-      notifyListeners();
-      return false;
-    }
-  }
-
-  Future<bool> updateVehicleLogs(
-      {required TimeOfDay checkInTime,
-      required TimeOfDay checkOutTime,
-      required String vehicleId,
-      required String jobId,
-      required LogModel logModel}) async {
-    pageStatus = PageStatus.loading;
-    notifyListeners();
-
-    try {
-      var format = DateFormat('yyyy-MM-dd HH:mm:ss');
-      String checkInDateString = format.format(TimeUtils()
-          .dateTimeFromTimeAndDate(checkInTime, dateTime: selectedDate));
-      String checkOutDateString = format.format(TimeUtils()
-          .dateTimeFromTimeAndDate(checkOutTime, dateTime: selectedDate));
-
-      Map<String, dynamic> requestBody = {
-        'jobId': jobId,
-        'vehicleId': vehicleId,
-        'checkIn': checkInDateString,
-        'checkout': checkOutDateString,
-      };
-      var response = await postDataRequest(
-          urlAddress: 'Vehicles/PutVehicleLog/${logModel.vehicleLogModel!.id}',
-          requestBody: requestBody,
-          method: 'put',
-          isShowLoader: false);
-      getLogs();
-
-      pageStatus = PageStatus.loaded;
-      notifyListeners();
-      return true;
-    } catch (e) {
-      print(e);
-      pageStatus = PageStatus.failed;
-      notifyListeners();
-      return false;
-    }
-  }
 
   Future getVehicleList() async {
     vehicleModels.clear();

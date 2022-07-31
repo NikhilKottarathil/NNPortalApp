@@ -1,3 +1,4 @@
+import 'package:nn_portal/models/lool_log_model.dart';
 import 'package:nn_portal/models/staff_log_model.dart';
 import 'package:nn_portal/models/vehicle_log_model.dart';
 
@@ -10,6 +11,7 @@ class LogModel {
   bool isCompleted;
   StaffLogModel? staffLogModel;
   VehicleLogModel? vehicleLogModel;
+  ToolLogModel? toolLogModel;
   String? locationName;
   String? clientName;
 
@@ -20,6 +22,7 @@ class LogModel {
       required this.isCompleted,
       this.staffLogModel,
       this.vehicleLogModel,
+        this.toolLogModel,
       this.clientName,
       this.locationName});
 }

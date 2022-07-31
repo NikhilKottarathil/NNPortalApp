@@ -114,7 +114,7 @@ Future postDataRequest(
 
 
 Future getDataRequest(
-    {required String urlAddress, bool isShowLoader = true}) async {
+    {required String urlAddress, bool isShowLoader = true,bool isShowSnackBar =true}) async {
   debugPrint('============= start $urlAddress get api ===============');
 
   if (await checkInternetConnectivity()) {
@@ -172,7 +172,9 @@ Future getDataRequest(
       if (isShowLoader) {
         hideLoader();
       }
-      showSnackBar(message: message);
+      if(isShowSnackBar) {
+        showSnackBar(message: message);
+      }
       rethrow;
     }
   }

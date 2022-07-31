@@ -56,3 +56,157 @@ class HomeDrawer extends StatelessWidget {
     );
   }
 }
+
+
+
+//
+// Future<bool> addWorkLogs(
+//     {required TimeOfDay checkInTime, required TimeOfDay checkOutTime}) async {
+//   pageStatus = PageStatus.loading;
+//   notifyListeners();
+//
+//   try {
+//     var format = DateFormat('yyyy-MM-dd HH:mm:ss');
+//     String checkInDateString = format.format(TimeUtils()
+//         .dateTimeFromTimeAndDate(checkInTime, dateTime: selectedDate));
+//     String checkOutDateString = format.format(TimeUtils()
+//         .dateTimeFromTimeAndDate(checkOutTime, dateTime: selectedDate));
+//
+//     Map<String, dynamic> requestBody = {
+//       'jobId': 0,
+//       'checkIn': checkInDateString,
+//       'checkout': checkOutDateString,
+//       'isMain': true
+//     };
+//     var response = await postDataRequest(
+//         urlAddress: 'Staffs/PostStaffLog',
+//         requestBody: requestBody,
+//         isShowLoader: false);
+//     getLogs();
+//
+//     pageStatus = PageStatus.loaded;
+//     notifyListeners();
+//     return true;
+//   } catch (e) {
+//     print(e);
+//     pageStatus = PageStatus.failed;
+//     notifyListeners();
+//     return false;
+//   }
+// }
+//
+// Future<bool> updateWorkLogs(
+//     {required TimeOfDay checkInTime,
+//       required TimeOfDay checkOutTime,
+//       required LogModel logModel}) async {
+//   pageStatus = PageStatus.loading;
+//   notifyListeners();
+//
+//   try {
+//     var format = DateFormat('yyyy-MM-dd HH:mm:ss');
+//     String checkInDateString = format.format(TimeUtils()
+//         .dateTimeFromTimeAndDate(checkInTime, dateTime: selectedDate));
+//     String checkOutDateString = format.format(TimeUtils()
+//         .dateTimeFromTimeAndDate(checkOutTime, dateTime: selectedDate));
+//
+//     Map<String, dynamic> requestBody = {
+//       'jobId': 0,
+//       'checkIn': checkInDateString,
+//       'checkout': checkOutDateString,
+//       'isMain': true
+//     };
+//     var response = await postDataRequest(
+//         urlAddress: 'Staffs/PutStaffLog/${logModel.staffLogModel!.id}',
+//         requestBody: requestBody,
+//         method: 'put',
+//         isShowLoader: false);
+//     getLogs();
+//
+//     pageStatus = PageStatus.loaded;
+//     notifyListeners();
+//     return true;
+//   } catch (e) {
+//     print(e);
+//     pageStatus = PageStatus.failed;
+//     notifyListeners();
+//     return false;
+//   }
+// }
+//
+// Future<bool> addVehicleLogs(
+//     {required TimeOfDay checkInTime,
+//       required TimeOfDay checkOutTime,
+//       required String vehicleId,
+//       required String jobId}) async {
+//   pageStatus = PageStatus.loading;
+//   notifyListeners();
+//
+//   try {
+//     var format = DateFormat('yyyy-MM-dd HH:mm:ss');
+//     String checkInDateString = format.format(TimeUtils()
+//         .dateTimeFromTimeAndDate(checkInTime, dateTime: selectedDate));
+//     String checkOutDateString = format.format(TimeUtils()
+//         .dateTimeFromTimeAndDate(checkOutTime, dateTime: selectedDate));
+//
+//     Map<String, dynamic> requestBody = {
+//       'jobId': jobId,
+//       'vehicleId': vehicleId,
+//       'checkIn': checkInDateString,
+//       'checkout': checkOutDateString,
+//     };
+//     var response = await postDataRequest(
+//         urlAddress: 'Vehicles/PostVehicleLog',
+//         requestBody: requestBody,
+//         isShowLoader: false);
+//     getLogs();
+//
+//     pageStatus = PageStatus.loaded;
+//     notifyListeners();
+//     return true;
+//   } catch (e) {
+//     print(e);
+//     pageStatus = PageStatus.failed;
+//     notifyListeners();
+//     return false;
+//   }
+// }
+//
+// Future<bool> updateVehicleLogs(
+//     {required TimeOfDay checkInTime,
+//       required TimeOfDay checkOutTime,
+//       required String vehicleId,
+//       required String jobId,
+//       required LogModel logModel}) async {
+//   pageStatus = PageStatus.loading;
+//   notifyListeners();
+//
+//   try {
+//     var format = DateFormat('yyyy-MM-dd HH:mm:ss');
+//     String checkInDateString = format.format(TimeUtils()
+//         .dateTimeFromTimeAndDate(checkInTime, dateTime: selectedDate));
+//     String checkOutDateString = format.format(TimeUtils()
+//         .dateTimeFromTimeAndDate(checkOutTime, dateTime: selectedDate));
+//
+//     Map<String, dynamic> requestBody = {
+//       'jobId': jobId,
+//       'vehicleId': vehicleId,
+//       'checkIn': checkInDateString,
+//       'checkout': checkOutDateString,
+//     };
+//     var response = await postDataRequest(
+//         urlAddress: 'Vehicles/PutVehicleLog/${logModel.vehicleLogModel!.id}',
+//         requestBody: requestBody,
+//         method: 'put',
+//         isShowLoader: false);
+//     getLogs();
+//
+//     pageStatus = PageStatus.loaded;
+//     notifyListeners();
+//     return true;
+//   } catch (e) {
+//     print(e);
+//     pageStatus = PageStatus.failed;
+//     notifyListeners();
+//     return false;
+//   }
+// }

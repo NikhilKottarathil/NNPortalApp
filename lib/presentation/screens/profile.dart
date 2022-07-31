@@ -1,8 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:nn_portal/constants/app_colors.dart';
+import 'package:nn_portal/presentation/components/restarted_widget.dart';
+import 'package:nn_portal/presentation/screens/login.dart';
 import 'package:nn_portal/providers/authentication_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Profile extends StatefulWidget {
   const Profile({Key? key}) : super(key: key);
@@ -22,7 +25,7 @@ class _ProfileState extends State<Profile> {
       ),
       body: Padding(
         padding: EdgeInsets.all(14),
-        child: ListView(
+        child: Column(
           children: [
             Container(
               width: double.infinity,
@@ -53,25 +56,45 @@ class _ProfileState extends State<Profile> {
             const SizedBox(
               height: 20,
             ),
-            // button(text: 'Vehicle history')
+            Spacer(),
+            button(
+                text: 'LogOut',
+                onPressed: () async {
+                  // Provider.of<AuthenticationProvider>(context,listen: false).logOut();
+                  SharedPreferences sharedPreferences =
+                      await SharedPreferences.getInstance();
+                  sharedPreferences.clear();
+
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => Login(),
+                      ),
+                      (route) => false);
+
+                  RestartWidget.restartApp(context);
+                })
           ],
         ),
       ),
     );
   }
 
-  Widget button({required String text}) {
+  Widget button({required String text, required Function onPressed}) {
     return ElevatedButton(
-      onPressed: () {},
+      onPressed: () {
+        onPressed();
+      },
       style: ButtonStyle(elevation: MaterialStateProperty.all(0.5)),
-      child: Padding(
+      child: Container(
+        width: MediaQuery.of(context).size.width,
         padding: const EdgeInsets.symmetric(vertical: 15.0),
-        child: Text(
-          text,
-          style: Theme.of(context)
-              .textTheme
-              .subtitle1!
-              .copyWith(fontWeight: FontWeight.w500),
+        child: Center(
+          child: Text(
+            text,
+            style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                fontWeight: FontWeight.w500, color: AppColors.textLight),
+          ),
         ),
       ),
     );

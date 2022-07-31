@@ -39,12 +39,12 @@ class JobNotes extends StatelessWidget {
                           //  const SizedBox(width: 8,),
                           Flexible(
                               child: Text(
-                            value.jobDescriptionModels[index].description??'',
+                            value.jobDescriptionModels[index].comment??'',
                             style: const TextStyle(height: 1.5),
                           )),
                         ],
                       ),
-                      subtitle: Text(value.jobDescriptionModels[index].postedOn??'Unknown date'
+                      subtitle: Text(value.jobDescriptionModels[index].commentOn??'Unknown date'
                           .substring(0, 10)),
                       trailing: IconButton(
                         constraints: const BoxConstraints(),
@@ -71,132 +71,158 @@ class JobNotes extends StatelessWidget {
   addNote({JobDescriptionModel? jobDescriptionModel}) async {
     TextEditingController textEditingController = TextEditingController();
     if(jobDescriptionModel!=null){
-      textEditingController.text=jobDescriptionModel.description!;
+      textEditingController.text=jobDescriptionModel.comment!;
     }
     final _formKey = GlobalKey<FormState>();
 
+    bool isCompleted=false;
+    if(jobDescriptionModel!=null){
+      isCompleted=jobDescriptionModel.status=='Completed';
+    }
     await showDialog(
       barrierDismissible: false,
       useRootNavigator: true,
       context: MyApp.navigatorKey.currentContext!,
       builder: (BuildContext context) {
-        return AlertDialog(
-          titlePadding: const EdgeInsets.all(0),
-          contentPadding: const EdgeInsets.all(14),
-          actionsPadding: const EdgeInsets.all(0),
-          buttonPadding: const EdgeInsets.all(0),
-          insetPadding: const EdgeInsets.only(left: 14, right: 14, bottom: 50),
-          content: Form(
-            key: _formKey,
-            child: SizedBox(
-              width: double.maxFinite,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: const Icon(Icons.clear),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  Text('Enter your note.',
-                      style: Theme.of(context).textTheme.subtitle2),
-                  TextFieldOutlineLabel(
-                    textEditingController: textEditingController,
-                    label: 'Enter your note',
-                    textInputType: TextInputType.multiline,
-                    hint: 'Write here...',
-                    minLines: 8,
-                    maxLines: 100,
-                    validator: (String? value) {
-                      print(
-                          'validator $value  ${value!.trim().isEmpty ? 'Please fill' : null}');
-                      return value.trim().isEmpty ? 'Please fill' : null;
-                    },
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Row(
+        return StatefulBuilder(
+          builder: (BuildContext context,StateSetter stateSetter) {
+            return AlertDialog(
+              titlePadding: const EdgeInsets.all(0),
+              contentPadding: const EdgeInsets.all(14),
+              actionsPadding: const EdgeInsets.all(0),
+              buttonPadding: const EdgeInsets.all(0),
+              insetPadding: const EdgeInsets.only(left: 14, right: 14, bottom: 50),
+              content: Form(
+                key: _formKey,
+                child: SizedBox(
+                  width: double.maxFinite,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      if(jobDescriptionModel!=null)
-                      Expanded(
-                        child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                primary: AppColors.secondaryBase),
-                            onPressed: () {
-                              showCustomAlertDialog(message: 'Are you sure?',negativeButtonText: 'Cancel', positiveButtonText: 'CONFIRM', positiveButtonAction: (){
-                                Provider.of<JobsDetailsProvider>(
-                                    MyApp.navigatorKey.currentContext!,
-                                    listen: false)
-                                    .deleteDescription(jobDescriptionModel: jobDescriptionModel);
-                                Navigator.pop(context);
-                                Navigator.pop(context);
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const Icon(Icons.clear),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      Text('Enter your note.',
+                          style: Theme.of(context).textTheme.subtitle2),
+                      TextFieldOutlineLabel(
+                        textEditingController: textEditingController,
+                        label: 'Enter your note',
+                        textInputType: TextInputType.multiline,
+                        hint: 'Write here...',
+                        minLines: 8,
+                        maxLines: 100,
+                        validator: (String? value) {
+                          print(
+                              'validator $value  ${value!.trim().isEmpty ? 'Please fill' : null}');
+                          return value.trim().isEmpty ? 'Please fill' : null;
+                        },
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Row(
+                        children: [
+
+                          SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: Checkbox(value:isCompleted, onChanged: (value){
+                              stateSetter((){
+                                isCompleted=value!;
                               });
-
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 20, vertical: 14),
-                              child: Text(
-                                'DELETE',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .button!
-                                    .apply(color: AppColors.textLight),
-                              ),
-                            )),
+                            }),
+                          ),
+                          SizedBox(width: 10,),
+                          const Text('Is Completed'),
+                        ],
                       ),
-                      if(jobDescriptionModel!=null)
+                      SizedBox(height: 20,),
 
-                       const SizedBox(width: 20,),
-                      Expanded(
-                        child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                primary: AppColors.primaryBase),
-                            onPressed: () {
-                              if (_formKey.currentState!.validate()) {
-                                if(jobDescriptionModel==null) {
+                      Row(
+                        children: [
+                          if(jobDescriptionModel!=null)
+                          Expanded(
+                            child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                    primary: AppColors.secondaryBase),
+                                onPressed: () {
+                                  showCustomAlertDialog(message: 'Are you sure?',negativeButtonText: 'Cancel', positiveButtonText: 'CONFIRM', positiveButtonAction: (){
+                                    Provider.of<JobsDetailsProvider>(
+                                        MyApp.navigatorKey.currentContext!,
+                                        listen: false)
+                                        .deleteDescription(jobDescriptionModel: jobDescriptionModel);
+                                    Navigator.pop(context);
+                                    Navigator.pop(context);
+                                  });
 
-                                  Provider.of<JobsDetailsProvider>(
-                                      MyApp.navigatorKey.currentContext!,
-                                      listen: false)
-                                      .addDescription(textEditingController.text);
-                                  Navigator.pop(context);
-                                }else{
-                                  Provider.of<JobsDetailsProvider>(
-                                      MyApp.navigatorKey.currentContext!,
-                                      listen: false)
-                                      .updateDescription(description:textEditingController.text,jobDescriptionModel: jobDescriptionModel);
-                                  Navigator.pop(context);
-                                }
-                              }
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 20, vertical: 14),
-                              child: Text(
-                                'SAVE',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .button!
-                                    .apply(color: AppColors.textLight),
-                              ),
-                            )),
-                      ),
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 20, vertical: 14),
+                                  child: Text(
+                                    'DELETE',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .button!
+                                        .apply(color: AppColors.textLight),
+                                  ),
+                                )),
+                          ),
+                          if(jobDescriptionModel!=null)
+
+                           const SizedBox(width: 20,),
+                          Expanded(
+                            child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                    primary: AppColors.primaryBase),
+                                onPressed: () {
+                                  if (_formKey.currentState!.validate()) {
+                                    if(jobDescriptionModel==null) {
+
+                                      Provider.of<JobsDetailsProvider>(
+                                          MyApp.navigatorKey.currentContext!,
+                                          listen: false)
+                                          .addDescription(textEditingController.text,isCompleted);
+                                      Navigator.pop(context);
+                                    }else{
+                                      Provider.of<JobsDetailsProvider>(
+                                          MyApp.navigatorKey.currentContext!,
+                                          listen: false)
+                                          .updateDescription(description:textEditingController.text,jobDescriptionModel: jobDescriptionModel,isCompleted: isCompleted);
+                                      Navigator.pop(context);
+                                    }
+                                  }
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 20, vertical: 14),
+                                  child: Text(
+                                    'SAVE',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .button!
+                                        .apply(color: AppColors.textLight),
+                                  ),
+                                )),
+                          ),
+                        ],
+                      )
                     ],
-                  )
-                ],
+                  ),
+                ),
               ),
-            ),
-          ),
+            );
+          }
         );
       },
     );

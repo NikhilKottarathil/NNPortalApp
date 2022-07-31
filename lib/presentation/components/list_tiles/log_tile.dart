@@ -51,6 +51,8 @@ class _LogTileState extends State<LogTile> {
             if (widget.logModel.logType != LogType.workLog) Divider(),
             if (widget.logModel.logType == LogType.vehicleLog)
               Text(widget.logModel.vehicleLogModel!.vehicleNo!,style: Theme.of(context).textTheme.bodyMedium,),
+            if (widget.logModel.logType == LogType.toolLog)
+              Text(widget.logModel.toolLogModel!.toolName!,style: Theme.of(context).textTheme.bodyMedium,),
 
             if (widget.logModel.logType != LogType.workLog)
               Text(widget.logModel.locationName!,style: Theme.of(context).textTheme.bodyMedium,),

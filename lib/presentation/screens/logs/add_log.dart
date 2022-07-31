@@ -33,6 +33,8 @@ class _AddLogState extends State<AddLog> {
   JobModel? selectedJobModel;
   GlobalKey<AutoCompleteTextFieldState<VehicleModel>> vehicleKey =
       GlobalKey<AutoCompleteTextFieldState<VehicleModel>>();
+  GlobalKey<AutoCompleteTextFieldState<ToolModel>> toolKey =
+      GlobalKey<AutoCompleteTextFieldState<ToolModel>>();
   GlobalKey<AutoCompleteTextFieldState<JobModel>> jobKey =
       GlobalKey<AutoCompleteTextFieldState<JobModel>>();
   TextEditingController jobTextEditController = TextEditingController();
@@ -49,15 +51,32 @@ class _AddLogState extends State<AddLog> {
       checkOutTime = TimeOfDay(
           hour: widget.logModel!.checkOut!.hour,
           minute: widget.logModel!.checkOut!.minute);
-      if (widget.logType == LogType.vehicleLog) {
+      if (widget.logType == LogType.siteLog) {
         selectedJobModel = JobModel(
-            id: widget.logModel!.vehicleLogModel!.jobId,
-            locationName: widget.logModel!.vehicleLogModel!.locationName,
-            clientName: widget.logModel!.vehicleLogModel!.clientName);
-        selectedVehicleModel = VehicleModel(
-            id: widget.logModel!.vehicleLogModel!.vehicleId,
-            vehicleNo: widget.logModel!.vehicleLogModel!.vehicleNo);
+            id: widget.logModel!.staffLogModel!.jobId,
+            locationName: widget.logModel!.staffLogModel!.locationName,
+            clientName: widget.logModel!.staffLogModel!.clientName);
       }
+
+        if (widget.logType == LogType.vehicleLog) {
+          selectedVehicleModel = VehicleModel(
+              id: widget.logModel!.vehicleLogModel!.vehicleId,
+              vehicleNo: widget.logModel!.vehicleLogModel!.vehicleNo);
+          selectedJobModel = JobModel(
+              id: widget.logModel!.vehicleLogModel!.jobId,
+              locationName: widget.logModel!.vehicleLogModel!.locationName,
+              clientName: widget.logModel!.vehicleLogModel!.clientName);
+        }
+        if (widget.logType == LogType.toolLog) {
+          selectedToolModel = ToolModel(
+              id: widget.logModel!.toolLogModel!.toolId,
+              toolName: widget.logModel!.toolLogModel!.toolName);
+          selectedJobModel = JobModel(
+              id: widget.logModel!.toolLogModel!.jobId,
+              locationName: widget.logModel!.toolLogModel!.locationName,
+              clientName: widget.logModel!.toolLogModel!.clientName);
+        }
+
     }
   }
 
@@ -205,7 +224,7 @@ class _AddLogState extends State<AddLog> {
                                   borderSide: BorderSide(
                                       color: AppColors.textDarFourth)),
                               hintText: "Search Vehicle",
-                              suffixIcon: Icon(Icons.search)),
+                         ),
                           itemSubmitted: (item) =>
                               setState(() => selectedVehicleModel = item),
                           suggestions:
@@ -239,67 +258,120 @@ class _AddLogState extends State<AddLog> {
                           )
                       ],
                     )),
+                Visibility(
+                    visible: widget.logType == LogType.toolLog,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Text('Select Tool',
+                            style: Theme.of(context).textTheme.subtitle2!),
+                        const SizedBox(
+                          height: 6,
+                          width: double.infinity,
+                        ),
+                        AutoCompleteTextField<ToolModel>(
+                          key: toolKey,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: AppColors.textDarFourth)),
+                            focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: AppColors.textDarFourth)),
+                            disabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: AppColors.textDarFourth)),
+                            enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: AppColors.textDarFourth)),
+                            errorBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: AppColors.textDarFourth)),
+                            focusedErrorBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: AppColors.textDarFourth)),
+                            hintText: "Search Tool",
+                          ),
+                          itemSubmitted: (item) =>
+                              setState(() => selectedToolModel = item),
+                          suggestions:
+                          Provider.of<LogProvider>(context, listen: false)
+                              .toolModels,
+                          itemBuilder: (context, suggestion) => Padding(
+                            padding: EdgeInsets.all(12.0),
+                            child: Text(suggestion.toolName!),
+                          ),
+                          itemSorter: (a, b) => 0,
+                          itemFilter: (suggestion, input) => suggestion
+                              .toolName!
+                              .toLowerCase()
+                              .startsWith(input.toLowerCase()),
+                        ),
+                        const SizedBox(
+                          height: 12,
+                        ),
+                        if (selectedToolModel != null)
+                          Card(
+                            margin: EdgeInsets.all(1),
+                            child: SizedBox(
+                                width: double.infinity,
+                                child: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 12, vertical: 12),
+                                    child: Text(
+                                      selectedToolModel!.toolName!,
+                                      textAlign: TextAlign.start,
+                                    ))),
+                          )
+                      ],
+                    )),
                 const SizedBox(
                   height: 30,
                 ),
                 ElevatedButton(
                     onPressed: () {
                       print(checkInTime);
-                      if (widget.logType == LogType.workLog) {
-                        if (_formKey.currentState!.validate()) {
-                          if (widget.logModel == null) {
-                            Provider.of<LogProvider>(
-                                    MyApp.navigatorKey.currentContext!,
-                                    listen: false)
-                                .addWorkLogs(
-                                    checkInTime: checkInTime!,
-                                    checkOutTime: checkOutTime!);
-                            Navigator.of(context).pop();
-                          } else {
-                            //edit
-                            Provider.of<LogProvider>(
-                                    MyApp.navigatorKey.currentContext!,
-                                    listen: false)
-                                .updateWorkLogs(
-                                    checkInTime: checkInTime!,
-                                    logModel: widget.logModel!,
-                                    checkOutTime: checkOutTime!);
-                            Navigator.of(context).pop();
-                          }
+                      if (_formKey.currentState!.validate()) {
+                        bool isReady = true;
+                        if (widget.logType != LogType.workLog &&
+                            selectedJobModel == null) {
+                          isReady = false;
+                          showSnackBar(message: 'Select Job');
                         }
-                      } else if (widget.logType == LogType.vehicleLog) {
-                        if (_formKey.currentState!.validate()) {
-                          if (selectedJobModel == null) {
-                            showSnackBar(message: 'Select Job Site');
-                          }
-                          if (selectedVehicleModel == null) {
-                            showSnackBar(message: 'Select Vehicle');
-                          } else {
-                            if (widget.logModel == null) {
-                              Provider.of<LogProvider>(
-                                      MyApp.navigatorKey.currentContext!,
-                                      listen: false)
-                                  .addVehicleLogs(
-                                      checkInTime: checkInTime!,
-                                      checkOutTime: checkOutTime!,
-                                      vehicleId:
-                                          selectedVehicleModel!.id.toString(),
-                                      jobId: selectedJobModel!.id.toString());
-                              Navigator.of(context).pop();
-                            } else {
-                              Provider.of<LogProvider>(
-                                      MyApp.navigatorKey.currentContext!,
-                                      listen: false)
-                                  .updateVehicleLogs(
-                                      logModel: widget.logModel!,
-                                      checkInTime: checkInTime!,
-                                      checkOutTime: checkOutTime!,
-                                      vehicleId:
-                                          selectedVehicleModel!.id.toString(),
-                                      jobId: selectedJobModel!.id.toString());
-                              Navigator.of(context).pop();
-                            }
-                          }
+                        if (widget.logType == LogType.vehicleLog &&
+                            selectedVehicleModel == null) {
+                          isReady = false;
+
+                          showSnackBar(message: 'Select Vehicle');
+                        }
+                        if (widget.logType == LogType.toolLog &&
+                            selectedToolModel == null) {
+                          isReady = false;
+
+                          showSnackBar(message: 'Select Tool');
+                        }
+                        if (isReady) {
+                          Provider.of<LogProvider>(
+                                  MyApp.navigatorKey.currentContext!,
+                                  listen: false)
+                              .addLog(
+                                  logType: widget.logType,
+                                  checkInTime: checkInTime!,
+                                  checkOutTime: checkOutTime!,
+                                  jobId: selectedJobModel != null
+                                      ? selectedJobModel!.id.toString()
+                                      : null,
+                                  vehicleId: selectedVehicleModel != null
+                                      ? selectedVehicleModel!.id.toString()
+                                      : null,
+                                  toolId: selectedToolModel != null
+                                      ? selectedToolModel!.id.toString()
+                                      : null,
+                                  logModel: widget.logModel);
+                          Navigator.of(context).pop();
                         }
                       }
                     },

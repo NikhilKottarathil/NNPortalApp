@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nn_portal/constants/app_colors.dart';
+import 'package:nn_portal/presentation/components/restarted_widget.dart';
 import 'package:nn_portal/presentation/screens/login.dart';
 import 'package:nn_portal/providers/authentication_provider.dart';
 import 'package:nn_portal/providers/job_details_provider.dart';
@@ -15,7 +16,7 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 void main() {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
-  runApp(const MyApp());
+  runApp(RestartWidget(child: const MyApp()));
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
       statusBarBrightness: Brightness.light // status bar color
