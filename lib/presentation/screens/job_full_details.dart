@@ -11,38 +11,56 @@ class JobFullDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
+    return Container(
+      decoration: BoxDecoration(
+        color:AppColors.tertiary,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      padding:const  EdgeInsets.symmetric(horizontal: 12,vertical: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
 
-        // Text(
-        //   'Name :',
-        //   style: Theme.of(context).textTheme.labelMedium!.copyWith(color: AppColors.textDarTertiary),
-        // ),
-        // SizedBox(height: 8,),
-        // Text(
-        //   value.jobModel!.locationName!,
-        //   style: Theme.of(context).textTheme.titleMedium,
-        // ),
-        FAWidget(field: 'Location', answer: jobModel.locationName!),
-        FAWidget(field: 'Client Name', answer: jobModel.clientName!),
+          // Text(
+          //   'Name :',
+          //   style: Theme.of(context).textTheme.labelMedium!.copyWith(color: AppColors.textDarTertiary),
+          // ),
+          // SizedBox(height: 8,),
+          // Text(
+          //   value.jobModel!.locationName!,
+          //   style: Theme.of(context).textTheme.titleMedium,
+          // ),
+          FAWidget(field: 'Location', answer: jobModel.locationName!),
+          SizedBox(height: 10,),
+          FAWidget(field: 'Client', answer: jobModel.clientName!),
 
-      ],
+        ],
+      ),
     );
   }
 
   Widget FAWidget({required String field,required String answer}){
-    return  Column(
+    return  Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          '$field :',
-          style: Theme.of(MyApp.navigatorKey.currentContext!).textTheme.labelMedium!.copyWith(color: AppColors.textDarTertiary),
+        Expanded(
+          flex: 1,
+          child: Text(
+            '$field :',
+            style: Theme.of(MyApp.navigatorKey.currentContext!).textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.bold),
+          ),
         ),
-        const SizedBox(height: 6,),
-        Text(
-          answer,
+         Text(
+          '  :  ',
           style: Theme.of(MyApp.navigatorKey.currentContext!).textTheme.bodyMedium,
+        ),
+        Expanded(
+          flex: 4,
+          child: Text(
+            answer,
+            style: Theme.of(MyApp.navigatorKey.currentContext!).textTheme.bodyMedium,
+          ),
         ),
        const  SizedBox(height: 15,),
       ],

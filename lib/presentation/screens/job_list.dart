@@ -48,30 +48,72 @@ class _JobListState extends State<JobList> {
       // drawer: HomeDrawer(),
       body: Consumer<JobsProvider>(builder: (context, value, child) {
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10.0,vertical: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              jobTypeTile(jobTypeModel: value.jobTypeModels[0]),
-              const SizedBox(height: 10,),
-
+              GestureDetector(
+                onTap: () {
+                  Provider.of<JobsProvider>(MyApp.navigatorKey.currentContext!,
+                          listen: false)
+                      .changeJobType(value.jobTypeModels[0]);
+                },
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  padding: const EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                      color: AppColors.secondaryBase,
+                     boxShadow: value.jobTypeModels[0].isSelected? [
+                        BoxShadow(
+                            color: Colors.grey.shade400,
+                            offset: Offset(0, 1),
+                            spreadRadius: 1,
+                            blurRadius: 1)
+                      ]:null,
+                      borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(8),
+                          topRight: Radius.circular(8))),
+                  child: Column(
+                    children: [
+                      Image.asset(
+                        'assets/all_jobs.png',
+                        height: 48,
+                      ),
+                      Text(
+                        'All Jobs',
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleLarge!
+                            .copyWith(color: AppColors.textLight, fontSize: 20,fontWeight: value.jobTypeModels[0].isSelected?FontWeight.bold:FontWeight.normal),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
               Row(
                 children: [
                   Expanded(
                       child: jobTypeTile(jobTypeModel: value.jobTypeModels[1])),
-                 const SizedBox(width: 10,),
+                  const SizedBox(
+                    width: 10,
+                  ),
                   Expanded(
                       child: jobTypeTile(jobTypeModel: value.jobTypeModels[2]))
                 ],
               ),
-              const SizedBox(height: 10,),
-
+              const SizedBox(
+                height: 10,
+              ),
               Row(
                 children: [
                   Expanded(
                       child: jobTypeTile(jobTypeModel: value.jobTypeModels[3])),
-                  const SizedBox(width: 10,),
-
+                  const SizedBox(
+                    width: 10,
+                  ),
                   Expanded(
                       child: jobTypeTile(jobTypeModel: value.jobTypeModels[4]))
                 ],
@@ -79,50 +121,55 @@ class _JobListState extends State<JobList> {
               const SizedBox(
                 height: 20,
               ),
-              Card(
-                elevation: 1,
-                child: TextFieldSearch(
-                  searchTextEditingController: searchTextEditingController,
-                  searchAction: () {
-                    Provider.of<JobsProvider>(context, listen: false)
-                        .searchJobs(searchTextEditingController.text);
-                  },
-                ),
+              TextFieldSearch(
+                searchTextEditingController: searchTextEditingController,
+                hintText: 'Search ',
+                searchAction: () {
+                  Provider.of<JobsProvider>(context, listen: false)
+                      .searchJobs(searchTextEditingController.text);
+                },
               ),
               const SizedBox(
-                height: 20,
+                height: 10,
               ),
               Expanded(
-                child: value.pageStatus==PageStatus.loading?CustomCircularProgressIndicator():value.models.isNotEmpty
-                    ? ListView.separated(
-                        itemCount: value.models.length,
-                        // shrinkWrap: true,
-                        controller: scrollController,
-                        itemBuilder: (BuildContext context, int index) {
-                          return GestureDetector(
-                              onTap: () {
-                                Provider.of<JobsDetailsProvider>(context,
-                                        listen: false)
-                                    .setJobModel(jobModel: value.models[index]);
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (_) => const JobDetails()));
-                              },
-                              child:
-                                  JobListTile(jobModel: value.models[index]));
-                        },
-                        separatorBuilder: (BuildContext context, int index) {
-                          return const SizedBox(
-                            height: 14,
-                          );
-                        },
-                      )
-                    : const NoItemsFound(),
+                child: value.pageStatus == PageStatus.loading
+                    ? CustomCircularProgressIndicator()
+                    : value.models.isNotEmpty
+                        ? ListView.separated(
+                            itemCount: value.models.length,
+                            // shrinkWrap: true,
+                            controller: scrollController,
+                            itemBuilder: (BuildContext context, int index) {
+                              return GestureDetector(
+                                  onTap: () {
+                                    Provider.of<JobsDetailsProvider>(context,
+                                            listen: false)
+                                        .setJobModel(
+                                            jobModel: value.models[index]);
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (_) =>
+                                                const JobDetails()));
+                                  },
+                                  child: JobListTile(
+                                      jobModel: value.models[index]));
+                            },
+                            separatorBuilder:
+                                (BuildContext context, int index) {
+                              return const SizedBox(
+                                height: 10,
+                              );
+                            },
+                          )
+                        : const NoItemsFound(),
               ),
               if (value.pageStatus == PageStatus.loadMore)
-                const SizedBox(
-                    height: 50, child: const CustomCircularProgressIndicator()),
+                const Center(
+                  child:  SizedBox(
+                      height: 50,width: 50, child:  CustomCircularProgressIndicator()),
+                ),
             ],
           ),
         );
@@ -133,42 +180,61 @@ class _JobListState extends State<JobList> {
 
 Widget jobTypeTile({required JobTypeModel jobTypeModel}) {
   return GestureDetector(
-    onTap: (){
-
-      Provider.of<JobsProvider>(MyApp.navigatorKey.currentContext!,listen: false).changeJobType(jobTypeModel);
+    onTap: () {
+      Provider.of<JobsProvider>(MyApp.navigatorKey.currentContext!,
+          listen: false)
+          .changeJobType(jobTypeModel);
     },
     child: Container(
-      decoration: BoxDecoration(
-          color: Colors.white,
-
-          border: jobTypeModel.isSelected?Border.all(color: Colors.grey):null,
+        decoration: BoxDecoration(
+          color: AppColors.tertiary,
+          // border:
+          //     jobTypeModel.isSelected ? Border.all(color: Colors.grey) : null,
           borderRadius: BorderRadius.circular(4),
-
-          boxShadow: [
-          BoxShadow(color: Colors.grey.shade200.withOpacity(.8),offset: Offset(0,2),spreadRadius: 2,blurRadius: 1)
-        ]
-      ),
-      padding: EdgeInsets.symmetric(vertical: 8),
+          boxShadow:jobTypeModel.isSelected? [
+            BoxShadow(
+                color: Colors.grey.shade400,
+                offset: Offset(0, 1),
+                spreadRadius: 1,
+                blurRadius: 1)
+          ]:null,
+        ),
+        padding: EdgeInsets.symmetric(vertical: 8,horizontal: 8),
         child: Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(Icons.photo,color: Colors.grey,),
-        const SizedBox(
-          width: 6,
-        ),
-        Text(jobTypeModel.count.toString(),
-            style: Theme.of(MyApp.navigatorKey.currentContext!)
-                .textTheme
-                .titleMedium!.copyWith(fontWeight: jobTypeModel.isSelected?FontWeight.bold:FontWeight.normal)),
-        const SizedBox(
-          width: 6,
-        ),
-        Text(
-          jobTypeModel.displayName,
-          style:
-              Theme.of(MyApp.navigatorKey.currentContext!).textTheme.titleMedium!.copyWith(fontWeight: jobTypeModel.isSelected?FontWeight.bold:FontWeight.normal),
-        )
-      ],
-    )),
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Image.asset(jobTypeModel.keyName == 'Open'
+                ? 'assets/open_jobs.png'
+                : jobTypeModel.keyName == 'Pending'
+                    ? 'assets/pending_jobs.png'
+                    : jobTypeModel.keyName == 'Completed'
+                        ? 'assets/completed_jobs.png'
+                        : 'assets/closed_jobs.png',height: 24,width: 24,),
+            const SizedBox(
+              width: 9,
+            ),
+            Text(jobTypeModel.count.toString(),
+                style: Theme.of(MyApp.navigatorKey.currentContext!)
+                    .textTheme
+                    .titleMedium!
+                    .copyWith(
+                        fontWeight: jobTypeModel.isSelected
+                            ? FontWeight.bold
+                            : FontWeight.normal)),
+            const SizedBox(
+              width: 6,
+            ),
+            Text(
+              jobTypeModel.displayName,
+              style: Theme.of(MyApp.navigatorKey.currentContext!)
+                  .textTheme
+                  .titleMedium!
+                  .copyWith(
+                      fontWeight: jobTypeModel.isSelected
+                          ? FontWeight.bold
+                          : FontWeight.normal),
+            )
+          ],
+        )),
   );
 }

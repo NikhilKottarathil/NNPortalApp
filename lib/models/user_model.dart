@@ -6,7 +6,9 @@ class UserModel {
   String? staffName;
   int? roleId;
   String? roleName;
+  String? visaExpiry;
   String? token;
+  bool? onLeave;
   bool? isActive;
   String? submitBy;
   String? submitOn;
@@ -19,7 +21,9 @@ class UserModel {
         this.staffName,
         this.roleId,
         this.roleName,
+        this.visaExpiry,
         this.token,
+        this.onLeave,
         this.isActive,
         this.submitBy,
         this.submitOn});
@@ -32,7 +36,9 @@ class UserModel {
     staffName = json['staffName'];
     roleId = json['roleId'];
     roleName = json['roleName'];
+    visaExpiry = json['visaExpiry'];
     token = json['token'];
+    onLeave = json['onLeave'];
     isActive = json['isActive'];
     submitBy = json['submitBy'];
     submitOn = json['submitOn'];
@@ -47,7 +53,9 @@ class UserModel {
     data['staffName'] = this.staffName;
     data['roleId'] = this.roleId;
     data['roleName'] = this.roleName;
+    data['visaExpiry'] = this.visaExpiry;
     data['token'] = this.token;
+    data['onLeave'] = this.onLeave;
     data['isActive'] = this.isActive;
     data['submitBy'] = this.submitBy;
     data['submitOn'] = this.submitOn;

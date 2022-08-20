@@ -5,8 +5,10 @@ import 'package:nn_portal/constants/app_colors.dart';
 import 'package:nn_portal/presentation/components/restarted_widget.dart';
 import 'package:nn_portal/presentation/screens/login.dart';
 import 'package:nn_portal/providers/authentication_provider.dart';
+import 'package:nn_portal/providers/in_hand_provider.dart';
 import 'package:nn_portal/providers/job_details_provider.dart';
 import 'package:nn_portal/providers/jobs_provider.dart';
+import 'package:nn_portal/providers/leave_provider.dart';
 import 'package:nn_portal/providers/log_provider.dart';
 import 'package:nn_portal/routers/app_router.dart';
 import 'package:nn_portal/text/text.dart';
@@ -42,6 +44,8 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(create: (_) => JobsProvider()),
         ChangeNotifierProvider(create: (_) => JobsDetailsProvider()),
         ChangeNotifierProvider(create: (_) => LogProvider()),
+        ChangeNotifierProvider(create: (_) => InHandProvider()),
+        ChangeNotifierProvider(create: (_) => LeaveProvider()),
       ],
       child: MaterialApp(
         navigatorKey: MyApp.navigatorKey,
@@ -69,6 +73,7 @@ class _MyAppState extends State<MyApp> {
             colorScheme: Theme.of(context).colorScheme.copyWith(
                 primary: AppColors.primaryBase,
                 onPrimary: Colors.white,
+
                 surface: Colors.white,
                 onSurface: AppColors.textDark)),
         home: Login(),

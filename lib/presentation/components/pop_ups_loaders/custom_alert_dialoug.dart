@@ -33,9 +33,9 @@ showCustomAlertDialog(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // heading != null ? Text(heading) : Container(),
-                  SizedBox(
-                    height: MediaQuery.of(MyApp.navigatorKey.currentContext!).size.height * .02,
-                  ),
+                  // SizedBox(
+                  //   height: MediaQuery.of(MyApp.navigatorKey.currentContext!).size.height * .02,
+                  // ),
                   if (message != null)
                     Text(
                       message,

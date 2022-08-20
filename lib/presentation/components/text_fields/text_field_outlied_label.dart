@@ -38,11 +38,10 @@ class TextFieldOutlineLabel extends StatelessWidget {
             label!,
             style: Theme.of(context)
                 .textTheme
-                .subtitle2!
-                .apply(color: AppColors.textLight),
+                .titleMedium!,
           ),
         const SizedBox(
-          height: 6,
+          height: 8,
           width: double.infinity,
         ),
         TextFormField(

@@ -33,46 +33,74 @@ class _JobDetailsState extends State<JobDetails>
         title: const Text('Job Details'),
       ),
       body: Consumer<JobsDetailsProvider>(builder: (context, value, child) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: JobFullDetails(jobModel: value.jobModel!,),
-
-            ),
-            Card(
-              elevation: .5,
-              child: TabBar(
-                labelColor: AppColors.textDark,
-                labelStyle: Theme.of(context).textTheme.labelLarge!.copyWith(fontWeight: FontWeight.w500,color: AppColors.textDark),
-                unselectedLabelStyle: Theme.of(context).textTheme.labelLarge!.copyWith(fontWeight: FontWeight.normal,color: AppColors.textDarkSecondary),
-                padding: EdgeInsets.only(bottom: 4,top: 12),
-                indicatorSize: TabBarIndicatorSize.label,
-                indicatorColor: AppColors.textDarFourth,
-                indicatorWeight: 1,
-                labelPadding: EdgeInsets.only(bottom: 8),
-                unselectedLabelColor: AppColors.textDarkSecondary,
-                controller: _tabController,
-                tabs: const [
-                  Text('Notes'),
-                  Text('Attachments'),
-                ],
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              JobFullDetails(
+                jobModel: value.jobModel!,
               ),
-            ),
-            Expanded(
-              child:  TabBarView(
-                controller: _tabController,
-                  children: [
-                JobNotes(),
-                    JobAttachments(),
-              ]),
-            ),
-          ],
+              const SizedBox(
+                height: 15,
+              ),
+              Expanded(
+                child: Container(
+                  decoration: BoxDecoration(
+                    // border: Border.all(color: AppColors.tertiary, width: 2),
+                    borderRadius: BorderRadius.circular(9),
+                    color: AppColors.tertiary.withOpacity(.5),
+                  ),
+                  child: Column(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          color: AppColors.tertiary,
+                          border: Border.all(color: AppColors.tertiary),
+                          borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(8),
+                              topRight: Radius.circular(8)),
+                        ),
+                        padding: EdgeInsets.all(3),
+                        child: TabBar(
+                            indicatorColor: Colors.grey,
+                            labelStyle: const TextStyle(
+                                fontSize: 14, fontWeight: FontWeight.w600),
+                            indicator: BoxDecoration(
+                                color: AppColors.primaryBase,
+                                borderRadius: BorderRadius.circular(8),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.shade100,
+                                  )
+                                ]),
+                            onTap: (index) {
+                              setState(() {});
+                            },
+                            controller: _tabController,
+                            labelColor: AppColors.textLight,
+                            unselectedLabelColor: AppColors.textDark,
+                            tabs: const [
+                              Tab(text: "Notes"),
+                              Tab(text: "Attachments"),
+                            ]),
+                      ),
+                      Expanded(
+                        child: TabBarView(
+                            controller: _tabController,
+                            children: const [
+                              JobNotes(),
+                              JobAttachments(),
+                            ]),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         );
       }),
     );
   }
-
-
 }

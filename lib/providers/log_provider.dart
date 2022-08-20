@@ -61,8 +61,11 @@ class LogProvider extends ChangeNotifier {
         StaffLogModel contentModel = StaffLogModel.fromJson(json);
         DateTime checkInTime =
             DateFormat('yyyy-MM-dd HH:mm:ss').parse(contentModel.checkIn!);
-        DateTime checkOutTime =
-            DateFormat('yyyy-MM-dd HH:mm:ss').parse(contentModel.checkOut!);
+        DateTime?  checkOutTime ;
+        if(contentModel.checkOut!=null) {
+          checkOutTime =
+              DateFormat('yyyy-MM-dd HH:mm:ss').parse(contentModel.checkOut!);
+        }
         models.add(LogModel(
             staffLogModel: contentModel,
             checkIn: checkInTime,
@@ -76,8 +79,11 @@ class LogProvider extends ChangeNotifier {
         VehicleLogModel contentModel = VehicleLogModel.fromJson(json);
         DateTime checkInTime =
         DateFormat('yyyy-MM-dd HH:mm:ss').parse(contentModel.checkIn!);
-        DateTime checkOutTime =
-        DateFormat('yyyy-MM-dd HH:mm:ss').parse(contentModel.checkOut!);
+        DateTime?  checkOutTime ;
+        if(contentModel.checkOut!=null) {
+          checkOutTime =
+              DateFormat('yyyy-MM-dd HH:mm:ss').parse(contentModel.checkOut!);
+        }
         models.add(LogModel(
             vehicleLogModel: contentModel,
             checkIn: checkInTime,
@@ -91,8 +97,11 @@ class LogProvider extends ChangeNotifier {
         ToolLogModel contentModel = ToolLogModel.fromJson(json);
         DateTime checkInTime =
         DateFormat('yyyy-MM-dd HH:mm:ss').parse(contentModel.checkIn!);
-        DateTime checkOutTime =
-        DateFormat('yyyy-MM-dd HH:mm:ss').parse(contentModel.checkOut!);
+        DateTime?  checkOutTime ;
+        if(contentModel.checkOut!=null) {
+          checkOutTime =
+              DateFormat('yyyy-MM-dd HH:mm:ss').parse(contentModel.checkOut!);
+        }
         models.add(LogModel(
             toolLogModel: contentModel,
             checkIn: checkInTime,
@@ -113,7 +122,7 @@ class LogProvider extends ChangeNotifier {
   }
 
   Future<bool> addLog(
-      {required LogType logType,required TimeOfDay checkInTime, required TimeOfDay checkOutTime, String? vehicleId,
+      {required LogType logType,required TimeOfDay checkInTime, TimeOfDay? checkOutTime, String? vehicleId,
          String? jobId,String? toolId,LogModel? logModel}) async {
     pageStatus = PageStatus.loading;
     notifyListeners();
@@ -123,14 +132,21 @@ class LogProvider extends ChangeNotifier {
       var format = DateFormat('yyyy-MM-dd HH:mm:ss');
       String checkInDateString = format.format(TimeUtils()
           .dateTimeFromTimeAndDate(checkInTime, dateTime: selectedDate));
-      String checkOutDateString = format.format(TimeUtils()
-          .dateTimeFromTimeAndDate(checkOutTime, dateTime: selectedDate));
+
 
       Map<String, dynamic> requestBody = {
         'jobId': 0,
         'checkIn': checkInDateString,
-        'checkout': checkOutDateString,
+
       };
+      if(checkOutTime!=null) {
+        String checkOutDateString = format.format(TimeUtils()
+            .dateTimeFromTimeAndDate(checkOutTime, dateTime: selectedDate));
+        requestBody.addAll({'checkout': checkOutDateString,});
+      }else{
+        requestBody.addAll({'checkout': ''});
+
+      }
       String apiUrl='Staffs/PostStaffLog';
       if(logType==LogType.workLog || logType==LogType.siteLog){
         if(logType==LogType.workLog){

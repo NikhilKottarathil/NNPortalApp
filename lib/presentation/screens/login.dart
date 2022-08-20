@@ -36,11 +36,7 @@ class _LoginState extends State<Login> {
         FlutterNativeSplash.remove();
       }else{
         FlutterNativeSplash.remove();
-        Provider.of<JobsProvider>(MyApp.navigatorKey.currentContext!,listen: false).getInitialJob();
-        Provider.of<LogProvider>(MyApp.navigatorKey.currentContext!,listen: false).getLogs();
-        Provider.of<LogProvider>(MyApp.navigatorKey.currentContext!,listen: false).initLog();
 
-        Navigator.of(context).pushNamed('/home');
       }
     });
   }
@@ -126,16 +122,7 @@ class _LoginState extends State<Login> {
                                   .login(
                                       email: emailTextEditingController.text,
                                       password:
-                                          passwordTextEditingController.text)
-                                  .then((value)  {
-                                if (value) {
-                                  Provider.of<JobsProvider>(MyApp.navigatorKey.currentContext!,listen: false).getInitialJob();
-                                  Provider.of<LogProvider>(MyApp.navigatorKey.currentContext!,listen: false).getLogs();
-                                  Provider.of<LogProvider>(MyApp.navigatorKey.currentContext!,listen: false).initLog();
-
-                                  Navigator.of(context).pushNamed('/home');
-                                }
-                              });
+                                          passwordTextEditingController.text);
                             }
                           },
                           backgroundColor: AppColors.textLight,

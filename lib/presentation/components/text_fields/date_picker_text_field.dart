@@ -3,20 +3,20 @@ import 'package:intl/intl.dart';
 import 'package:nn_portal/constants/app_colors.dart';
 import 'package:nn_portal/utils/time_utils.dart';
 
-class TimePickerTextField extends StatelessWidget {
+class DatePickerTextField extends StatelessWidget {
   String? label;
   String? hint;
 
   FormFieldValidator<String> validator;
 
-  TimeOfDay? timeOfDay;
+  DateTime? dateTime;
   Function callback;
 
-  TimePickerTextField({
+  DatePickerTextField({
     Key? key,
     this.hint,
     this.label,
-    this.timeOfDay,
+    this.dateTime,
     required this.callback,
     required this.validator,
   }) : super(key: key);
@@ -25,28 +25,30 @@ class TimePickerTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (timeOfDay != null) {
-      textEditingController.text = DateFormat('hh:mm a')
-          .format(TimeUtils().dateTimeFromTimeAndDate(timeOfDay!));
+    if (dateTime != null) {
+      textEditingController.text = DateFormat('yyyy-MM-dd').format(dateTime!);
     }
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (label != null)
-          Text(label!, style: Theme.of(context).textTheme.subtitle2!),
+          Text(label!, style: Theme.of(context).textTheme.titleSmall!),
         const SizedBox(
           height: 6,
           width: double.infinity,
         ),
         GestureDetector(
           onTap: () async {
-            timeOfDay = await showTimePicker(
-                context: context, initialTime: timeOfDay ?? TimeOfDay.now());
-            if (timeOfDay != null) {
-              callback(timeOfDay);
-              textEditingController.text = DateFormat('hh:mm a')
-                  .format(TimeUtils().dateTimeFromTimeAndDate(timeOfDay!));
+            dateTime = await showDatePicker(
+                context: context,
+                initialDate: dateTime ?? DateTime.now(),
+                firstDate: DateTime.now(),
+                lastDate: DateTime.now().add(const Duration(days: 365)));
+            if (dateTime != null) {
+              callback(dateTime);
+              textEditingController.text = DateFormat('yyyy-MM-dd')
+                  .format(dateTime!);
             }
           },
           child: TextFormField(
@@ -61,7 +63,10 @@ class TimePickerTextField extends StatelessWidget {
                 ),
             decoration: InputDecoration(
               counterText: '',
-              suffixIcon:  Icon(Icons.access_time_outlined,color: AppColors.iconColor,),
+              suffixIcon: Icon(
+                Icons.calendar_month,
+                color: AppColors.iconColor,
+              ),
               hintText: hint,
               contentPadding:
                   const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
@@ -78,16 +83,6 @@ class TimePickerTextField extends StatelessWidget {
                     style: BorderStyle.none,
                   ),
                   borderRadius: BorderRadius.circular(8)),
-              // focusedBorder: OutlineInputBorder(
-              //     borderSide: BorderSide(color: AppColors.textDarFourth)),
-              // disabledBorder: OutlineInputBorder(
-              //     borderSide: BorderSide(color: AppColors.textDarFourth)),
-              // enabledBorder: OutlineInputBorder(
-              //     borderSide: BorderSide(color: AppColors.textDarFourth)),
-              // errorBorder: OutlineInputBorder(
-              //     borderSide: BorderSide(color: AppColors.textDarFourth)),
-              // focusedErrorBorder: OutlineInputBorder(
-              //     borderSide: BorderSide(color: AppColors.textDarFourth)),
             ),
           ),
         ),

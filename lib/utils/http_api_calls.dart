@@ -37,13 +37,6 @@ Future postDataRequest(
       if (isShowLoader) {
         showLoader();
       }
-      // SharedPreferences sharedPreferences =
-      //     await SharedPreferences.getInstance();
-      // var userId = sharedPreferences.getString('uid');
-      //
-      // if (userId != null) {
-      //   requestBody.addAll({'user_id': userId});
-      // }
 
       final uri = Uri.parse(apiAddress + urlAddress);
       Map<String, String> headers = {"Content-Type": "application/json"};

@@ -9,6 +9,7 @@ import 'package:nn_portal/presentation/components/list_tiles/log_tile.dart';
 import 'package:nn_portal/presentation/components/others/no_items_found.dart';
 import 'package:nn_portal/presentation/drawers/home_drawer.dart';
 import 'package:nn_portal/presentation/screens/logs/add_log.dart';
+import 'package:nn_portal/providers/authentication_provider.dart';
 import 'package:nn_portal/providers/log_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -45,17 +46,16 @@ class _LogsState extends State<Logs> with SingleTickerProviderStateMixin {
           Provider.of<LogProvider>(context, listen: false)
               .changSelectedDate(value);
         },
-        firstDate: DateTime.now().subtract(Duration(days: 140)),
+        firstDate: DateTime(2020, 1, 1),
         lastDate: DateTime.now(),
         backButton: false,
         fullCalendar: true,
         accent: AppColors.primaryBase,
-        padding: 20,
+        padding: 0,
       ),
-      drawer: HomeDrawer(),
       body: Consumer<LogProvider>(builder: (context, value, child) {
         return Padding(
-          padding: const EdgeInsets.all(14.0),
+          padding: const EdgeInsets.only(left: 10, right: 10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -67,14 +67,23 @@ class _LogsState extends State<Logs> with SingleTickerProviderStateMixin {
                         itemBuilder: (BuildContext context, int index) {
                           return GestureDetector(
                               onTap: () {
-                                Navigator.of(context)
-                                    .push(MaterialPageRoute(builder: (_) => AddLog(logType: value.models[index].logType,logModel: value.models[index],)));                                // Navigator.push(context, MaterialPageRoute(builder: (_)=>const JobDetails()));
+                                if(!Provider.of<AuthenticationProvider>(context, listen: false)
+                                    .userModel!
+                                    .onLeave!) {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (_) =>
+                                          AddLog(
+                                            logType: value.models[index]
+                                                .logType,
+                                            logModel: value.models[index],
+                                          )));
+                                }// Navigator.push(context, MaterialPageRoute(builder: (_)=>const JobDetails()));
                               },
                               child: LogTile(logModel: value.models[index]));
                         },
                         separatorBuilder: (BuildContext context, int index) {
                           return const SizedBox(
-                            height: 8,
+                            height: 10,
                           );
                         },
                       )
@@ -84,7 +93,12 @@ class _LogsState extends State<Logs> with SingleTickerProviderStateMixin {
           ),
         );
       }),
-      floatingActionButton: floatingActionBubble(),
+      floatingActionButton:
+          !Provider.of<AuthenticationProvider>(context, listen: false)
+                  .userModel!
+                  .onLeave!
+              ? floatingActionBubble()
+              : null,
     );
   }
 
@@ -102,8 +116,10 @@ class _LogsState extends State<Logs> with SingleTickerProviderStateMixin {
               .apply(color: AppColors.textLight),
           onPress: () {
             _animationController!.reverse();
-            Navigator.of(context)
-                .push(MaterialPageRoute(builder: (_) => AddLog(logType: LogType.vehicleLog,)));
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (_) => AddLog(
+                      logType: LogType.vehicleLog,
+                    )));
           },
         ),
         Bubble(
@@ -117,8 +133,10 @@ class _LogsState extends State<Logs> with SingleTickerProviderStateMixin {
               .apply(color: AppColors.textLight),
           onPress: () {
             _animationController!.reverse();
-            Navigator.of(context)
-                .push(MaterialPageRoute(builder: (_) => AddLog(logType: LogType.toolLog,)));
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (_) => AddLog(
+                      logType: LogType.toolLog,
+                    )));
           },
         ),
         Bubble(
@@ -131,9 +149,10 @@ class _LogsState extends State<Logs> with SingleTickerProviderStateMixin {
               .button!
               .apply(color: AppColors.textLight),
           onPress: () {
-
-            Navigator.of(context)
-                .push(MaterialPageRoute(builder: (_) => AddLog(logType: LogType.siteLog,)));
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (_) => AddLog(
+                      logType: LogType.siteLog,
+                    )));
             _animationController!.reverse();
           },
         ),
@@ -148,8 +167,10 @@ class _LogsState extends State<Logs> with SingleTickerProviderStateMixin {
               .apply(color: AppColors.textLight),
           onPress: () {
             _animationController!.reverse();
-            Navigator.of(context)
-                .push(MaterialPageRoute(builder: (_) => AddLog(logType: LogType.workLog,)));
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (_) => AddLog(
+                      logType: LogType.workLog,
+                    )));
           },
         ),
       ],
@@ -159,7 +180,7 @@ class _LogsState extends State<Logs> with SingleTickerProviderStateMixin {
           : _animationController!.forward(),
       iconColor: AppColors.textLight,
       animatedIconData: AnimatedIcons.menu_close,
-      backGroundColor: AppColors.primaryBase,
+      backGroundColor: AppColors.secondaryBase,
     );
   }
 }
