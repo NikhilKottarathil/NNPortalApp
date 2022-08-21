@@ -140,7 +140,7 @@ class _ProfileState extends State<Profile> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Image.asset(
-                      'assets/tool_icon.png',
+                      'assets/leave.png',
                       height: 24,
                       width: 24,
                     ),

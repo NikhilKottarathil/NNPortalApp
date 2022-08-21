@@ -17,7 +17,7 @@ class AuthenticationProvider extends ChangeNotifier {
   UserModel? userModel;
 
   int? visaExpiringDays;
-  int warningCheckDays=39;
+  int warningCheckDays=15;
 
   Future<bool> attemptAutoLogin() async {
     try {

@@ -32,8 +32,42 @@ class JobFullDetails extends StatelessWidget {
           //   style: Theme.of(context).textTheme.titleMedium,
           // ),
           FAWidget(field: 'Location', answer: jobModel.locationName!),
-          SizedBox(height: 10,),
+          const SizedBox(height: 4),
           FAWidget(field: 'Client', answer: jobModel.clientName!),
+          if(jobModel.assignedVehicle!=null)
+            const SizedBox(height: 4),
+          if(jobModel.assignedVehicle!=null)
+
+            Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                flex: 1,
+                child: Text(
+                  'Vehicle',
+                  style: Theme.of(MyApp.navigatorKey.currentContext!).textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.bold),
+                ),
+              ),
+              Text(
+                '  :  ',
+                style: Theme.of(MyApp.navigatorKey.currentContext!).textTheme.bodyMedium,
+              ),
+              Expanded(
+                flex: 4,
+                child: Text(
+                  jobModel.assignedVehicle!,
+                  style: Theme.of(MyApp.navigatorKey.currentContext!).textTheme.bodyMedium,
+                ),
+              ),
+              const  SizedBox(height: 15,),
+            ],
+          ),
+          if(jobModel.assignedStaff!=null)
+            const SizedBox(height: 4),
+
+          if(jobModel.assignedStaff!=null)
+
+            FAWidget(field: 'Staffs', answer: jobModel.assignedStaff!),
 
         ],
       ),
@@ -47,7 +81,7 @@ class JobFullDetails extends StatelessWidget {
         Expanded(
           flex: 1,
           child: Text(
-            '$field :',
+            '$field ',
             style: Theme.of(MyApp.navigatorKey.currentContext!).textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.bold),
           ),
         ),
