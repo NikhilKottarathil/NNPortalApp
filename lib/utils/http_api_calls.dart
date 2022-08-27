@@ -33,7 +33,7 @@ Future postDataRequest(
   debugPrint('============= start $urlAddress post api ===============');
 
   if (await checkInternetConnectivity()) {
-    try {
+    // try {
       if (isShowLoader) {
         showLoader();
       }
@@ -62,6 +62,7 @@ Future postDataRequest(
       var responseBody = jsonDecode(response.body);
 
       print(response.statusCode);
+      print(response.body);
       if (response.statusCode == 200 || response.statusCode == 404) {
         debugPrint(
             '============= end ${apiAddress+urlAddress} post api =============== \n $responseBody');
@@ -89,18 +90,18 @@ Future postDataRequest(
       } else {
         throw Exception(AppStrings.somethingWentWrong);
       }
-    } catch (e) {
-      debugPrint(
-          '============= fail ${apiAddress+urlAddress} post api =============== \n error $e');
-
-      print(e);
-      String message = e.toString().substring(10);
-      if (isShowLoader) {
-        hideLoader();
-      }
-      showSnackBar(message: message);
-      rethrow;
-    }
+    // } catch (e) {
+    //   debugPrint(
+    //       '============= fail ${apiAddress+urlAddress} post api =============== \n error $e');
+    //
+    //   print(e);
+    //   String message = e.toString().substring(10);
+    //   if (isShowLoader) {
+    //     hideLoader();
+    //   }
+    //   showSnackBar(message: message);
+    //   rethrow;
+    // }
   }
 }
 

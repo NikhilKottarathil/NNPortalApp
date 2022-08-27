@@ -29,7 +29,7 @@ showVisaExpireAlert() async {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                Provider.of<AuthenticationProvider>(context,listen: false).visaExpiringDays!>0?'Visa Expire Soon !!!':"Visa Expired !!!",
+                Provider.of<AuthenticationProvider>(context,listen: false).visaExpiringDays!>0?'Visa Expiring Soon !!!':"Visa Expired !!!",
                 style: Theme.of(context).textTheme.titleLarge!.copyWith(
                     fontWeight: FontWeight.bold, color: AppColors.textLight),
               ),

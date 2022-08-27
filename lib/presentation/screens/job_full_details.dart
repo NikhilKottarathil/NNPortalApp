@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:nn_portal/constants/app_colors.dart';
 import 'package:nn_portal/main.dart';
 import 'package:nn_portal/models/job_model.dart';
+import 'package:nn_portal/presentation/components/pop_ups_loaders/change_job_vehicle.dart';
 
 class JobFullDetails extends StatelessWidget {
   final JobModel jobModel;
@@ -54,9 +55,18 @@ class JobFullDetails extends StatelessWidget {
               ),
               Expanded(
                 flex: 4,
-                child: Text(
-                  jobModel.assignedVehicle!,
-                  style: Theme.of(MyApp.navigatorKey.currentContext!).textTheme.bodyMedium,
+                child: Row(
+                  children: [
+                    Text(
+                      jobModel.assignedVehicle!,
+                      style: Theme.of(MyApp.navigatorKey.currentContext!).textTheme.bodyMedium,
+                    ),
+                   const SizedBox(width: 4,),
+                    GestureDetector(onTap:(){
+                      changeJobVehicle(message: 'hfdjkg');
+                    },child: Image.asset('assets/edit.png',height: 18,width: 18,)),
+
+                  ],
                 ),
               ),
               const  SizedBox(height: 15,),

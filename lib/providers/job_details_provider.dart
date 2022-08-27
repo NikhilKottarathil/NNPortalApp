@@ -22,33 +22,49 @@ class JobsDetailsProvider extends ChangeNotifier {
   List<JobDescriptionModel> jobDescriptionModels = [];
   List<JobAttachmentModel> jobAttachmentModels = [];
   PageStatus pageStatus = PageStatus.initialState;
+  String assignedStaffs = '';
+  List<int> assignedStaffListIds = [];
 
   setJobModel({required JobModel jobModel}) {
     this.jobModel = jobModel;
     jobDescriptionModels.clear();
     jobAttachmentModels.clear();
+    assignedStaffs = '';
+    assignedStaffListIds.clear();
     pageStatus = PageStatus.initialState;
     if (jobModel.jobStaffs != null && jobModel.jobStaffs!.isNotEmpty) {
       for (var element in jobModel.jobStaffs!) {
-        if (element.isDriver!) {
-          jobModel.jobStaffs!.remove(element);
-          element.staffName = '${element.staffName!} (D)';
-          jobModel.jobStaffs!.insert(0, element);
-        }
-      }
-      for (var element in jobModel.jobStaffs!) {
         if (element.isTeamLeader!) {
-          jobModel.jobStaffs!.remove(element);
-          element.staffName = '${element.staffName!} (L)';
-          jobModel.jobStaffs!.insert(0, element);
+          if (!assignedStaffListIds.contains(element.staffId!)) {
+            assignedStaffListIds.add(element.staffId!);
+            if (assignedStaffs == '') {
+              assignedStaffs = '${element.staffName ?? ''} (L)';
+            } else {
+              assignedStaffs = '$assignedStaffs,${element.staffName ?? ''} (L)';
+            }
+          }
         }
       }
-      String assignedStaffs = '';
       for (var element in jobModel.jobStaffs!) {
-        if (assignedStaffs == '') {
-          assignedStaffs = element.staffName!;
-        } else {
-          assignedStaffs = '$assignedStaffs, ${element.staffName!}';
+        if (element.isDriver!) {
+          if (!assignedStaffListIds.contains(element.staffId!)) {
+            assignedStaffListIds.add(element.staffId!);
+            if (assignedStaffs == '') {
+              assignedStaffs = '${element.staffName ?? ''} (D)';
+            } else {
+              assignedStaffs = '$assignedStaffs,${element.staffName ?? ''} (D)';
+            }
+          }
+        }
+      }
+      for (var element in jobModel.jobStaffs!) {
+        if (!assignedStaffListIds.contains(element.staffId!)) {
+          assignedStaffListIds.add(element.staffId!);
+          if (assignedStaffs == '') {
+            assignedStaffs = element.staffName ?? '';
+          } else {
+            assignedStaffs = '$assignedStaffs,${element.staffName ?? ''}';
+          }
         }
       }
       jobModel.assignedStaff = assignedStaffs;
@@ -89,6 +105,27 @@ class JobsDetailsProvider extends ChangeNotifier {
       notifyListeners();
     } catch (e) {
       print(e);
+      pageStatus = PageStatus.failed;
+      notifyListeners();
+    }
+  }
+
+  Future updateJobVehicle({required VehicleModel vehicleModel}) async {
+    pageStatus = PageStatus.loading;
+    notifyListeners();
+
+    try {
+      var response = await postDataRequest(
+        requestBody: {'id': jobModel!.id, 'vehicleId': vehicleModel.id},
+        method: 'put',
+        urlAddress: 'Jobs/UpdateJobVehicle/${jobModel!.id}',
+        isShowLoader: false,
+      );
+
+      pageStatus = PageStatus.loaded;
+      notifyListeners();
+    } catch (e) {
+      debugPrint(e.toString());
       pageStatus = PageStatus.failed;
       notifyListeners();
     }
@@ -275,33 +312,6 @@ class JobsDetailsProvider extends ChangeNotifier {
           isShowLoader: false);
       jobAttachmentModels.removeAt(jobAttachmentModels
           .indexWhere((element) => element.id == jobAttachmentModel.id));
-
-      pageStatus = PageStatus.loaded;
-      notifyListeners();
-      return true;
-    } catch (e) {
-      print(e);
-      pageStatus = PageStatus.failed;
-      notifyListeners();
-      return false;
-    }
-  }
-  Future<bool> updateJobVehicle(
-      {required VehicleModel vehicleModel}) async {
-    pageStatus = PageStatus.loading;
-    notifyListeners();
-
-    try {
-
-
-      var response = await postDataRequest(
-          urlAddress: 'Jobs/UpdateJobVehicle/${jobModel!.id}',
-          requestBody: {
-            'id':jobModel!.id,
-            'vehicleId':vehicleModel.id
-          },
-          isShowLoader: false);
-     // jobModel.assignedVehicle=vehicleModel.vehicleN
 
       pageStatus = PageStatus.loaded;
       notifyListeners();
