@@ -29,7 +29,7 @@ class JobModel {
 
   //app side field
   String? assignedStaff;
-  String? assignedVehicle;
+  // String? assignedVehicle;
 
   JobModel({
     this.id,
@@ -60,7 +60,7 @@ class JobModel {
     this.logs,
     this.jobVehicles,
     this.assignedStaff,
-    this.assignedVehicle,
+    // this.assignedVehicle,
   });
 
   JobModel.fromJson(Map<String, dynamic> json) {
@@ -318,53 +318,28 @@ class JobStaffs {
 
 class JobVehicle {
   int? id;
-  int? jobId;
   int? vehicleId;
   String? vehicleName;
-  int? teamId;
-  String? teamName;
-  int? staffId;
-  String? staffName;
-  Null? submitBy;
-  Null? submitOn;
+
 
   JobVehicle(
       {this.id,
-      this.jobId,
       this.vehicleId,
-      this.vehicleName,
-      this.teamId,
-      this.teamName,
-      this.staffId,
-      this.staffName,
-      this.submitBy,
-      this.submitOn});
+      this.vehicleName});
 
   JobVehicle.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    jobId = json['jobId'];
     vehicleId = json['vehicleId'];
     vehicleName = json['vehicleName'];
-    teamId = json['teamId'];
-    teamName = json['teamName'];
-    staffId = json['staffId'];
-    staffName = json['staffName'];
-    submitBy = json['submitBy'];
-    submitOn = json['submitOn'];
+
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
-    data['jobId'] = this.jobId;
     data['vehicleId'] = this.vehicleId;
     data['vehicleName'] = this.vehicleName;
-    data['teamId'] = this.teamId;
-    data['teamName'] = this.teamName;
-    data['staffId'] = this.staffId;
-    data['staffName'] = this.staffName;
-    data['submitBy'] = this.submitBy;
-    data['submitOn'] = this.submitOn;
+
     return data;
   }
 }

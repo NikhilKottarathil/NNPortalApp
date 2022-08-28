@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "757447120021",
+    "project_id": "nnportal-fb0dd",
+    "storage_bucket": "nnportal-fb0dd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:757447120021:android:9babfe5324b749dfc1f79c",
+        "android_client_info": {
+          "package_name": "com.netsolutions.nnportal"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "757447120021-4fm5qqi8fg6qvh6r8hv1iiihr643aaae.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBj1Q3llqge3Jylg3dRdP4G7C9ZgsDEx5k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "757447120021-4fm5qqi8fg6qvh6r8hv1iiihr643aaae.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

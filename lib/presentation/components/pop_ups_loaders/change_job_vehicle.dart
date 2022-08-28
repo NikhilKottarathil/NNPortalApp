@@ -2,13 +2,14 @@ import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:nn_portal/constants/app_colors.dart';
 import 'package:nn_portal/main.dart';
+import 'package:nn_portal/models/job_model.dart';
 import 'package:nn_portal/models/vehicle_model.dart';
 import 'package:nn_portal/providers/job_details_provider.dart';
 import 'package:nn_portal/providers/log_provider.dart';
 import 'package:provider/provider.dart';
 
 changeJobVehicle({
-  required String? message,
+  required JobVehicle jobVehicle,
 }) async {
   VehicleModel? selectedVehicleModel;
 
@@ -119,7 +120,8 @@ changeJobVehicle({
                         onPressed: () {
                           if(selectedVehicleModel!=null){
                             Provider.of<JobsDetailsProvider>(alertContext,
-                                listen: false).updateJobVehicle( vehicleModel: selectedVehicleModel!);
+                                listen: false).updateJobVehicle( vehicleModel: selectedVehicleModel!,jobVehicle: jobVehicle);
+                            Navigator.pop(context);
                           }
                         },
                         style: ElevatedButton.styleFrom(primary: selectedVehicleModel==null?AppColors.tertiary:null,onPrimary: selectedVehicleModel==null?AppColors.textDark:null,),

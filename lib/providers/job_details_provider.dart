@@ -71,16 +71,16 @@ class JobsDetailsProvider extends ChangeNotifier {
     }
     String assignedVehicles = '';
 
-    if (jobModel.jobVehicles != null && jobModel.jobVehicles!.isNotEmpty) {
-      for (var element in jobModel.jobVehicles!) {
-        if (assignedVehicles == '') {
-          assignedVehicles = element.vehicleName!;
-        } else {
-          assignedVehicles = '$assignedVehicles, ${element.vehicleName!}';
-        }
-      }
-      jobModel.assignedVehicle = assignedVehicles;
-    }
+    // if (jobModel.jobVehicles != null && jobModel.jobVehicles!.isNotEmpty) {
+    //   for (var element in jobModel.jobVehicles!) {
+    //     if (assignedVehicles == '') {
+    //       assignedVehicles = element.vehicleName!;
+    //     } else {
+    //       assignedVehicles = '$assignedVehicles, ${element.vehicleName!}';
+    //     }
+    //   }
+    //   jobModel.assignedVehicle = assignedVehicles;
+    // }
     getDescriptions();
     getAttachments();
   }
@@ -110,25 +110,29 @@ class JobsDetailsProvider extends ChangeNotifier {
     }
   }
 
-  Future updateJobVehicle({required VehicleModel vehicleModel}) async {
+  Future updateJobVehicle(
+      {required VehicleModel vehicleModel,
+      required JobVehicle jobVehicle}) async {
     pageStatus = PageStatus.loading;
     notifyListeners();
 
-    try {
+    // try {
       var response = await postDataRequest(
-        requestBody: {'id': jobModel!.id, 'vehicleId': vehicleModel.id},
+        requestBody: {'id': jobVehicle.id, 'vehicleId': vehicleModel.id},
         method: 'put',
-        urlAddress: 'Jobs/UpdateJobVehicle/${jobModel!.id}',
+        urlAddress: 'Jobs/UpdateJobVehicle/${jobVehicle.id}',
         isShowLoader: false,
       );
+      jobModel!.jobVehicles!.singleWhere((element) => element.id==jobVehicle.id).vehicleName=vehicleModel.vehicleNo;
+      jobModel!.jobVehicles!.singleWhere((element) => element.id==jobVehicle.id).vehicleId=vehicleModel.id;
 
       pageStatus = PageStatus.loaded;
       notifyListeners();
-    } catch (e) {
-      debugPrint(e.toString());
-      pageStatus = PageStatus.failed;
-      notifyListeners();
-    }
+    // } catch (e) {
+    //   debugPrint(e.toString());
+    //   pageStatus = PageStatus.failed;
+    //   notifyListeners();
+    // }
   }
 
   Future getDescriptions() async {

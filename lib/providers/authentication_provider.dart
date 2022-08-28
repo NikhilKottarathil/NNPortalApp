@@ -7,6 +7,7 @@ import 'package:nn_portal/models/user_model.dart';
 import 'package:nn_portal/presentation/components/pop_ups_loaders/visa_expire_alert.dart';
 import 'package:nn_portal/providers/jobs_provider.dart';
 import 'package:nn_portal/providers/log_provider.dart';
+import 'package:nn_portal/utils/firebase_notification_utils.dart';
 import 'package:nn_portal/utils/http_api_calls.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -36,7 +37,7 @@ class AuthenticationProvider extends ChangeNotifier {
      Provider.of<LogProvider>(MyApp.navigatorKey.currentContext!,listen: false).getLogs();
      Provider.of<LogProvider>(MyApp.navigatorKey.currentContext!,listen: false).initLog();
 
-     Navigator.of(MyApp.navigatorKey.currentContext!).pushNamed('/home');
+     Navigator.of(MyApp.navigatorKey.currentContext!).pushReplacementNamed('/home');
 
      if(userModel!.visaExpiry!=null){
        DateTime? visaExpireDateTime=DateFormat('yyyy-MM-dd').parse(userModel!.visaExpiry!);
@@ -52,9 +53,11 @@ class AuthenticationProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
+      String firebaseToken=await getFirebaseMessagingToken();
       var response = await postDataRequest(
           urlAddress: 'Authenticate',
-          requestBody: {'username': email, 'password': password},
+          requestBody: {'username': email, 'password': password,
+          'firebaseToken':firebaseToken},
           isShowLoader: false);
       userModel=UserModel.fromJson(response);
 

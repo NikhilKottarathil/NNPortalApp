@@ -1,4 +1,4 @@
-package com.example.nn_portal
+package com.netsolutions.nnportal
 
 import io.flutter.embedding.android.FlutterActivity
 
