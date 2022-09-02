@@ -169,8 +169,10 @@ class _AddLogState extends State<AddLog> {
                                   toolId: selectedToolModel != null
                                       ? selectedToolModel!.id.toString()
                                       : null,
-                                  logModel: widget.logModel);
-                          Navigator.of(context).pop();
+                                  logModel: widget.logModel).then((value) {
+                            Navigator.of(context).pop();
+
+                          });
                         }
                       }
                     },
