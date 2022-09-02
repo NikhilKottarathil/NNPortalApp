@@ -77,7 +77,8 @@ class _LogsState extends State<Logs> with SingleTickerProviderStateMixin {
                                                 .logType,
                                             logModel: value.models[index],
                                           )));
-                                }// Navigator.push(context, MaterialPageRoute(builder: (_)=>const JobDetails()));
+                                }
+                                // Navigator.push(context, MaterialPageRoute(builder: (_)=>const JobDetails()));
                               },
                               child: LogTile(logModel: value.models[index]));
                         },

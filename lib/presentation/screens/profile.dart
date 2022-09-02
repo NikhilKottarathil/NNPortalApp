@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:nn_portal/constants/app_colors.dart';
 import 'package:nn_portal/main.dart';
+import 'package:nn_portal/models/log_model.dart';
 import 'package:nn_portal/presentation/components/pop_ups_loaders/custom_alert_dialoug.dart';
 import 'package:nn_portal/presentation/components/restarted_widget.dart';
 import 'package:nn_portal/presentation/screens/in_hand.dart';
@@ -90,7 +91,9 @@ class _ProfileState extends State<Profile> {
                 ),
                 onPressed: () {
                   Provider.of<InHandProvider>(context, listen: false)
-                      .getData(parentPage: 'vehicles');
+                      .setLogType(LogType.vehicleLog);
+                  Provider.of<InHandProvider>(context, listen: false)
+                      .getData();
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -124,7 +127,8 @@ class _ProfileState extends State<Profile> {
                 ),
                 onPressed: () {
                   Provider.of<InHandProvider>(context, listen: false)
-                      .getData(parentPage: 'tools');
+                      .setLogType(LogType.toolLog);
+                  Provider.of<InHandProvider>(context, listen: false).getData();
                   Navigator.push(
                     context,
                     MaterialPageRoute(

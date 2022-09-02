@@ -29,40 +29,64 @@ showVisaExpireAlert() async {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                Provider.of<AuthenticationProvider>(context,listen: false).visaExpiringDays!>0?'Visa Expiring Soon !!!':"Visa Expired !!!",
+                Provider.of<AuthenticationProvider>(context, listen: false)
+                            .visaExpiringDays! >
+                        0
+                    ? 'Visa Expiring Soon !!!'
+                    : "Visa Expired !!!",
                 style: Theme.of(context).textTheme.titleLarge!.copyWith(
                     fontWeight: FontWeight.bold, color: AppColors.textLight),
               ),
-             const SizedBox(height: 12,),
+              const SizedBox(
+                height: 12,
+              ),
+              if (Provider.of<AuthenticationProvider>(context, listen: false)
+                  .visaExpiringDays! >=
+                  0)
               Text(
-                Provider.of<AuthenticationProvider>(context,listen: false).visaExpiringDays!>0?'Remaining Days':'Expired Days',
+                Provider.of<AuthenticationProvider>(context, listen: false)
+                            .visaExpiringDays! >
+                        0
+                    ? 'Remaining Days'
+                    : 'Expired Days',
                 style: Theme.of(context)
                     .textTheme
                     .bodyMedium!
                     .copyWith(color: AppColors.textLight),
               ),
-              const SizedBox(height: 4,),
 
-              Container(
-                decoration: BoxDecoration(
-                  color: AppColors.secondaryBase,
-                  shape: BoxShape.circle,
-                ),
-                padding: const EdgeInsets.all(14),
-                child: Text(
-                  Provider.of<AuthenticationProvider>(context,listen: false).visaExpiringDays.toString(),
-                  style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.textLight),
-                ),
+              const SizedBox(
+                height: 4,
               ),
-              const SizedBox(height: 12,),
-
+              if (Provider.of<AuthenticationProvider>(context, listen: false)
+                      .visaExpiringDays! >=
+                  0)
+                Container(
+                  decoration: BoxDecoration(
+                    color: AppColors.secondaryBase,
+                    shape: BoxShape.circle,
+                  ),
+                  padding: const EdgeInsets.all(14),
+                  child: Text(
+                    Provider.of<AuthenticationProvider>(context, listen: false)
+                        .visaExpiringDays
+                        .toString(),
+                    style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.textLight),
+                  ),
+                ),
+              const SizedBox(
+                height: 12,
+              ),
               ElevatedButton(
-                style: ElevatedButton.styleFrom(primary: AppColors.secondaryBase,onPrimary: AppColors.textLight),
-                  onPressed: (){
-                Navigator.of(context).pop();
-              }, child: const Text('OK'))
+                  style: ElevatedButton.styleFrom(
+                      primary: AppColors.secondaryBase,
+                      onPrimary: AppColors.textLight),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('OK'))
             ],
           ),
         );

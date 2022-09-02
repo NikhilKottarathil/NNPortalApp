@@ -48,9 +48,11 @@ class _AddLogState extends State<AddLog> {
       checkInTime = TimeOfDay(
           hour: widget.logModel!.checkIn.hour,
           minute: widget.logModel!.checkIn.minute);
-      checkOutTime = TimeOfDay(
-          hour: widget.logModel!.checkOut!.hour,
-          minute: widget.logModel!.checkOut!.minute);
+      if(widget.logModel!.checkOut!=null) {
+        checkOutTime = TimeOfDay(
+            hour: widget.logModel!.checkOut!.hour,
+            minute: widget.logModel!.checkOut!.minute);
+      }
       if (widget.logType == LogType.siteLog) {
         selectedJobModel = JobModel(
             id: widget.logModel!.staffLogModel!.jobId,

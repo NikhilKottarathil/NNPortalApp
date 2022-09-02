@@ -23,20 +23,21 @@ import 'package:provider/provider.dart';
 class InHandProvider extends ChangeNotifier {
   PageStatus pageStatus = PageStatus.initialState;
 
-  List<InHandModel> models = [];
+  List<LogModel> models = [];
+LogType? logType;
 
-
-
-  Future<bool> getData({required String parentPage}) async {
+setLogType(LogType logType){
+  this.logType=logType;
+}
+  Future<bool> getData() async {
     pageStatus = PageStatus.loading;
     notifyListeners();
     models.clear();
-
     try {
 
       String apiUrl='';
 
-      if(parentPage=='tools'){
+      if(logType==LogType.toolLog){
         apiUrl='Tools/GetInHandTools';
       }else{
         apiUrl='Vehicles/GetInHandVehicles';
@@ -45,23 +46,65 @@ class InHandProvider extends ChangeNotifier {
           urlAddress: apiUrl,
           isShowLoader: false);
 
-      for (var json in response) {
-        StaffLogModel contentModel = StaffLogModel.fromJson(json);
-        DateTime checkInTime =
-        DateFormat('yyyy-MM-dd HH:mm:ss').parse(contentModel.checkIn!);
-
-        InHandModel inHandModel=InHandModel.fromJson(json);
-        inHandModel.checkInTime=checkInTime;
-
-        if(json['toolId']!=null){
-          inHandModel.type=Type.tool;
-        }else{
-          inHandModel.type=Type.vehicle;
+      // for (var json in response) {
+      //   StaffLogModel contentModel = StaffLogModel.fromJson(json);
+      //   DateTime checkInTime =
+      //   DateFormat('yyyy-MM-dd HH:mm:ss').parse(contentModel.checkIn!);
+      //
+      //   InHandModel inHandModel=InHandModel.fromJson(json);
+      //   inHandModel.checkInTime=checkInTime;
+      //
+      //   if(json['toolId']!=null){
+      //     inHandModel.type=Type.tool;
+      //   }else{
+      //     inHandModel.type=Type.vehicle;
+      //   }
+      //   models.add(inHandModel);
+      //   models.sort((m1,m2)=>m1.checkInTime!.compareTo(m2.checkInTime!));
+      // }
+      // pageStatus = PageStatus.loaded;
+      if(logType==LogType.vehicleLog) {
+        for (var json in response) {
+          VehicleLogModel contentModel = VehicleLogModel.fromJson(json);
+          DateTime checkInTime =
+          DateFormat('yyyy-MM-dd HH:mm:ss').parse(contentModel.checkIn!);
+          DateTime? checkOutTime;
+          if (contentModel.checkOut != null) {
+            checkOutTime =
+                DateFormat('yyyy-MM-dd HH:mm:ss').parse(contentModel.checkOut!);
+          }
+          models.add(LogModel(
+              vehicleLogModel: contentModel,
+              checkIn: checkInTime,
+              checkOut: checkOutTime,
+              locationName: json['locationName'],
+              clientName: json['clientName'],
+              logType: LogType.vehicleLog,
+              isCompleted: true));
         }
-        models.add(inHandModel);
-        models.sort((m1,m2)=>m1.checkInTime!.compareTo(m2.checkInTime!));
+      }
+      if(logType==LogType.toolLog) {
+        for (var json in response['toolLogs']) {
+          ToolLogModel contentModel = ToolLogModel.fromJson(json);
+          DateTime checkInTime =
+          DateFormat('yyyy-MM-dd HH:mm:ss').parse(contentModel.checkIn!);
+          DateTime? checkOutTime;
+          if (contentModel.checkOut != null) {
+            checkOutTime =
+                DateFormat('yyyy-MM-dd HH:mm:ss').parse(contentModel.checkOut!);
+          }
+          models.add(LogModel(
+              toolLogModel: contentModel,
+              checkIn: checkInTime,
+              checkOut: checkOutTime,
+              locationName: json['locationName'],
+              clientName: json['clientName'],
+              logType: LogType.toolLog,
+              isCompleted: true));
+        }
       }
       pageStatus = PageStatus.loaded;
+
       notifyListeners();
       return true;
     } catch (e) {
@@ -73,6 +116,9 @@ class InHandProvider extends ChangeNotifier {
   }
 
 
+  onTileTap({required int index}){
+
+  }
 
 
 

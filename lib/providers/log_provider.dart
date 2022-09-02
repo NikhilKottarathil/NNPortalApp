@@ -40,7 +40,7 @@ class LogProvider extends ChangeNotifier {
   }
 
   Future getLogs() async {
-    pageStatus = PageStatus.loading;
+    pageStatus = PageStatus.loading; 
     notifyListeners();
 
     models.clear();
