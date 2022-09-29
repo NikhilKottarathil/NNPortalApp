@@ -5,9 +5,11 @@ import 'package:nn_portal/main.dart';
 import 'package:nn_portal/models/log_model.dart';
 import 'package:nn_portal/presentation/components/pop_ups_loaders/custom_alert_dialoug.dart';
 import 'package:nn_portal/presentation/components/restarted_widget.dart';
+import 'package:nn_portal/presentation/screens/admin_jobs/admin_job_list.dart';
 import 'package:nn_portal/presentation/screens/in_hand.dart';
 import 'package:nn_portal/presentation/screens/leaves.dart';
 import 'package:nn_portal/presentation/screens/login.dart';
+import 'package:nn_portal/providers/admin_jobs_provider.dart';
 import 'package:nn_portal/providers/authentication_provider.dart';
 import 'package:nn_portal/providers/in_hand_provider.dart';
 import 'package:nn_portal/providers/leave_provider.dart';
@@ -136,6 +138,69 @@ class _ProfileState extends State<Profile> {
                     ),
                   );
                 }),
+            const SizedBox(height: 20,),
+            button(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Image.asset(
+                      'assets/tool_icon.png',
+                      height: 24,
+                      width: 24,
+                    ),
+                    const SizedBox(
+                      width: 8,
+                    ),
+                    Text(
+                      "In-hand  Tools",
+                      style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.textDark),
+                    ),
+                  ],
+                ),
+                onPressed: () {
+                  Provider.of<InHandProvider>(context, listen: false)
+                      .setLogType(LogType.toolLog);
+                  Provider.of<InHandProvider>(context, listen: false).getData();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const InHand(parentPage: 'In Hand Tools'),
+                    ),
+                  );
+                }),
+            const SizedBox(height: 20,),
+            button(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Image.asset(
+                      'assets/site_icon.png',
+                      height: 24,
+                      width: 24,
+                    ),
+                    const SizedBox(
+                      width: 8,
+                    ),
+                    Text(
+                      "Jobs",
+                      style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.textDark),
+                    ),
+                  ],
+                ),
+                onPressed: () {
+                      Provider.of<AdminJobsProvider>(MyApp.navigatorKey.currentContext!,listen: false).getInitialJob();
+
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const AdminJobList(),
+                    ),
+                  );
+                }),
             const SizedBox(
               height: 20,
             ),
@@ -144,7 +209,7 @@ class _ProfileState extends State<Profile> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Image.asset(
-                      'assets/leave.png',
+                      'assets/work_icon.png',
                       height: 24,
                       width: 24,
                     ),
@@ -153,7 +218,7 @@ class _ProfileState extends State<Profile> {
                       width: 8,
                     ),
                     Text(
-                      "Apply Leave",
+                      "Teams",
                       style: Theme.of(context).textTheme.labelLarge!.copyWith(
                           fontWeight: FontWeight.bold,
                           color: AppColors.textDark),
@@ -177,6 +242,8 @@ class _ProfileState extends State<Profile> {
               height: 20,
             ),
             const Spacer(),
+            if(Provider.of<AuthenticationProvider>(context, listen: false)
+                .visaExpiringDays!=null)
             Text(
               (Provider.of<AuthenticationProvider>(context, listen: false)
                               .visaExpiringDays! >

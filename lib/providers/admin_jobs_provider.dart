@@ -6,7 +6,7 @@ import 'package:nn_portal/presentation/screens/job_list.dart';
 import 'package:nn_portal/utils/http_api_calls.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class JobsProvider extends ChangeNotifier {
+class AdminJobsProvider extends ChangeNotifier {
   PageStatus pageStatus = PageStatus.initialState;
   int totalPages = 0;
   int pageIndex = 1;
@@ -14,13 +14,6 @@ class JobsProvider extends ChangeNotifier {
   String searchString = '';
   List<JobModel> models = [];
 
-  List<JobTypeModel> jobTypeModels = [
-    JobTypeModel(displayName: 'All', keyName: 'All', isSelected: true),
-    JobTypeModel(displayName: 'Open', keyName: 'Open'),
-    JobTypeModel(displayName: 'Pending', keyName: 'Pending'),
-    JobTypeModel(displayName: 'Completed', keyName: 'Completed'),
-    JobTypeModel(displayName: 'Closed', keyName: 'Closed'),
-  ];
 
   getInitialJob() {
     pageStatus = PageStatus.loading;
@@ -28,7 +21,6 @@ class JobsProvider extends ChangeNotifier {
 
     pageIndex = 1;
     models.clear();
-    getJobCounts();
     getJobs();
   }
 
@@ -45,20 +37,7 @@ class JobsProvider extends ChangeNotifier {
     }
   }
 
-  changeJobType(JobTypeModel jobTypeModel) {
-    for (var element in jobTypeModels) {
-      element.isSelected = false;
-      if (element.keyName == jobTypeModel.keyName) {
-        element.isSelected = true;
-      }
-    }
-    pageStatus = PageStatus.loading;
-    notifyListeners();
 
-    pageIndex = 1;
-    models.clear();
-    getJobs();
-  }
 
   loadMore() {
     if (totalPages > pageIndex) {
@@ -79,9 +58,9 @@ class JobsProvider extends ChangeNotifier {
             'filterText': searchString,
             'pageIndex': pageIndex.toString(),
             'pageSize': pageSize.toString(),
-            'status': jobTypeModels
-                .singleWhere((element) => element.isSelected)
-                .keyName
+            // 'status': jobTypeModels
+            //     .singleWhere((element) => element.isSelected)
+            //     .keyName
           },
           isShowLoader: false);
       totalPages = (response['totalCount'] / pageSize).ceil();
@@ -97,23 +76,46 @@ class JobsProvider extends ChangeNotifier {
       notifyListeners();
     }
   }
-
-  Future getJobCounts() async {
+  Future<bool> delete(
+      {required JobModel jobModel}) async {
+    pageStatus = PageStatus.loading;
     notifyListeners();
 
     try {
-      var response = await getDataRequest(
-          urlAddress: 'Reports/GetStaffBasicData', isShowLoader: false);
 
-      jobTypeModels[0].count = response['totalJobs'] ?? 0;
-      jobTypeModels[1].count = response['openJobs'] ?? 0;
-      jobTypeModels[2].count = response['pendingJobs'] ?? 0;
-      jobTypeModels[3].count = response['completedJobs'] ?? 0;
-      jobTypeModels[4].count = response['closedJobs'] ?? 0;
+      var response = await deleteDataRequest(
+          urlAddress: 'Job/${jobModel.id}',
+          isShowLoader: false);
+      models.removeAt(models
+          .indexWhere((element) => element.id == jobModel.id));
 
+      pageStatus = PageStatus.loaded;
       notifyListeners();
+      return true;
     } catch (e) {
+      print(e);
+      pageStatus = PageStatus.failed;
       notifyListeners();
+      return false;
     }
   }
+  //
+  // Future getJobCounts() async {
+  //   notifyListeners();
+  //
+  //   try {
+  //     var response = await getDataRequest(
+  //         urlAddress: 'Reports/GetStaffBasicData', isShowLoader: false);
+  //
+  //     jobTypeModels[0].count = response['totalJobs'] ?? 0;
+  //     jobTypeModels[1].count = response['openJobs'] ?? 0;
+  //     jobTypeModels[2].count = response['pendingJobs'] ?? 0;
+  //     jobTypeModels[3].count = response['completedJobs'] ?? 0;
+  //     jobTypeModels[4].count = response['closedJobs'] ?? 0;
+  //
+  //     notifyListeners();
+  //   } catch (e) {
+  //     notifyListeners();
+  //   }
+  // }
 }
