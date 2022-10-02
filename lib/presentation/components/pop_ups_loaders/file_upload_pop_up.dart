@@ -13,6 +13,7 @@ Future showUploadFileAlert({
 required  Map<String, String> requestBody,
  required List<File> files,
  required List<String> fileAddresses,
+  String method='post'
 }) async {
   double totalByteLength = 0.0, uploadedByteLength = 0.0;
   double progress = 0.0;
@@ -25,7 +26,6 @@ required  Map<String, String> requestBody,
   await showModalBottomSheet(
       elevation: 10,
       useRootNavigator: true,
-      barrierColor: Colors.black54,
       isDismissible: false,
       shape:const  RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
@@ -44,6 +44,7 @@ required  Map<String, String> requestBody,
                   files: files,
                   fileAddresses: fileAddresses,
                   cancelToken: cancelToken,
+                  method: 'post',
                   onUploadProgress: (uploaded, total) {
                     try {
                       setState(() {
@@ -67,9 +68,8 @@ required  Map<String, String> requestBody,
             }
           }
           return Container(
-            decoration: BoxDecoration(
-                color: Colors.grey.shade900,
-                borderRadius:const BorderRadius.only(
+            decoration:const BoxDecoration(
+                borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(16.0),
                   topRight: Radius.circular(16.0),
                 )),

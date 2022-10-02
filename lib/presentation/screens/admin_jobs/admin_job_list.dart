@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:nn_portal/constants/app_colors.dart';
 import 'package:nn_portal/constants/enums.dart';
 import 'package:nn_portal/presentation/components/list_tiles/admin_job_list_tile.dart';
 import 'package:nn_portal/presentation/components/list_tiles/job_list_tile.dart';
 import 'package:nn_portal/presentation/components/others/no_items_found.dart';
 import 'package:nn_portal/presentation/components/pop_ups_loaders/custom_circular_progress_indicator.dart';
 import 'package:nn_portal/presentation/components/text_fields/text_field_search.dart';
+import 'package:nn_portal/presentation/screens/admin_jobs/add_job.dart';
 import 'package:nn_portal/presentation/screens/job_details.dart';
 import 'package:nn_portal/providers/admin_jobs_provider.dart';
 import 'package:nn_portal/providers/job_details_provider.dart';
@@ -102,8 +104,12 @@ class _AdminJobListState extends State<AdminJobList> {
           ),
         );
       }),
+
       floatingActionButton: FloatingActionButton(
-        onPressed: () {  },
+        backgroundColor: AppColors.primaryBase,
+        onPressed: () {
+          Navigator.push(context,MaterialPageRoute(builder: (_)=>AddJob()));
+        },
         child: Icon(Icons.add),
       ),
     );

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:nn_portal/constants/app_colors.dart';
 import 'package:nn_portal/main.dart';
 import 'package:nn_portal/models/log_model.dart';
+import 'package:nn_portal/presentation/components/custom_webview.dart';
 import 'package:nn_portal/presentation/components/pop_ups_loaders/custom_alert_dialoug.dart';
 import 'package:nn_portal/presentation/components/restarted_widget.dart';
 import 'package:nn_portal/presentation/screens/admin_jobs/admin_job_list.dart';
@@ -226,17 +227,13 @@ class _ProfileState extends State<Profile> {
                   ],
                 ),
                 onPressed: () {
-                  Provider.of<LeaveProvider>(context, listen: false)
-                      .getInitialData();
+
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) =>  Leaves(),
+                      builder: (_) =>  CustomWebView(url: 'https://nnportal.asianetdigital.net/#/masters/teams'),
                     ),
-                  ).then((value) {
-                    Provider.of<LeaveProvider>(context, listen: false)
-                        .clearLeaveForm();
-                  });
+                  );
                 }),
             const SizedBox(
               height: 20,

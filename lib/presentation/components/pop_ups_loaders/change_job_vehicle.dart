@@ -9,7 +9,7 @@ import 'package:nn_portal/providers/log_provider.dart';
 import 'package:provider/provider.dart';
 
 changeJobVehicle({
-  required JobVehicle jobVehicle,
+  required JobVehicles jobVehicle,
 }) async {
   VehicleModel? selectedVehicleModel;
 

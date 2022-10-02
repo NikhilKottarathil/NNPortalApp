@@ -201,6 +201,9 @@ Future deleteDataRequest(
 
       var responseBody = jsonDecode(response.body);
 
+      print('responseBody $responseBody');
+      print('responseCode ${response.statusCode}');
+
       if (response.statusCode == 200) {
         debugPrint(
             '============= end $urlAddress get api =============== \n $responseBody');

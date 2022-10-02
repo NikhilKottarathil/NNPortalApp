@@ -112,7 +112,7 @@ class JobsDetailsProvider extends ChangeNotifier {
 
   Future updateJobVehicle(
       {required VehicleModel vehicleModel,
-      required JobVehicle jobVehicle}) async {
+      required JobVehicles jobVehicle}) async {
     pageStatus = PageStatus.loading;
     notifyListeners();
 
