@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:nn_portal/constants/enums.dart';
 import 'package:nn_portal/main.dart';
 import 'package:nn_portal/models/admin_job_model.dart';
+import 'package:nn_portal/models/assigned_team_model.dart';
 import 'package:nn_portal/models/job_model.dart';
 import 'package:nn_portal/models/job_type_model.dart';
 import 'package:nn_portal/presentation/components/pop_ups_loaders/file_upload_pop_up.dart';
@@ -18,26 +19,29 @@ import 'package:nn_portal/utils/http_api_calls.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class AdminJobsProvider extends ChangeNotifier {
+class AssignedTeamProvider extends ChangeNotifier {
   PageStatus pageStatus = PageStatus.initialState;
 
-  List<JobModel> models = [];
+  List<AssignedTeamModel> models = [];
 
 
 
 
 
+  String? jobId;
 
 
-  Future getData(String jobId) async {
+  Future getData({required String jobId}) async {
+    this.jobId=jobId;
     notifyListeners();
 
     try {
+      models.clear();
       var response = await getDataRequest(
           urlAddress: 'JobStaffMappings/GetAssignedTeams/$jobId',
           isShowLoader: false);
-      for (var json in response['items']) {
-        models.add(JobModel.fromJson(json));
+      for (var json in response) {
+        models.add(AssignedTeamModel.fromJson(json));
       }
 
       pageStatus = PageStatus.loaded;
@@ -79,7 +83,7 @@ class AdminJobsProvider extends ChangeNotifier {
 
     );
 
-    models.insert(0,JobModel.fromJson(response));
+    models.insert(0,AssignedTeamModel.fromJson(response));
     //
     // var response = await fileUploadWithDio(
     //   showUploadBytes: true,
@@ -97,15 +101,15 @@ class AdminJobsProvider extends ChangeNotifier {
     //   return false;
     // }
   }
-  Future<bool> delete({required JobModel jobModel}) async {
+  Future<bool> delete({required AssignedTeamModel model}) async {
     pageStatus = PageStatus.loading;
     notifyListeners();
 
     try {
-      var response = await deleteDataRequest(
-          urlAddress: 'Job/${jobModel.id}', isShowLoader: false);
-      models
-          .removeAt(models.indexWhere((element) => element.id == jobModel.id));
+      // var response = await deleteDataRequest(
+      //     urlAddress: 'JobStaffMappings/DeleteAssignedTeam', isShowLoader: false);
+      // models
+      //     .removeAt(models.indexWhere((element) => element.id == jobModel.id));
 
       pageStatus = PageStatus.loaded;
       notifyListeners();

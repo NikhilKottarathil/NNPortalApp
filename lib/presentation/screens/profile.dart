@@ -145,15 +145,16 @@ class _ProfileState extends State<Profile> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Image.asset(
-                      'assets/tool_icon.png',
+                      'assets/leave.png',
                       height: 24,
                       width: 24,
                     ),
+
                     const SizedBox(
                       width: 8,
                     ),
                     Text(
-                      "In-hand  Tools",
+                      "Apply Leave",
                       style: Theme.of(context).textTheme.labelLarge!.copyWith(
                           fontWeight: FontWeight.bold,
                           color: AppColors.textDark),
@@ -161,15 +162,17 @@ class _ProfileState extends State<Profile> {
                   ],
                 ),
                 onPressed: () {
-                  Provider.of<InHandProvider>(context, listen: false)
-                      .setLogType(LogType.toolLog);
-                  Provider.of<InHandProvider>(context, listen: false).getData();
+                  Provider.of<LeaveProvider>(context, listen: false)
+                      .getInitialData();
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => const InHand(parentPage: 'In Hand Tools'),
+                      builder: (_) =>  Leaves(),
                     ),
-                  );
+                  ).then((value) {
+                    Provider.of<LeaveProvider>(context, listen: false)
+                        .clearLeaveForm();
+                  });
                 }),
             const SizedBox(height: 20,),
             button(

@@ -8,6 +8,7 @@ import 'package:nn_portal/firebase_options.dart';
 import 'package:nn_portal/presentation/components/restarted_widget.dart';
 import 'package:nn_portal/presentation/screens/login.dart';
 import 'package:nn_portal/providers/admin_jobs_provider.dart';
+import 'package:nn_portal/providers/assign_team_provider.dart';
 import 'package:nn_portal/providers/authentication_provider.dart';
 import 'package:nn_portal/providers/in_hand_provider.dart';
 import 'package:nn_portal/providers/job_details_provider.dart';
@@ -61,6 +62,7 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(create: (_) => AuthenticationProvider()),
         ChangeNotifierProvider(create: (_) => JobsProvider()),
         ChangeNotifierProvider(create: (_) => AdminJobsProvider()),
+        ChangeNotifierProvider(create: (_) => AssignedTeamProvider()),
         ChangeNotifierProvider(create: (_) => JobsDetailsProvider()),
         ChangeNotifierProvider(create: (_) => LogProvider()),
         ChangeNotifierProvider(create: (_) => InHandProvider()),

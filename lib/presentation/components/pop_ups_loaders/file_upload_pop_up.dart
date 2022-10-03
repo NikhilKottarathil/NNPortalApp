@@ -44,7 +44,7 @@ required  Map<String, String> requestBody,
                   files: files,
                   fileAddresses: fileAddresses,
                   cancelToken: cancelToken,
-                  method: 'post',
+                  method: method,
                   onUploadProgress: (uploaded, total) {
                     try {
                       setState(() {

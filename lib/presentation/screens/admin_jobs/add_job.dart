@@ -60,13 +60,49 @@ class AddJobState extends State<AddJob> {
     super.initState();
     if (widget.jobModel != null) {
       JobModel jobModel = widget.jobModel!;
-      clientTextEditController.text = jobModel.clientName!;
-      locationTextEditController.text = jobModel.locationName!;
+      if (Provider.of<AdminJobsProvider>(context, listen: false).clients.any(
+          (element) => element.id.toString() == jobModel.clientId.toString())) {
+        clientTextEditController.text =
+            Provider.of<AdminJobsProvider>(context, listen: false)
+                .clients
+                .singleWhere((element) =>
+                    element.id.toString() == jobModel.clientId.toString())
+                .text;
+      }
+      if (Provider.of<AdminJobsProvider>(context, listen: false).locations.any(
+          (element) =>
+              element.id.toString() == jobModel.locationId.toString())) {
+        locationTextEditController.text =
+            Provider.of<AdminJobsProvider>(context, listen: false)
+                .locations
+                .singleWhere((element) =>
+                    element.id.toString() == jobModel.locationId.toString())
+                .text;
+      }
 
-      ticketNoTextEditController.text = jobModel.ticketNo!;
-      ticketCallerTextEditController.text = jobModel.ticketCaller!;
-      descriptionTextEditController.text = jobModel.description!;
-      commentsTextEditController.text = jobModel.comment!;
+      ticketNoTextEditController.text = jobModel.ticketNo ?? '';
+      ticketCallerTextEditController.text = jobModel.ticketCaller ?? '';
+      descriptionTextEditController.text = jobModel.description ?? '';
+      commentsTextEditController.text = jobModel.comment ?? '';
+
+      status.add(MultiSelectItemModel(
+          id: 'Pending', text: "Pending", isSelected: false));
+      status.add(MultiSelectItemModel(
+          id: 'Completed', text: "Completed", isSelected: false));
+      status.add(MultiSelectItemModel(
+          id: 'Closed', text: "Closed", isSelected: false));
+
+      if (jobModel.status != null) {
+        for (var element in status) {
+          element.isSelected = jobModel.status == element.id;
+        }
+      }
+      if (jobModel.prev != null) {
+        for (var element in jobTypes) {
+          element.isSelected = false;
+        }
+        jobModel.prev!?jobTypes.last.isSelected=true:jobTypes.first.isSelected=true;
+      }
     }
   }
 
@@ -203,6 +239,7 @@ class AddJobState extends State<AddJob> {
                               );
                               if (result != null) {
                                 file = File(result.files.single.path!);
+                                setState((){});
                               } else {
                                 // User canceled the picker
                               }
@@ -231,14 +268,17 @@ class AddJobState extends State<AddJob> {
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(8),
                                 color: AppColors.tertiary),
-                            padding:const EdgeInsets.all(4),
+                            padding: const EdgeInsets.all(4),
                             child: Image.file(
                               file!,
                               width: double.infinity,
                               height: MediaQuery.of(context).size.width * .5,
                             ),
                           )
-                        : Text(file!.path.split('/').toList().last,textAlign: TextAlign.start,)
+                        : Text(
+                            file!.path.split('/').toList().last,
+                            textAlign: TextAlign.start,
+                          )
                 ],
               ),
               const SizedBox(
@@ -250,7 +290,7 @@ class AddJobState extends State<AddJob> {
                       Provider.of<AdminJobsProvider>(
                               MyApp.navigatorKey.currentContext!,
                               listen: false)
-                          .addOrEdit(state: this)
+                          .addOrEdit(state: this,jobModel: widget.jobModel)
                           .then((value) {
                         Navigator.of(context).pop();
                       });

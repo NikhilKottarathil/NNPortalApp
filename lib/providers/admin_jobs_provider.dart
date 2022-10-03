@@ -1,22 +1,16 @@
 import 'dart:io';
 
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:nn_portal/constants/enums.dart';
 import 'package:nn_portal/main.dart';
-import 'package:nn_portal/models/admin_job_model.dart';
 import 'package:nn_portal/models/job_model.dart';
-import 'package:nn_portal/models/job_type_model.dart';
 import 'package:nn_portal/presentation/components/pop_ups_loaders/file_upload_pop_up.dart';
 import 'package:nn_portal/presentation/components/text_fields/mutli_select_list.dart';
 import 'package:nn_portal/presentation/screens/admin_jobs/add_job.dart';
-import 'package:nn_portal/presentation/screens/job_list.dart';
 import 'package:nn_portal/providers/authentication_provider.dart';
-import 'package:nn_portal/utils/dio_api_calls.dart';
 import 'package:nn_portal/utils/http_api_calls.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class AdminJobsProvider extends ChangeNotifier {
   PageStatus pageStatus = PageStatus.initialState;
@@ -88,82 +82,101 @@ class AdminJobsProvider extends ChangeNotifier {
       notifyListeners();
     }
   }
-  Future<bool> addOrEdit({ JobModel? jobModel,required AddJobState state}) async {
-    pageStatus = PageStatus.loading;
+
+  Future<bool> addOrEdit(
+      {JobModel? jobModel, required AddJobState state}) async {
+    // pageStatus = PageStatus.loading;
     notifyListeners();
 
-    print('stateeee ${state.clientTextEditController.text}');
-
-    Map<String,String> requestBody={
-      'clientId': clients.singleWhere((element) =>element.text== state.clientTextEditController.text.trim()).id.toString(),
-      'locationId': locations.singleWhere((element) =>element.text== state.locationTextEditController.text.trim()).id.toString(),
-      'ticketNo': state.ticketNoTextEditController.text,
-      'ticketCaller': state.ticketCallerTextEditController.text,
-      'ticketCreatedOn':DateFormat('yyyy-MM-dd').format(DateTime.now()),
-      'description': state.ticketCallerTextEditController.text,
-      'openOn': DateFormat('yyyy-MM-dd').format(DateTime.now()),
-      'flag': 'False',
-      'status': state.status.singleWhere((element) => element.isSelected).id.toString(),
-      'comment': state.ticketCallerTextEditController.text,
-      'prev': 'False',
-      'submitBy': Provider.of<AuthenticationProvider>(MyApp.navigatorKey.currentContext!,listen: false).userModel!.id.toString()
-    };
-    List<String> fileAddresses=[];
-    List<File> files=[];
-    CancelToken cancelToken = CancelToken();
+    print('inside');
+    bool isNew=jobModel==null;
     // try {
-     var response=await showUploadFileAlert(
-          urlAddress: 'Jobs',
-          requestBody: requestBody,
-          files: files,
-          fileAddresses: fileAddresses,
-          // cancelToken: cancelToken,
-          method: 'post',
+      Map<String, String> requestBody = {
+        'clientId': clients
+            .singleWhere((element) =>
+                element.text == state.clientTextEditController.text.trim())
+            .id
+            .toString(),
+        'locationId': locations
+            .singleWhere((element) =>
+                element.text == state.locationTextEditController.text.trim())
+            .id
+            .toString(),
+        'description': state.ticketCallerTextEditController.text,
+        'comment': state.ticketCallerTextEditController.text,
+        'ticketNo': state.ticketNoTextEditController.text,
+        'ticketCaller': state.ticketCallerTextEditController.text,
+        'ticketCreatedOn': DateFormat('yyyy-MM-dd').format(DateTime.now()),
+        'openOn': DateFormat('yyyy-MM-dd').format(DateTime.now()),
+        'flag': 'False',
+        'status': state.status
+            .singleWhere((element) => element.isSelected)
+            .id
+            .toString(),
+        'prev': state.status.last.isSelected ? 'True' : 'False',
+        'submitBy': Provider.of<AuthenticationProvider>(
+                MyApp.navigatorKey.currentContext!,
+                listen: false)
+            .userModel!
+            .id
+            .toString()
+      };
+      if(!isNew){
+        requestBody.addAll({'id':jobModel.id.toString()});
+      }
+      List<String> fileAddresses = [];
+      List<File> files = [];
+      if(state.file!=null){
+        files.add(state.file!);
+        fileAddresses.add('imageFile');
+      }
+      var response = await showUploadFileAlert(
+        urlAddress: isNew?'Jobs':'Jobs/${jobModel.id}',
+        requestBody: requestBody,
+        files: files,
+        fileAddresses: fileAddresses,
+        method: isNew?'post':'put',
+      );
 
-          );
+      if(isNew) {
+        models.insert(0, JobModel.fromJson(response));
+      }else{
+        models[models.indexWhere((element) => element.id==jobModel.id)]=JobModel.fromJson(response);
 
-     models.insert(0,JobModel.fromJson(response));
-     //
-      // var response = await fileUploadWithDio(
-      //   showUploadBytes: true,
-      //     urlAddress: 'Jobs', fileAddresses: fileAddresses,files: files, requestBody: requestBody );
-
-
-
-      pageStatus = PageStatus.loaded;
+      }
+      // pageStatus = PageStatus.loaded;
       notifyListeners();
       return true;
     // } catch (e) {
-    //   print(e);
-    //   pageStatus = PageStatus.failed;
+    //   debugPrint(e.toString());
+    //   // pageStatus = PageStatus.failed;
     //   notifyListeners();
     //   return false;
     // }
   }
+
   Future<bool> delete({required JobModel jobModel}) async {
-    pageStatus = PageStatus.loading;
+    // pageStatus = PageStatus.loading;
     notifyListeners();
 
     try {
       var response = await deleteDataRequest(
-          urlAddress: 'Job/${jobModel.id}', isShowLoader: false);
+          urlAddress: 'Job/${jobModel.id}', isShowLoader: true);
       models
           .removeAt(models.indexWhere((element) => element.id == jobModel.id));
 
-      pageStatus = PageStatus.loaded;
+      // pageStatus = PageStatus.loaded;
       notifyListeners();
       return true;
     } catch (e) {
       print(e);
-      pageStatus = PageStatus.failed;
+      // pageStatus = PageStatus.failed;
       notifyListeners();
       return false;
     }
   }
 
   Future getClientAndLocations() async {
-    notifyListeners();
-
     try {
       var response = await getDataRequest(
           urlAddress: 'Clients/GetdlClients', isShowLoader: false);
@@ -191,7 +204,6 @@ class AdminJobsProvider extends ChangeNotifier {
             id: element['id'].toString(),
             isSelected: false));
       });
-
       notifyListeners();
     } catch (e) {
       notifyListeners();
