@@ -176,7 +176,7 @@ Future getDataRequest(
 
 
 Future deleteDataRequest(
-    {required String urlAddress, bool isShowLoader = true}) async {
+    {required String urlAddress, bool isShowLoader = true, Map<String, dynamic> ? requestBody ,}) async {
   debugPrint('============= start $urlAddress get api ===============');
 
   if (await checkInternetConnectivity()) {
@@ -185,10 +185,12 @@ Future deleteDataRequest(
         showLoader();
       }
 
+      
 
 
       final uri = Uri.parse(AppStrings.apiAddress+urlAddress);
       Map<String, String> headers = {"Content-Type": "application/json"};
+      // Map<String, String> headers = {};
       SharedPreferences sharedPreferences =
       await SharedPreferences.getInstance();
 
@@ -196,15 +198,16 @@ Future deleteDataRequest(
         headers.addAll({HttpHeaders.authorizationHeader: 'Bearer ${sharedPreferences.getString('token')}'});
       }
       print('header $headers');
+      debugPrint('============= start $uri get api ===============');
 
-      final response = await http.delete(uri, headers: headers);
+      final response = await http.delete(uri, headers: headers,body: jsonEncode(requestBody??{}));
 
       var responseBody = jsonDecode(response.body);
 
       print('responseBody $responseBody');
       print('responseCode ${response.statusCode}');
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode==400) {
         debugPrint(
             '============= end $urlAddress get api =============== \n $responseBody');
         if (responseBody['success'] != null) {

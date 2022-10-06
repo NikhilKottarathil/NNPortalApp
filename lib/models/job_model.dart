@@ -14,7 +14,7 @@ class JobModel {
   String? status;
   String? closedOn;
   bool? isClosed;
-  String? imageFile;
+  // String? imageFile;
   String? imageUrl;
   String? comment;
   bool? prev;
@@ -55,7 +55,7 @@ class JobModel {
         this.status,
         this.closedOn,
         this.isClosed,
-        this.imageFile,
+        // this.imageFile,
         this.imageUrl,
         this.comment,
         this.prev,
@@ -94,7 +94,7 @@ class JobModel {
     status = json['status'];
     closedOn = json['closedOn'];
     isClosed = json['isClosed'];
-    imageFile = json['imageFile'];
+    // imageFile = json['imageFile'];
     imageUrl = json['imageUrl'];
     comment = json['comment'];
     prev = json['prev'];
@@ -155,7 +155,7 @@ class JobModel {
     data['status'] = this.status;
     data['closedOn'] = this.closedOn;
     data['isClosed'] = this.isClosed;
-    data['imageFile'] = this.imageFile;
+    // data['imageFile'] = this.imageFile;
     data['imageUrl'] = this.imageUrl;
     data['comment'] = this.comment;
     data['prev'] = this.prev;

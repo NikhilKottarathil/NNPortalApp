@@ -10,6 +10,7 @@ import 'package:nn_portal/models/assigned_team_model.dart';
 import 'package:nn_portal/models/job_model.dart';
 import 'package:nn_portal/models/job_type_model.dart';
 import 'package:nn_portal/presentation/components/pop_ups_loaders/file_upload_pop_up.dart';
+import 'package:nn_portal/presentation/components/pop_ups_loaders/show_snack_bar.dart';
 import 'package:nn_portal/presentation/components/text_fields/mutli_select_list.dart';
 import 'package:nn_portal/presentation/screens/admin_jobs/add_job.dart';
 import 'package:nn_portal/presentation/screens/job_list.dart';
@@ -106,12 +107,19 @@ class AssignedTeamProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      // var response = await deleteDataRequest(
-      //     urlAddress: 'JobStaffMappings/DeleteAssignedTeam', isShowLoader: false);
-      // models
-      //     .removeAt(models.indexWhere((element) => element.id == jobModel.id));
+      var response = await postDataRequest(
+        method: 'post',
+          urlAddress: 'JobStaffMappings/DeleteAssignedTeam', isShowLoader: false, requestBody: {
+        "jobId": jobId,
+        "teamId": model.teamId.toString(),
+        'assignedFor':model.assignedFor
+      });
+      models
+          .removeAt(models.indexWhere((element) => element.id == model.id));
 
       pageStatus = PageStatus.loaded;
+      showSnackBar(message: 'Team removed successfully');
+
       notifyListeners();
       return true;
     } catch (e) {
