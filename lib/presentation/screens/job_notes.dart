@@ -7,7 +7,7 @@ import 'package:nn_portal/models/job_description_model.dart';
 import 'package:nn_portal/presentation/components/others/no_items_found.dart';
 import 'package:nn_portal/presentation/components/pop_ups_loaders/custom_alert_dialoug.dart';
 import 'package:nn_portal/presentation/components/pop_ups_loaders/custom_circular_progress_indicator.dart';
-import 'package:nn_portal/presentation/components/text_fields/text_field_outlied_label.dart';
+import 'package:nn_portal/presentation/components/text_fields/text_field_outlined_label.dart';
 import 'package:nn_portal/providers/authentication_provider.dart';
 import 'package:nn_portal/providers/job_details_provider.dart';
 import 'package:provider/provider.dart';

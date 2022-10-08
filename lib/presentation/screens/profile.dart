@@ -10,10 +10,12 @@ import 'package:nn_portal/presentation/screens/admin_jobs/admin_job_list.dart';
 import 'package:nn_portal/presentation/screens/in_hand.dart';
 import 'package:nn_portal/presentation/screens/leaves.dart';
 import 'package:nn_portal/presentation/screens/login.dart';
+import 'package:nn_portal/presentation/screens/teams/team_list.dart';
 import 'package:nn_portal/providers/admin_jobs_provider.dart';
 import 'package:nn_portal/providers/authentication_provider.dart';
 import 'package:nn_portal/providers/in_hand_provider.dart';
 import 'package:nn_portal/providers/leave_provider.dart';
+import 'package:nn_portal/providers/team_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -230,11 +232,12 @@ class _ProfileState extends State<Profile> {
                   ],
                 ),
                 onPressed: () {
+                  Provider.of<TeamProvider>(MyApp.navigatorKey.currentContext!,listen: false).getInitialData();
 
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) =>  CustomWebView(url: 'https://nnportal.asianetdigital.net/#/masters/teams'),
+                      builder: (_) =>  TeamList(),
                     ),
                   );
                 }),

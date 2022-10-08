@@ -15,6 +15,7 @@ import 'package:nn_portal/providers/job_details_provider.dart';
 import 'package:nn_portal/providers/jobs_provider.dart';
 import 'package:nn_portal/providers/leave_provider.dart';
 import 'package:nn_portal/providers/log_provider.dart';
+import 'package:nn_portal/providers/team_provider.dart';
 import 'package:nn_portal/routers/app_router.dart';
 import 'package:nn_portal/utils/firebase_notification.dart';
 import 'package:provider/provider.dart';
@@ -67,6 +68,7 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(create: (_) => LogProvider()),
         ChangeNotifierProvider(create: (_) => InHandProvider()),
         ChangeNotifierProvider(create: (_) => LeaveProvider()),
+        ChangeNotifierProvider(create: (_) => TeamProvider()),
       ],
       child: MaterialApp(
         navigatorKey: MyApp.navigatorKey,

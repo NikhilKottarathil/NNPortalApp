@@ -6,12 +6,14 @@ class TextFieldSearch extends StatefulWidget {
       {Key? key,
       required this.searchTextEditingController,
       required this.hintText,
+      this.onTypingSearchEnable = false,
       required this.searchAction})
       : super(key: key);
 
   final TextEditingController searchTextEditingController;
   final Function searchAction;
   final String hintText;
+  final bool onTypingSearchEnable;
 
   @override
   State<TextFieldSearch> createState() => _TextFieldSearchState();
@@ -38,6 +40,11 @@ class _TextFieldSearchState extends State<TextFieldSearch> {
       textInputAction: TextInputAction.search,
       onSubmitted: (value) {
         widget.searchAction();
+      },
+      onChanged: (value) {
+        if (widget.onTypingSearchEnable) {
+          widget.searchAction();
+        }
       },
       decoration: InputDecoration(
         hintText: 'Search...',

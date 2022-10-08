@@ -1,211 +1,222 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:nn_portal/constants/enums.dart';
-import 'package:nn_portal/main.dart';
-import 'package:nn_portal/models/job_model.dart';
-import 'package:nn_portal/presentation/components/pop_ups_loaders/file_upload_pop_up.dart';
-import 'package:nn_portal/presentation/components/text_fields/mutli_select_list.dart';
-import 'package:nn_portal/presentation/screens/admin_jobs/add_job.dart';
-import 'package:nn_portal/providers/authentication_provider.dart';
+import 'package:nn_portal/models/staff_model.dart';
+import 'package:nn_portal/models/team_model.dart';
 import 'package:nn_portal/utils/http_api_calls.dart';
-import 'package:provider/provider.dart';
 
-class AdminJobsProvider extends ChangeNotifier {
+class TeamProvider extends ChangeNotifier {
   PageStatus pageStatus = PageStatus.initialState;
-  int totalPages = 0;
-  int pageIndex = 1;
-  int pageSize = 15;
-  String searchString = '';
-  List<JobModel> models = [];
 
-  List<MultiSelectItemModel> clients = [];
-  List<MultiSelectItemModel> locations = [];
+  List<TeamModel> displayModel = [];
+  List<TeamModel> initialModels = [];
+  List<StaffModel> staffsModels = [];
 
-  getInitialJob() {
+  // apiReduce
+  getInitialData() async {
     pageStatus = PageStatus.loading;
     notifyListeners();
-    getClientAndLocations();
+    initialModels.clear();
+    displayModel.clear();
+    await getAllStaffs();
 
-    pageIndex = 1;
-    models.clear();
-    getJobs();
+    getTeams();
   }
 
-  searchJobs(String text) {
-    if (searchString != text) {
-      searchString = text;
-      pageStatus = PageStatus.loading;
-      notifyListeners();
-
-      pageIndex = 1;
-      models.clear();
-      getJobs();
-    }
-  }
-
-  loadMore() {
-    if (totalPages > pageIndex) {
-      pageStatus = PageStatus.loadMore;
-      notifyListeners();
-      pageIndex++;
-      getJobs();
-    }
-  }
-
-  Future getJobs() async {
-    notifyListeners();
-
-    try {
-      var response = await postDataRequest(
-          urlAddress: 'Jobs/GetStaffJobs',
-          requestBody: {
-            'filterText': searchString,
-            'pageIndex': pageIndex.toString(),
-            'pageSize': pageSize.toString(),
-            // 'status': jobTypeModels
-            //     .singleWhere((element) => element.isSelected)
-            //     .keyName
-          },
-          isShowLoader: false);
-      totalPages = (response['totalCount'] / pageSize).ceil();
-      for (var json in response['items']) {
-        models.add(JobModel.fromJson(json));
+  searchTeams(String text) {
+    displayModel.clear();
+    if (text.trim().isNotEmpty) {
+      for (var element in initialModels) {
+        if (element.teamName!.toLowerCase().contains(text.toLowerCase())) {
+          displayModel.add(element);
+        }
       }
+    } else {
+      displayModel.addAll(initialModels);
+    }
+    notifyListeners();
+  }
 
+  Future getTeams() async {
+    notifyListeners();
+    try {
+      var response =
+          await getDataRequest(urlAddress: 'Teams', isShowLoader: false);
+      for (var json in response) {
+        initialModels.add(TeamModel.fromJson(json));
+      }
+      displayModel.addAll(initialModels);
       pageStatus = PageStatus.loaded;
       notifyListeners();
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
       pageStatus = PageStatus.failed;
       notifyListeners();
     }
   }
 
-  Future<bool> addOrEdit(
-      {JobModel? jobModel, required AddJobState state}) async {
+  Future getAllStaffs() async {
+    try {
+      var response = await getDataRequest(
+          urlAddress: 'Staffs/GetdlStaffs', isShowLoader: false);
+      for (var json in response) {
+        print(
+            'staffModel ${StaffModel.fromJson(json).isLeader} ${StaffModel.fromJson(json).isDriver}');
+        staffsModels.add(StaffModel.fromJson(json));
+      }
+      notifyListeners();
+    } catch (e) {
+      debugPrint(e.toString());
+      notifyListeners();
+    }
+  }
+
+  Future<List<StaffModel>> getStaffInTeam(int teamId) async {
+    var response = await getDataRequest(
+        urlAddress: 'Teams/GetTeamStaffs/$teamId', isShowLoader: false);
+    List<StaffModel> tempStaffModel=[];
+    for (var json in response) {
+      print(
+          'staffModel ${StaffModel.fromJson(json).isLeader} ${StaffModel.fromJson(json).isDriver}');
+      tempStaffModel.add(StaffModel.fromJson(json));
+    }
+    return tempStaffModel;
+  }
+
+  Future<bool> addStaffToTeam({
+    required StaffModel staffModel,
+    required TeamModel? teamModel,
+  }) async {
     // pageStatus = PageStatus.loading;
     notifyListeners();
-
-    print('inside');
-    bool isNew=jobModel==null;
+    bool isNew = teamModel == null;
     // try {
-    Map<String, String> requestBody = {
-      'clientId': clients
-          .singleWhere((element) =>
-      element.text == state.clientTextEditController.text.trim())
-          .id
-          .toString(),
-      'locationId': locations
-          .singleWhere((element) =>
-      element.text == state.locationTextEditController.text.trim())
-          .id
-          .toString(),
-      'description': state.ticketCallerTextEditController.text,
-      'comment': state.ticketCallerTextEditController.text,
-      'ticketNo': state.ticketNoTextEditController.text,
-      'ticketCaller': state.ticketCallerTextEditController.text,
-      'ticketCreatedOn': DateFormat('yyyy-MM-dd').format(DateTime.now()),
-      'openOn': DateFormat('yyyy-MM-dd').format(DateTime.now()),
-      'flag': 'False',
-      'status': state.status
-          .singleWhere((element) => element.isSelected)
-          .id
-          .toString(),
-      'prev': state.status.last.isSelected ? 'True' : 'False',
-      'submitBy': Provider.of<AuthenticationProvider>(
-          MyApp.navigatorKey.currentContext!,
-          listen: false)
-          .userModel!
-          .id
-          .toString()
-    };
-    if(!isNew){
-      requestBody.addAll({'id':jobModel.id.toString()});
-    }
-    List<String> fileAddresses = [];
-    List<File> files = [];
-    if(state.file!=null){
-      files.add(state.file!);
-      fileAddresses.add('imageFile');
-    }
-    var response = await showUploadFileAlert(
-      urlAddress: isNew?'Jobs':'Jobs/${jobModel.id}',
-      requestBody: requestBody,
-      files: files,
-      fileAddresses: fileAddresses,
-      method: isNew?'post':'put',
-    );
-
-    if(isNew) {
-      models.insert(0, JobModel.fromJson(response));
-    }else{
-      models[models.indexWhere((element) => element.id==jobModel.id)]=JobModel.fromJson(response);
-
-    }
-    // pageStatus = PageStatus.loaded;
-    notifyListeners();
-    return true;
+    //   Map<String, dynamic> requestBody = {
+    //     "teamName": text,
+    //     "isActive": isActive,
+    //   };
+    //   if (!isNew) {
+    //     requestBody.addAll({'id': teamModel.id});
+    //   }
+    //
+    //   var response = await postDataRequest(
+    //     urlAddress: isNew ? 'Teams' : 'Teams/${teamModel.id}',
+    //     requestBody: requestBody,
+    //     isShowLoader: true,
+    //     method: isNew ? 'post' : 'put',
+    //   );
+    //
+    //   if (isNew) {
+    //     displayModel.insert(0, TeamModel.fromJson(response));
+    //     initialModels.insert(0, TeamModel.fromJson(response));
+    //   } else {
+    //     displayModel[displayModel
+    //             .indexWhere((element) => element.id == teamModel.id)] =
+    //         TeamModel.fromJson(response);
+    //     initialModels[displayModel
+    //             .indexWhere((element) => element.id == teamModel.id)] =
+    //         TeamModel.fromJson(response);
+    //   }
+    //   // pageStatus = PageStatus.loaded;
+    //   notifyListeners();
+    //   return true;
     // } catch (e) {
     //   debugPrint(e.toString());
     //   // pageStatus = PageStatus.failed;
     //   notifyListeners();
     //   return false;
     // }
+    return true;
   }
 
-  Future<bool> delete({required JobModel jobModel}) async {
+  Future<bool> addOrEdit(
+      {required String text,
+      TeamModel? teamModel,
+      required bool isActive}) async {
     // pageStatus = PageStatus.loading;
     notifyListeners();
-
+    bool isNew = teamModel == null;
     try {
-      var response = await deleteDataRequest(
-          urlAddress: 'Jobs/${jobModel.id}', isShowLoader: true);
-      models
-          .removeAt(models.indexWhere((element) => element.id == jobModel.id));
+      Map<String, dynamic> requestBody = {
+        "teamName": text,
+        "isActive": isActive,
+      };
+      if (!isNew) {
+        requestBody.addAll({'id': teamModel.id});
+      }
 
+      var response = await postDataRequest(
+        urlAddress: isNew ? 'Teams' : 'Teams/${teamModel.id}',
+        requestBody: requestBody,
+        isShowLoader: true,
+        method: isNew ? 'post' : 'put',
+      );
+
+      if (isNew) {
+        displayModel.insert(0, TeamModel.fromJson(response));
+        initialModels.insert(0, TeamModel.fromJson(response));
+      } else {
+        displayModel[displayModel
+                .indexWhere((element) => element.id == teamModel.id)] =
+            TeamModel.fromJson(response);
+        initialModels[displayModel
+                .indexWhere((element) => element.id == teamModel.id)] =
+            TeamModel.fromJson(response);
+      }
       // pageStatus = PageStatus.loaded;
       notifyListeners();
       return true;
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
       // pageStatus = PageStatus.failed;
       notifyListeners();
       return false;
     }
   }
 
-  Future getClientAndLocations() async {
+  Future<bool> delete({required TeamModel teamModel}) async {
     try {
-      var response = await getDataRequest(
-          urlAddress: 'Clients/GetdlClients', isShowLoader: false);
-
-      clients.clear();
-      response.forEach((element) {
-        clients.add(MultiSelectItemModel(
-            text: element['clientName'] ?? '',
-            id: element['id'].toString(),
-            isSelected: false));
-      });
-
+      await deleteDataRequest(
+          urlAddress: 'Teams/${teamModel.id}', isShowLoader: true);
+      displayModel.removeAt(
+          displayModel.indexWhere((element) => element.id == teamModel.id));
+      initialModels.removeAt(
+          initialModels.indexWhere((element) => element.id == teamModel.id));
       notifyListeners();
+      return true;
     } catch (e) {
-      notifyListeners();
+      debugPrint(e.toString());
+      return false;
     }
-    try {
-      var response = await getDataRequest(
-          urlAddress: 'Locations/GetdlLocations', isShowLoader: false);
+  }
 
-      locations.clear();
-      response.forEach((element) {
-        locations.add(MultiSelectItemModel(
-            text: element['locationName'] ?? '',
-            id: element['id'].toString(),
-            isSelected: false));
-      });
-      notifyListeners();
+  Future changeStatus({required TeamModel teamModel}) async {
+    bool currentStatus = teamModel.isActive ?? false;
+    displayModel[
+            displayModel.indexWhere((element) => element.id == teamModel.id)]
+        .isActive = !currentStatus;
+    initialModels[
+            initialModels.indexWhere((element) => element.id == teamModel.id)]
+        .isActive = !currentStatus;
+    notifyListeners();
+
+    try {
+      await postDataRequest(
+          urlAddress: 'Teams/DisableTeam/${teamModel.id}',
+          isShowLoader: false,
+          method: 'put',
+          requestBody: {
+            "id": teamModel.id,
+            "teamName": teamModel.teamName,
+            "isActive": !currentStatus
+          });
     } catch (e) {
+      debugPrint(e.toString());
+      displayModel[
+              displayModel.indexWhere((element) => element.id == teamModel.id)]
+          .isActive = currentStatus;
+      initialModels[
+              initialModels.indexWhere((element) => element.id == teamModel.id)]
+          .isActive = currentStatus;
       notifyListeners();
     }
   }

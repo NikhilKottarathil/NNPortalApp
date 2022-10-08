@@ -15,7 +15,7 @@ import 'package:nn_portal/presentation/components/pop_ups_loaders/custom_circula
 import 'package:nn_portal/presentation/components/pop_ups_loaders/show_snack_bar.dart';
 import 'package:nn_portal/presentation/components/text_fields/date_picker_text_field.dart';
 import 'package:nn_portal/presentation/components/text_fields/text_field_custom.dart';
-import 'package:nn_portal/presentation/components/text_fields/text_field_outlied_label.dart';
+import 'package:nn_portal/presentation/components/text_fields/text_field_outlined_label.dart';
 import 'package:nn_portal/presentation/components/text_fields/time_picker_text_field.dart';
 import 'package:nn_portal/providers/leave_provider.dart';
 import 'package:nn_portal/providers/log_provider.dart';
