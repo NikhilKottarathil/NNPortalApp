@@ -7,6 +7,7 @@ import 'package:nn_portal/models/team_model.dart';
 import 'package:nn_portal/presentation/components/pop_ups_loaders/custom_alert_dialoug.dart';
 import 'package:nn_portal/presentation/screens/admin_jobs/add_job.dart';
 import 'package:nn_portal/presentation/screens/admin_jobs/assigned_teams.dart';
+import 'package:nn_portal/presentation/screens/admin_jobs/job_team_mapping.dart';
 import 'package:nn_portal/presentation/screens/teams/add_staff_to_team.dart';
 import 'package:nn_portal/presentation/screens/teams/add_team.dart';
 import 'package:nn_portal/providers/admin_jobs_provider.dart';
@@ -72,7 +73,6 @@ class TeamListTile extends StatelessWidget {
                     iconSize: 21,
                     onPressed: () {
                       addTeam(teamModel: teamModel);
-
                     },
                   ),
                   IconButton(
@@ -81,24 +81,50 @@ class TeamListTile extends StatelessWidget {
                     icon: const Icon(Icons.add_circle_outline),
                     iconSize: 26,
                     onPressed: () {
-                      Provider.of<AssignedTeamProvider>(
-                              MyApp.navigatorKey.currentContext!,
-                              listen: false)
-                          .getData(jobId: teamModel.id!.toString());
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (_) => AddStaffToTeam(teamModel: teamModel,)));
+
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => AddStaffToTeam(
+                                    teamModel: teamModel,
+                                  )));
                     },
                   ),
+                  GestureDetector(
+
+                    child: Row(
+                      children: [
+                        const Icon(Icons.add_circle_outline,size: 26,),
+                        const SizedBox(width: 4,),
+                        Text('Assign Job',style: Theme.of(context).textTheme.labelMedium,)
+                      ],
+                    ),
+                    onTap: () {
+
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => JobTeamMapping(
+                                    teamModel: teamModel,
+                                parentPage: 'team',
+                                  )));
+                    },
+                  ),
+                 const SizedBox(width: 18,),
                   SizedBox(
                     width: 24,
                     height: 24,
                     child: Switch(
-
+                        activeColor:
+                        Colors.grey.shade800,
+                        trackColor:
+                            MaterialStateProperty.all(Colors.grey),
+                        inactiveThumbColor: Colors.grey.shade100,
                         value: teamModel.isActive ?? false,
                         onChanged: (value) {
                           Provider.of<TeamProvider>(
-                              MyApp.navigatorKey.currentContext!,
-                              listen: false)
+                                  MyApp.navigatorKey.currentContext!,
+                                  listen: false)
                               .changeStatus(teamModel: teamModel);
                         }),
                   ),

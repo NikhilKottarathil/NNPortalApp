@@ -228,14 +228,17 @@ class _AddStaffToTeamState extends State<AddStaffToTeam> {
                               1) {
                             showSnackBar(
                                 message: 'More than one leader selected');
+                          } else {
+                            Provider.of<TeamProvider>(
+                                    MyApp.navigatorKey.currentContext!,
+                                    listen: false)
+                                .addStaffToTeam(
+                                    assignedStaffModels: assignedStaffModels,
+                                    teamModel: widget.teamModel)
+                                .then((value) {
+                              Navigator.of(context).pop();
+                            });
                           }
-                          // Provider.of<TeamProvider>(
-                          //         MyApp.navigatorKey.currentContext!,
-                          //         listen: false)
-                          //     .addStaffToTeam(staffModel: staffModel, teamModel: widget.teamModel)
-                          //     .then((value) {
-                          //   Navigator.of(context).pop();
-                          // });
                         },
                         child: Text(
                           'SAVE',

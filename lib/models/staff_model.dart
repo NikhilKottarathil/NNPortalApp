@@ -16,6 +16,9 @@ class StaffModel {
   String? description;
   bool? isDriver;
   bool? isLeader;
+  String? vehicleNo;
+  int? vehicleId;
+  String? vehicleName;
 
   StaffModel(
       {this.id,
@@ -33,7 +36,10 @@ class StaffModel {
       this.submitOn,
       this.description,
       this.isDriver,
-      this.isLeader});
+      this.isLeader,
+      this.vehicleNo,
+      this.vehicleName,
+      this.vehicleId});
 
   StaffModel.fromJson(Map<String, dynamic> json) {
     id = json['staffId'] ?? json['id'];

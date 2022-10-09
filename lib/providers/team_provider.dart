@@ -8,14 +8,14 @@ class TeamProvider extends ChangeNotifier {
   PageStatus pageStatus = PageStatus.initialState;
 
   List<TeamModel> displayModel = [];
-  List<TeamModel> initialModels = [];
+  List<TeamModel> teamModels = [];
   List<StaffModel> staffsModels = [];
 
   // apiReduce
   getInitialData() async {
     pageStatus = PageStatus.loading;
     notifyListeners();
-    initialModels.clear();
+    teamModels.clear();
     displayModel.clear();
     await getAllStaffs();
 
@@ -25,13 +25,13 @@ class TeamProvider extends ChangeNotifier {
   searchTeams(String text) {
     displayModel.clear();
     if (text.trim().isNotEmpty) {
-      for (var element in initialModels) {
+      for (var element in teamModels) {
         if (element.teamName!.toLowerCase().contains(text.toLowerCase())) {
           displayModel.add(element);
         }
       }
     } else {
-      displayModel.addAll(initialModels);
+      displayModel.addAll(teamModels);
     }
     notifyListeners();
   }
@@ -42,9 +42,9 @@ class TeamProvider extends ChangeNotifier {
       var response =
           await getDataRequest(urlAddress: 'Teams', isShowLoader: false);
       for (var json in response) {
-        initialModels.add(TeamModel.fromJson(json));
+        teamModels.add(TeamModel.fromJson(json));
       }
-      displayModel.addAll(initialModels);
+      displayModel.addAll(teamModels);
       pageStatus = PageStatus.loaded;
       notifyListeners();
     } catch (e) {
@@ -83,48 +83,42 @@ class TeamProvider extends ChangeNotifier {
   }
 
   Future<bool> addStaffToTeam({
-    required StaffModel staffModel,
-    required TeamModel? teamModel,
+    required List<StaffModel> assignedStaffModels,
+    required  TeamModel teamModel,
   }) async {
     // pageStatus = PageStatus.loading;
-    notifyListeners();
-    bool isNew = teamModel == null;
-    // try {
-    //   Map<String, dynamic> requestBody = {
-    //     "teamName": text,
-    //     "isActive": isActive,
-    //   };
-    //   if (!isNew) {
-    //     requestBody.addAll({'id': teamModel.id});
-    //   }
-    //
-    //   var response = await postDataRequest(
-    //     urlAddress: isNew ? 'Teams' : 'Teams/${teamModel.id}',
-    //     requestBody: requestBody,
-    //     isShowLoader: true,
-    //     method: isNew ? 'post' : 'put',
-    //   );
-    //
-    //   if (isNew) {
-    //     displayModel.insert(0, TeamModel.fromJson(response));
-    //     initialModels.insert(0, TeamModel.fromJson(response));
-    //   } else {
-    //     displayModel[displayModel
-    //             .indexWhere((element) => element.id == teamModel.id)] =
-    //         TeamModel.fromJson(response);
-    //     initialModels[displayModel
-    //             .indexWhere((element) => element.id == teamModel.id)] =
-    //         TeamModel.fromJson(response);
-    //   }
-    //   // pageStatus = PageStatus.loaded;
-    //   notifyListeners();
-    //   return true;
-    // } catch (e) {
-    //   debugPrint(e.toString());
-    //   // pageStatus = PageStatus.failed;
-    //   notifyListeners();
-    //   return false;
-    // }
+    // notifyListeners();
+
+    try {
+      List<Map<String,dynamic>> requestBody=[];
+
+      for (var element in assignedStaffModels) {
+        requestBody.add(
+          {
+            "teamId": teamModel.id,
+            "staffId": element.id,
+            "description": element.description,
+            "isTeamLeader": element.isLeader,
+            "isDriver": element.isDriver
+          }
+        );
+      }
+
+
+      var response = await postDataRequest(
+        urlAddress: 'Teams/TeamStaffMapping',
+        requestBody: requestBody,
+        isShowLoader: true,
+        method: 'post',
+      );
+
+      return true;
+    } catch (e) {
+      debugPrint(e.toString());
+      // pageStatus = PageStatus.failed;
+      notifyListeners();
+      return false;
+    }
     return true;
   }
 
@@ -153,12 +147,12 @@ class TeamProvider extends ChangeNotifier {
 
       if (isNew) {
         displayModel.insert(0, TeamModel.fromJson(response));
-        initialModels.insert(0, TeamModel.fromJson(response));
+        teamModels.insert(0, TeamModel.fromJson(response));
       } else {
         displayModel[displayModel
                 .indexWhere((element) => element.id == teamModel.id)] =
             TeamModel.fromJson(response);
-        initialModels[displayModel
+        teamModels[displayModel
                 .indexWhere((element) => element.id == teamModel.id)] =
             TeamModel.fromJson(response);
       }
@@ -179,8 +173,8 @@ class TeamProvider extends ChangeNotifier {
           urlAddress: 'Teams/${teamModel.id}', isShowLoader: true);
       displayModel.removeAt(
           displayModel.indexWhere((element) => element.id == teamModel.id));
-      initialModels.removeAt(
-          initialModels.indexWhere((element) => element.id == teamModel.id));
+      teamModels.removeAt(
+          teamModels.indexWhere((element) => element.id == teamModel.id));
       notifyListeners();
       return true;
     } catch (e) {
@@ -194,8 +188,8 @@ class TeamProvider extends ChangeNotifier {
     displayModel[
             displayModel.indexWhere((element) => element.id == teamModel.id)]
         .isActive = !currentStatus;
-    initialModels[
-            initialModels.indexWhere((element) => element.id == teamModel.id)]
+    teamModels[
+            teamModels.indexWhere((element) => element.id == teamModel.id)]
         .isActive = !currentStatus;
     notifyListeners();
 
@@ -214,8 +208,8 @@ class TeamProvider extends ChangeNotifier {
       displayModel[
               displayModel.indexWhere((element) => element.id == teamModel.id)]
           .isActive = currentStatus;
-      initialModels[
-              initialModels.indexWhere((element) => element.id == teamModel.id)]
+      teamModels[
+              teamModels.indexWhere((element) => element.id == teamModel.id)]
           .isActive = currentStatus;
       notifyListeners();
     }

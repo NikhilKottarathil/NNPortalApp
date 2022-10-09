@@ -135,12 +135,12 @@ class AdminJobListTile extends StatelessWidget {
                     icon: Icon(Icons.add_circle_outline),
                     iconSize: 26,
                     onPressed: () {
-                      Provider.of<AssignedTeamProvider>(
+                      Provider.of<AssignTeamProvider>(
                               MyApp.navigatorKey.currentContext!,
                               listen: false)
                           .getData(jobId: jobModel.id!.toString());
                       Navigator.push(context,
-                          MaterialPageRoute(builder: (_) => AssignedTeam()));
+                          MaterialPageRoute(builder: (_) => AssignedTeam(jobModel: jobModel,)));
                     },
                   ),
                 ],

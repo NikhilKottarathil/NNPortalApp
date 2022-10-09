@@ -13,6 +13,7 @@ class JobsProvider extends ChangeNotifier {
   int pageSize = 15;
   String searchString = '';
   List<JobModel> models = [];
+  List<JobModel> jobSuggestionModels = [];
 
   List<JobTypeModel> jobTypeModels = [
     JobTypeModel(displayName: 'All', keyName: 'All', isSelected: true),
@@ -30,6 +31,7 @@ class JobsProvider extends ChangeNotifier {
     models.clear();
     getJobCounts();
     getJobs();
+    getJobSuggestions();
   }
 
   searchJobs(String text) {
@@ -37,7 +39,6 @@ class JobsProvider extends ChangeNotifier {
       searchString = text;
       pageStatus = PageStatus.loading;
       notifyListeners();
-
 
       pageIndex = 1;
       models.clear();
@@ -114,6 +115,28 @@ class JobsProvider extends ChangeNotifier {
       notifyListeners();
     } catch (e) {
       notifyListeners();
+    }
+  }
+
+  Future getJobSuggestions() async {
+    try {
+      jobSuggestionModels.clear();
+      var response = await postDataRequest(
+        requestBody: {
+          'filterText': '',
+          'pageIndex':1,
+          'pageSize': 10,
+          'status':'All'
+        },
+          urlAddress: 'Jobs/GetdlJobs', isShowLoader: false);
+
+      print('job suggectionCount ${response['items'].length}');
+      for (var json in response['items']) {
+        jobSuggestionModels.add(JobModel.fromJson(json));
+      }
+      notifyListeners();
+    } catch (e) {
+      debugPrint(e.toString());
     }
   }
 }

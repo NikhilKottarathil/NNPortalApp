@@ -11,16 +11,20 @@ class CustomAutoCompleteTextField extends StatefulWidget {
     this.validator,
     this.isRequiredField = true,
     required this.suggestions,
+    this.onSuggestionSelected,
     this.action,
+    this.textInputType=TextInputType.text
   }) : super(key: key);
 
   final String hint;
   final TextEditingController textEditingController;
+  final TextInputType textInputType;
   final FormFieldValidator<String>? validator;
   final String? label;
   final bool isRequiredField;
   final List<String> suggestions;
   final Function? action;
+  final Function? onSuggestionSelected;
 
   @override
   State<CustomAutoCompleteTextField> createState() =>
@@ -72,6 +76,11 @@ class _CustomAutoCompleteTextFieldState
                 .bodyMedium!
                 .copyWith(decoration: TextDecoration.none),
             focusNode: focusNode,
+
+            keyboardType: widget.textInputType,
+            onTap: (){
+
+            },
             decoration: InputDecoration(
               hintText: widget.hint,
               suffixIcon: widget.textEditingController.text.isNotEmpty
@@ -117,6 +126,9 @@ class _CustomAutoCompleteTextFieldState
             widget.textEditingController.text = suggestion;
             if (widget.action != null) {
               widget.action!(suggestion);
+            }
+            if (widget.onSuggestionSelected != null) {
+              widget.onSuggestionSelected!(suggestion);
             }
           },
           noItemsFoundBuilder: (context) {

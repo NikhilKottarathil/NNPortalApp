@@ -27,7 +27,7 @@ Future<bool> checkInternetConnectivity() async {
 
 Future postDataRequest(
     {required String urlAddress,
-    required Map<String, dynamic> requestBody,
+    required var requestBody,
       String method='post',
     bool isShowLoader = true}) async {
   debugPrint('============= start $urlAddress post api ===============');
@@ -112,7 +112,7 @@ Future getDataRequest(
   debugPrint('============= start $urlAddress get api ===============');
 
   if (await checkInternetConnectivity()) {
-    try {
+    // try {
       if (isShowLoader) {
         showLoader();
       }
@@ -133,6 +133,7 @@ Future getDataRequest(
 
       var responseBody = jsonDecode(response.body);
 
+      print('responseBody $responseBody');
       if (response.statusCode == 200) {
         debugPrint(
             '============= end $urlAddress get api =============== \n $responseBody');
@@ -159,18 +160,18 @@ Future getDataRequest(
       } else {
         throw Exception(AppStrings.somethingWentWrong);
       }
-    } catch (e) {
-      debugPrint(
-          '============= fail $urlAddress get api =============== \n error $e');
-      String message = e.toString().substring(10);
-      if (isShowLoader) {
-        hideLoader();
-      }
-      if(isShowSnackBar) {
-        showSnackBar(message: message);
-      }
-      rethrow;
-    }
+    // } catch (e) {
+    //   debugPrint(
+    //       '============= fail $urlAddress get api =============== \n error $e');
+    //   String message = e.toString().substring(10);
+    //   if (isShowLoader) {
+    //     hideLoader();
+    //   }
+    //   if(isShowSnackBar) {
+    //     showSnackBar(message: message);
+    //   }
+    //   rethrow;
+    // }
   }
 }
 

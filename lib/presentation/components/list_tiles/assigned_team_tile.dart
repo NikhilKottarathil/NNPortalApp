@@ -117,7 +117,7 @@ class AssignedTeamTile extends StatelessWidget {
                           negativeButtonText: 'Cancel',
                           positiveButtonText: 'CONFIRM',
                           positiveButtonAction: () {
-                            Provider.of<AssignedTeamProvider>(
+                            Provider.of<AssignTeamProvider>(
                                 MyApp.navigatorKey.currentContext!,
                                 listen: false)
                                 .delete(model: model);

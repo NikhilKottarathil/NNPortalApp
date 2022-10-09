@@ -66,7 +66,6 @@ class _ProfileState extends State<Profile> {
                           .titleMedium!
                           .copyWith(color: Colors.white),
                     ),
-
                   ],
                 );
               }),
@@ -97,8 +96,7 @@ class _ProfileState extends State<Profile> {
                 onPressed: () {
                   Provider.of<InHandProvider>(context, listen: false)
                       .setLogType(LogType.vehicleLog);
-                  Provider.of<InHandProvider>(context, listen: false)
-                      .getData();
+                  Provider.of<InHandProvider>(context, listen: false).getData();
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -141,7 +139,9 @@ class _ProfileState extends State<Profile> {
                     ),
                   );
                 }),
-            const SizedBox(height: 20,),
+            const SizedBox(
+              height: 20,
+            ),
             button(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -151,7 +151,6 @@ class _ProfileState extends State<Profile> {
                       height: 24,
                       width: 24,
                     ),
-
                     const SizedBox(
                       width: 8,
                     ),
@@ -169,14 +168,24 @@ class _ProfileState extends State<Profile> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) =>  Leaves(),
+                      builder: (_) => Leaves(),
                     ),
                   ).then((value) {
                     Provider.of<LeaveProvider>(context, listen: false)
                         .clearLeaveForm();
                   });
                 }),
-            const SizedBox(height: 20,),
+            const SizedBox(
+              height: 20,
+            ),
+            if (Provider.of<AuthenticationProvider>(context, listen: false)
+                .userModel!
+                .roleName !=
+                null &&
+                Provider.of<AuthenticationProvider>(context, listen: false)
+                    .userModel!
+                    .roleName ==
+                    'Admin')
             button(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -198,7 +207,10 @@ class _ProfileState extends State<Profile> {
                   ],
                 ),
                 onPressed: () {
-                      Provider.of<AdminJobsProvider>(MyApp.navigatorKey.currentContext!,listen: false).getInitialJob();
+                  Provider.of<AdminJobsProvider>(
+                          MyApp.navigatorKey.currentContext!,
+                          listen: false)
+                      .getInitialJob();
 
                   Navigator.push(
                     context,
@@ -210,67 +222,84 @@ class _ProfileState extends State<Profile> {
             const SizedBox(
               height: 20,
             ),
-            button(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Image.asset(
-                      'assets/work_icon.png',
-                      height: 24,
-                      width: 24,
-                    ),
+            if (Provider.of<AuthenticationProvider>(context, listen: false)
+                        .userModel!
+                        .roleName !=
+                    null &&
+                Provider.of<AuthenticationProvider>(context, listen: false)
+                        .userModel!
+                        .roleName ==
+                    'Admin')
+              button(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Image.asset(
+                        'assets/work_icon.png',
+                        height: 24,
+                        width: 24,
+                      ),
+                      const SizedBox(
+                        width: 8,
+                      ),
+                      Text(
+                        "Teams",
+                        style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.textDark),
+                      ),
+                    ],
+                  ),
+                  onPressed: () {
+                    Provider.of<TeamProvider>(
+                            MyApp.navigatorKey.currentContext!,
+                            listen: false)
+                        .getInitialData();
 
-                    const SizedBox(
-                      width: 8,
-                    ),
-                    Text(
-                      "Teams",
-                      style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.textDark),
-                    ),
-                  ],
-                ),
-                onPressed: () {
-                  Provider.of<TeamProvider>(MyApp.navigatorKey.currentContext!,listen: false).getInitialData();
-
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) =>  TeamList(),
-                    ),
-                  );
-                }),
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => TeamList(),
+                      ),
+                    );
+                  }),
             const SizedBox(
               height: 20,
             ),
             const Spacer(),
-            if(Provider.of<AuthenticationProvider>(context, listen: false)
-                .visaExpiringDays!=null)
-            Text(
-              (Provider.of<AuthenticationProvider>(context, listen: false)
-                              .visaExpiringDays! >
-                          0
-                      ? 'Visa Expire date : '
-                      : "Visa Expired date : ") +
-                  Provider.of<AuthenticationProvider>(context, listen: false)
-                      .userModel!
-                      .visaExpiry!,
-              style: Theme.of(context).textTheme.titleMedium,
+            if (Provider.of<AuthenticationProvider>(context, listen: false)
+                    .visaExpiringDays !=
+                null)
+              Text(
+                (Provider.of<AuthenticationProvider>(context, listen: false)
+                                .visaExpiringDays! >
+                            0
+                        ? 'Visa Expire date : '
+                        : "Visa Expired date : ") +
+                    Provider.of<AuthenticationProvider>(context, listen: false)
+                        .userModel!
+                        .visaExpiry!,
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+            const SizedBox(
+              height: 20,
             ),
-          const  SizedBox(height: 20,),
             button(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Icon(Icons.logout,color: AppColors.textLight,),
+                  Icon(
+                    Icons.logout,
+                    color: AppColors.textLight,
+                  ),
                   const SizedBox(
                     width: 12,
                   ),
                   Text(
                     "Log Out",
                     style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                        fontWeight: FontWeight.bold, color: AppColors.textLight),
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.textLight),
                   ),
                 ],
               ),
@@ -306,7 +335,10 @@ class _ProfileState extends State<Profile> {
     );
   }
 
-  Widget button({required Widget child, required Function onPressed,bool isSecondaryColor =false  }) {
+  Widget button(
+      {required Widget child,
+      required Function onPressed,
+      bool isSecondaryColor = false}) {
     return GestureDetector(
       onTap: () {
         onPressed();
@@ -314,7 +346,9 @@ class _ProfileState extends State<Profile> {
       child: Container(
         width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
-            color: isSecondaryColor?AppColors.secondaryBase:AppColors.tertiary, borderRadius: BorderRadius.circular(8)),
+            color:
+                isSecondaryColor ? AppColors.secondaryBase : AppColors.tertiary,
+            borderRadius: BorderRadius.circular(8)),
         padding: const EdgeInsets.all(17),
         child: Center(
           child: child,

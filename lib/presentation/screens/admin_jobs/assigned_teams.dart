@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:nn_portal/constants/app_colors.dart';
 import 'package:nn_portal/constants/enums.dart';
+import 'package:nn_portal/main.dart';
+import 'package:nn_portal/models/job_model.dart';
 import 'package:nn_portal/presentation/components/list_tiles/admin_job_list_tile.dart';
 import 'package:nn_portal/presentation/components/list_tiles/assigned_team_tile.dart';
 import 'package:nn_portal/presentation/components/list_tiles/job_list_tile.dart';
 import 'package:nn_portal/presentation/components/others/no_items_found.dart';
 import 'package:nn_portal/presentation/components/pop_ups_loaders/custom_circular_progress_indicator.dart';
 import 'package:nn_portal/presentation/components/text_fields/text_field_search.dart';
+import 'package:nn_portal/presentation/screens/admin_jobs/job_team_mapping.dart';
 import 'package:nn_portal/providers/assign_team_provider.dart';
 import 'package:provider/provider.dart';
 
 class AssignedTeam extends StatefulWidget {
-  const AssignedTeam({Key? key}) : super(key: key);
+  final JobModel jobModel;
+  const AssignedTeam({Key? key,required this.jobModel}) : super(key: key);
 
   @override
   State<AssignedTeam> createState() => _AssignedTeamState();
@@ -27,7 +31,7 @@ class _AssignedTeamState extends State<AssignedTeam> {
         centerTitle: true,
       ),
       // drawer: HomeDrawer(),
-      body: Consumer<AssignedTeamProvider>(builder: (context, value, child) {
+      body: Consumer<AssignTeamProvider>(builder: (context, value, child) {
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
           child: Column(
@@ -89,9 +93,19 @@ class _AssignedTeamState extends State<AssignedTeam> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppColors.primaryBase,
         onPressed: () {
-          // Navigator.push(context,MaterialPageRoute(builder: (_)=>AddJob()));
-        },
-        child: Icon(Icons.add),
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (_) => JobTeamMapping(
+                    jobModel: widget.jobModel,
+                    parentPage: 'job',
+                  ))).then((value) {
+            Provider.of<AssignTeamProvider>(
+                MyApp.navigatorKey.currentContext!,
+                listen: false)
+                .getData(jobId: widget.jobModel.id!.toString());
+          });        },
+        child:const  Icon(Icons.add),
       ),
     );
   }

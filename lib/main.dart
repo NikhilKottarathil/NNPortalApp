@@ -63,7 +63,7 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(create: (_) => AuthenticationProvider()),
         ChangeNotifierProvider(create: (_) => JobsProvider()),
         ChangeNotifierProvider(create: (_) => AdminJobsProvider()),
-        ChangeNotifierProvider(create: (_) => AssignedTeamProvider()),
+        ChangeNotifierProvider(create: (_) => AssignTeamProvider()),
         ChangeNotifierProvider(create: (_) => JobsDetailsProvider()),
         ChangeNotifierProvider(create: (_) => LogProvider()),
         ChangeNotifierProvider(create: (_) => InHandProvider()),
@@ -79,6 +79,11 @@ class _MyAppState extends State<MyApp> {
           textTheme: GoogleFonts.interTextTheme(),
           scaffoldBackgroundColor: Colors.grey.shade100,
           timePickerTheme: Theme.of(context).timePickerTheme.copyWith(),
+          checkboxTheme: Theme.of(context).checkboxTheme.copyWith(
+            // fillColor: MaterialStateProperty.all(Colors.grey.shade600),
+            fillColor: MaterialStateProperty.all(Colors.grey.shade800),
+             ),
+
           appBarTheme: Theme.of(context).appBarTheme.copyWith(
               elevation: 0.5,
               backgroundColor: AppColors.primaryBase,
