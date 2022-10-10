@@ -19,12 +19,20 @@ import 'package:provider/provider.dart';
 import '../../constants/enums.dart';
 
 class JobAttachments extends StatelessWidget {
-  const JobAttachments({Key? key}) : super(key: key);
+   JobAttachments({Key? key}) : super(key: key);
 
   final List<String> imageFormats = const ['jpg', 'png', 'raw', 'svg'];
-
+  bool isViewOnly=false;
   @override
   Widget build(BuildContext context) {
+
+    if(!Provider.of<AuthenticationProvider>(context, listen: false)
+        .userModel!
+        .onLeave! || Provider.of<AuthenticationProvider>(context, listen: false)
+        .userModel!
+        .roleId! == 1 ){
+      isViewOnly=true;
+    }
     double fileSize = MediaQuery.of(context).size.width * .15;
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -205,9 +213,7 @@ class JobAttachments extends StatelessWidget {
                     },
                   );
       }),
-      floatingActionButton:!Provider.of<AuthenticationProvider>(context, listen: false)
-          .userModel!
-          .onLeave!? FloatingActionButton(
+      floatingActionButton:!isViewOnly? FloatingActionButton(
         backgroundColor: AppColors.secondaryBase,
         child: const Icon(Icons.attach_file),
         onPressed: () async {

@@ -84,4 +84,16 @@ class AuthenticationProvider extends ChangeNotifier {
     RestartWidget.restartApp(MyApp.navigatorKey.currentContext!);
 
   }
+  Future<bool> sendNotification(DateTime dateTime) async {
+    try {
+      await postDataRequest(
+        requestBody: {'startdt':DateFormat('dd/MM/yyyy').format(dateTime)},
+          urlAddress: 'JobStaffMappings/SendPushNotifications', isShowLoader: false);
+      authSuccess();
+
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
 }

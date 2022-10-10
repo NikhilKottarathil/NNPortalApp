@@ -39,7 +39,7 @@ class _AdminJobListState extends State<AdminJobList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Find your jobs'),
+        title: const Text('Jobs'),
         automaticallyImplyLeading: true,
         centerTitle: true,
       ),

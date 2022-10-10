@@ -13,10 +13,19 @@ import 'package:nn_portal/providers/job_details_provider.dart';
 import 'package:provider/provider.dart';
 
 class JobNotes extends StatelessWidget {
-  const JobNotes({Key? key}) : super(key: key);
+   JobNotes({Key? key}) : super(key: key);
 
+  bool isViewOnly=false;
   @override
   Widget build(BuildContext context) {
+
+    if(!Provider.of<AuthenticationProvider>(context, listen: false)
+        .userModel!
+        .onLeave! || Provider.of<AuthenticationProvider>(context, listen: false)
+        .userModel!
+        .roleId! == 1 ){
+      isViewOnly=true;
+    }
     return Scaffold(
 
       backgroundColor: Colors.transparent,
@@ -132,15 +141,13 @@ class JobNotes extends StatelessWidget {
                       // );
                     },
                     separatorBuilder: (BuildContext context, int index) {
-                      return SizedBox(
+                      return const SizedBox(
                         height: 10,
                       );
                     },
                   );
       }),
-      floatingActionButton:!Provider.of<AuthenticationProvider>(context, listen: false)
-          .userModel!
-          .onLeave!? FloatingActionButton(
+      floatingActionButton:!isViewOnly? FloatingActionButton(
         backgroundColor: AppColors.secondaryBase,
         onPressed: () {
           addNote();

@@ -37,6 +37,8 @@ class JobFullDetails extends StatelessWidget {
               FAWidget(field: 'Location', answer: jobModel.locationName!),
               const SizedBox(height: 8),
               FAWidget(field: 'Client', answer: jobModel.clientName!),
+              const SizedBox(height: 8),
+              FAWidget(field: 'Open On', answer: jobModel.openOn!),
               if (jobModel.jobVehicles != null && jobModel.jobVehicles!.isNotEmpty)
                 const SizedBox(height: 8),
               if (jobModel.jobVehicles != null && jobModel.jobVehicles!.isNotEmpty)

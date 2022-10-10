@@ -140,7 +140,7 @@ class AdminJobListTile extends StatelessWidget {
                               listen: false)
                           .getData(jobId: jobModel.id!.toString());
                       Navigator.push(context,
-                          MaterialPageRoute(builder: (_) => AssignedTeam(jobModel: jobModel,)));
+                          MaterialPageRoute(builder: (_) => AssignedTeams(jobModel: jobModel,)));
                     },
                   ),
                 ],

@@ -13,15 +13,16 @@ import 'package:nn_portal/presentation/screens/admin_jobs/job_team_mapping.dart'
 import 'package:nn_portal/providers/assign_team_provider.dart';
 import 'package:provider/provider.dart';
 
-class AssignedTeam extends StatefulWidget {
+class AssignedTeams extends StatefulWidget {
   final JobModel jobModel;
-  const AssignedTeam({Key? key,required this.jobModel}) : super(key: key);
+ final bool isFromJob;
+  const AssignedTeams({Key? key,required this.jobModel,this.isFromJob=true}) : super(key: key);
 
   @override
-  State<AssignedTeam> createState() => _AssignedTeamState();
+  State<AssignedTeams> createState() => _AssignedTeamsState();
 }
 
-class _AssignedTeamState extends State<AssignedTeam> {
+class _AssignedTeamsState extends State<AssignedTeams> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -90,7 +91,7 @@ class _AssignedTeamState extends State<AssignedTeam> {
         );
       }),
 
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: widget.isFromJob?FloatingActionButton(
         backgroundColor: AppColors.primaryBase,
         onPressed: () {
           Navigator.push(
@@ -106,7 +107,7 @@ class _AssignedTeamState extends State<AssignedTeam> {
                 .getData(jobId: widget.jobModel.id!.toString());
           });        },
         child:const  Icon(Icons.add),
-      ),
+      ):null,
     );
   }
 }

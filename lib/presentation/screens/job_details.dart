@@ -88,7 +88,7 @@ class _JobDetailsState extends State<JobDetails>
                       Expanded(
                         child: TabBarView(
                             controller: _tabController,
-                            children: const [
+                            children:  [
                               JobNotes(),
                               JobAttachments(),
                             ]),

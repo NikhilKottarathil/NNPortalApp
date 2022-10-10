@@ -121,17 +121,17 @@ class JobsProvider extends ChangeNotifier {
   Future getJobSuggestions() async {
     try {
       jobSuggestionModels.clear();
-      var response = await postDataRequest(
-        requestBody: {
-          'filterText': '',
-          'pageIndex':1,
-          'pageSize': 10,
-          'status':'All'
-        },
+      var response = await getDataRequest(
+        // requestBody: {
+        //   'filterText': '',
+        //   'pageIndex':1,
+        //   'pageSize': 10,
+        //   'status':'All'
+        // },
           urlAddress: 'Jobs/GetdlJobs', isShowLoader: false);
 
-      print('job suggectionCount ${response['items'].length}');
-      for (var json in response['items']) {
+      print('job suggectionCount ${response.length}');
+      for (var json in response) {
         jobSuggestionModels.add(JobModel.fromJson(json));
       }
       notifyListeners();

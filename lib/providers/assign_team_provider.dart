@@ -73,7 +73,7 @@ class AssignTeamProvider extends ChangeNotifier {
 
 
       var response = await postDataRequest(
-        urlAddress: 'Teams/TeamStaffMapping',
+        urlAddress: 'JobStaffMappings',
         requestBody: requestBody,
         isShowLoader: true,
         method: 'post',

@@ -13,6 +13,7 @@ import 'package:nn_portal/presentation/components/pop_ups_loaders/show_snack_bar
 import 'package:nn_portal/presentation/components/text_fields/auto_complete_text_field.dart';
 import 'package:nn_portal/presentation/components/text_fields/date_picker_text_field.dart';
 import 'package:nn_portal/presentation/components/text_fields/text_field_custom.dart';
+import 'package:nn_portal/presentation/screens/admin_jobs/assigned_teams.dart';
 import 'package:nn_portal/presentation/screens/teams/add_staff_to_team.dart';
 import 'package:nn_portal/providers/assign_team_provider.dart';
 import 'package:nn_portal/providers/jobs_provider.dart';
@@ -49,6 +50,7 @@ class _JobTeamMappingState extends State<JobTeamMapping> {
   List<JobModel> jobModels = [];
   List<VehicleModel> vehicleModels = [];
 
+  JobModel? selectedJobModel;
   TeamModel? selectedTeamModel;
 
   @override
@@ -71,68 +73,94 @@ class _JobTeamMappingState extends State<JobTeamMapping> {
               SingleChildScrollView(
                 child: Column(
                   children: [
-                    IgnorePointer(
-                      ignoring:widget.parentPage=='job',
-                      child: CustomAutoCompleteTextField(
-                        label: 'Job',
-                        hint: '',
+                   if(widget.parentPage=='team')
+                     Row(
+                       crossAxisAlignment: CrossAxisAlignment.end,
+                       children: [
+                         Expanded(
+                           child:  CustomAutoCompleteTextField(
+                             label: 'Job',
+                             hint: '',
 
-                        textEditingController: jobTextEditController,
-                        validator: (value) => jobModels.any((e) =>
-                                e.code! ==
-                                jobTextEditController.text)
-                            ? null
-                            : 'Please fill',
-                        suggestions:
-                            jobModels.map((e) => e.code.toString()).toList(),
-                      ),
-                    ),
-                    // if(widget.parentPage=='team')
+                             action: (value){
+                               if(value!=null && value.toString().trim().isEmpty) {
+                                 if (jobModels.any((element) =>
+                                 element.code == value)) {
+                                   selectedJobModel = jobModels.singleWhere((
+                                       element) => element.code == value);
+                                   setState(() {});
+                                 }
+                               }
+                             },
+                             textEditingController: jobTextEditController,
+                             validator: (value) => jobModels.any((e) =>
+                             e.code! ==
+                                 jobTextEditController.text)
+                                 ? null
+                                 : 'Please fill',
+                             suggestions:
+                             jobModels.map((e) => e.code.toString()).toList(),
+                           ),
+                         ),
+                         if (selectedJobModel != null && widget.parentPage=='team')
+                           IconButton(
+                               onPressed: () {
+                                 Provider.of<AssignTeamProvider>(
+                                     MyApp.navigatorKey.currentContext!,
+                                     listen: false)
+                                     .getData(jobId: selectedJobModel!.id!.toString());
+                                 Navigator.push(context,
+                                     MaterialPageRoute(builder: (_) => AssignedTeams(jobModel: selectedJobModel!,isFromJob: false,)));
+                               },
+                               icon: const Icon(Icons.add_business))
+                       ],
+                     ),
+
+
+                    if(widget.parentPage=='team')
                     const SizedBox(
                       height: 12,
                     ),
-
-                    IgnorePointer(
-                      ignoring:widget.parentPage=='team',
-
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Expanded(
-                            child: CustomAutoCompleteTextField(
-                              label: 'Team',
-                              hint: '',
-                              action: (value) {
-                                _getStaffsInTeam();
-                              },
-                              textEditingController: teamTextEditController,
-                              validator: (value) => teamModels.any((e) =>
-                                      e.teamName!.trim() ==
-                                      teamTextEditController.text.trim())
-                                  ? null
-                                  : 'Please fill',
-                              suggestions: teamModels
-                                  .where((element) => element.isActive!)
-                                  .map((e) => e.teamName.toString())
-                                  .toList(),
-                            ),
+                    if(widget.parentPage=='job')
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Expanded(
+                          child: CustomAutoCompleteTextField(
+                            label: 'Team',
+                            hint: '',
+                            action: (value) {
+                              _getStaffsInTeam();
+                            },
+                            textEditingController: teamTextEditController,
+                            validator: (value) => teamModels.any((e) =>
+                                    e.teamName!.trim() ==
+                                    teamTextEditController.text.trim())
+                                ? null
+                                : 'Please fill',
+                            suggestions: teamModels
+                                .where((element) => element.isActive!)
+                                .map((e) => e.teamName.toString())
+                                .toList(),
                           ),
-                          if (selectedTeamModel != null && widget.parentPage=='job')
-                            IconButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (_) => AddStaffToTeam(
-                                          teamModel: selectedTeamModel!),
-                                    ),
-                                  ).then((value) => _getStaffsInTeam());
-                                },
-                                icon: const Icon(Icons.person_add))
-                        ],
-                      ),
+                        ),
+                        if (selectedTeamModel != null && widget.parentPage=='job')
+                          IconButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => AddStaffToTeam(
+                                        teamModel: selectedTeamModel!),
+                                  ),
+                                ).then((value) => _getStaffsInTeam());
+                              },
+                              icon: const Icon(Icons.person_add))
+                      ],
                     ),
-                    const SizedBox(
+                    if(widget.parentPage=='job')
+
+                      const SizedBox(
                       height: 12,
                     ),
                     DatePickerTextField(
@@ -378,6 +406,13 @@ class _JobTeamMappingState extends State<JobTeamMapping> {
   }
 
   _initPage() async {
+    await Future.delayed(const Duration(milliseconds: 10));
+
+    showLoader();
+    await Provider.of<JobsProvider>(
+        MyApp.navigatorKey.currentContext!,
+        listen: false)
+        .getJobSuggestions();
     teamModels = Provider.of<TeamProvider>(context, listen: false).teamModels;
     jobModels =
         Provider.of<JobsProvider>(context, listen: false).jobSuggestionModels;
@@ -389,14 +424,14 @@ class _JobTeamMappingState extends State<JobTeamMapping> {
       _getStaffsInTeam();
     }
     if (widget.parentPage == 'job') {
-      jobTextEditController.text = widget.jobModel!.code!;
-      await Future.delayed(const Duration(milliseconds: 10));
+      jobTextEditController.text = jobModels.singleWhere((element) => element.id==widget.jobModel!.id).code!;
+        selectedJobModel=jobModels.singleWhere((element) => element.id==widget.jobModel!.id);
+
       _getStaffsInTeam();
     }
-    // await Provider.of<JobsProvider>(
-    //     MyApp.navigatorKey.currentContext!,
-    //     listen: false)
-    //     .getJobSuggestions();
+
+
+    hideLoader();
   }
 
   void _getStaffsInTeam() async {

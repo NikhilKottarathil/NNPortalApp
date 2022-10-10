@@ -6,6 +6,7 @@ import 'package:nn_portal/models/log_model.dart';
 import 'package:nn_portal/presentation/components/custom_webview.dart';
 import 'package:nn_portal/presentation/components/pop_ups_loaders/custom_alert_dialoug.dart';
 import 'package:nn_portal/presentation/components/restarted_widget.dart';
+import 'package:nn_portal/presentation/components/text_fields/date_picker_text_field.dart';
 import 'package:nn_portal/presentation/screens/admin_jobs/admin_job_list.dart';
 import 'package:nn_portal/presentation/screens/in_hand.dart';
 import 'package:nn_portal/presentation/screens/leaves.dart';
@@ -19,16 +20,23 @@ import 'package:nn_portal/providers/team_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class Profile extends StatefulWidget {
-  const Profile({Key? key}) : super(key: key);
+class Profile extends StatelessWidget {
+  Profile({Key? key}) : super(key: key);
 
-  @override
-  State<Profile> createState() => _ProfileState();
-}
+  bool isAdmin = false;
 
-class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
+    if (Provider.of<AuthenticationProvider>(context, listen: false)
+                .userModel!
+                .roleId !=
+            null &&
+        Provider.of<AuthenticationProvider>(context, listen: false)
+                .userModel!
+                .roleId ==
+            1) {
+      isAdmin = true;
+    }
     return Scaffold(
       appBar: AppBar(
         title: const Text('Profile'),
@@ -178,58 +186,44 @@ class _ProfileState extends State<Profile> {
             const SizedBox(
               height: 20,
             ),
-            if (Provider.of<AuthenticationProvider>(context, listen: false)
-                .userModel!
-                .roleName !=
-                null &&
-                Provider.of<AuthenticationProvider>(context, listen: false)
-                    .userModel!
-                    .roleName ==
-                    'Admin')
-            button(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Image.asset(
-                      'assets/site_icon.png',
-                      height: 24,
-                      width: 24,
-                    ),
-                    const SizedBox(
-                      width: 8,
-                    ),
-                    Text(
-                      "Jobs",
-                      style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.textDark),
-                    ),
-                  ],
-                ),
-                onPressed: () {
-                  Provider.of<AdminJobsProvider>(
-                          MyApp.navigatorKey.currentContext!,
-                          listen: false)
-                      .getInitialJob();
+            if (isAdmin)
+              button(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Image.asset(
+                        'assets/site_icon.png',
+                        height: 24,
+                        width: 24,
+                      ),
+                      const SizedBox(
+                        width: 8,
+                      ),
+                      Text(
+                        "Jobs",
+                        style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.textDark),
+                      ),
+                    ],
+                  ),
+                  onPressed: () {
+                    Provider.of<AdminJobsProvider>(
+                            MyApp.navigatorKey.currentContext!,
+                            listen: false)
+                        .getInitialJob();
 
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => const AdminJobList(),
-                    ),
-                  );
-                }),
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const AdminJobList(),
+                      ),
+                    );
+                  }),
             const SizedBox(
               height: 20,
             ),
-            if (Provider.of<AuthenticationProvider>(context, listen: false)
-                        .userModel!
-                        .roleName !=
-                    null &&
-                Provider.of<AuthenticationProvider>(context, listen: false)
-                        .userModel!
-                        .roleName ==
-                    'Admin')
+            if (isAdmin)
               button(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -266,6 +260,7 @@ class _ProfileState extends State<Profile> {
             const SizedBox(
               height: 20,
             ),
+            notificationWidget(),
             const Spacer(),
             if (Provider.of<AuthenticationProvider>(context, listen: false)
                     .visaExpiringDays !=
@@ -335,6 +330,53 @@ class _ProfileState extends State<Profile> {
     );
   }
 
+  Widget notificationWidget() {
+    DateTime dateTime = DateTime.now();
+    return Container(
+        width: MediaQuery.of(MyApp.navigatorKey.currentContext!).size.width,
+        decoration: BoxDecoration(
+            // color:AppColors.tertiary,
+            borderRadius: BorderRadius.circular(8)),
+        // padding: EdgeInsets.only(bottom: 12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Notifications',
+              style: Theme.of(MyApp.navigatorKey.currentContext!)
+                  .textTheme
+                  .titleMedium,
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: DatePickerTextField(
+                    dateTime: dateTime,
+                    callback: (date) {
+                      dateTime = date;
+                    },
+                    validator: (value) {
+                      return value!.isEmpty ? 'Select from date' : null;
+                    },
+                  ),
+                ),
+                const SizedBox(
+                  width: 12,
+                ),
+                ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        padding:
+                            EdgeInsets.symmetric(vertical: 14, horizontal: 24)),
+                    onPressed: () {
+                      Provider.of<AuthenticationProvider>(MyApp.navigatorKey.currentContext!,listen:false ).sendNotification(dateTime);
+                    },
+                    child: const Text('SEND'))
+              ],
+            ),
+          ],
+        ));
+  }
+
   Widget button(
       {required Widget child,
       required Function onPressed,
@@ -344,7 +386,7 @@ class _ProfileState extends State<Profile> {
         onPressed();
       },
       child: Container(
-        width: MediaQuery.of(context).size.width,
+        width: MediaQuery.of(MyApp.navigatorKey.currentContext!).size.width,
         decoration: BoxDecoration(
             color:
                 isSecondaryColor ? AppColors.secondaryBase : AppColors.tertiary,
