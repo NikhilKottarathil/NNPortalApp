@@ -26,7 +26,14 @@ class JobListTile extends StatelessWidget {
           width:62,
         ),
         title: Text(jobModel.locationName!),
-        subtitle: Text(jobModel.clientName!),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(jobModel.clientName!,style: Theme.of(context).textTheme.titleSmall!.copyWith(height: 1.5),),
+            if(jobModel.openOn!=null)
+            Text(jobModel.openOn!,style:Theme.of(context).textTheme.bodySmall!.copyWith(height: 1.5),),
+          ],
+        ),
         // trailing: showTrailingIcon ? const Icon(Icons.arrow_forward_ios) : null,
       ),
     );

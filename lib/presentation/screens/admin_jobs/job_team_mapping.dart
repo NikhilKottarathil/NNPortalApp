@@ -83,7 +83,7 @@ class _JobTeamMappingState extends State<JobTeamMapping> {
                              hint: '',
 
                              action: (value){
-                               if(value!=null && value.toString().trim().isEmpty) {
+                               if(value!=null && value.toString().trim().isNotEmpty) {
                                  if (jobModels.any((element) =>
                                  element.code == value)) {
                                    selectedJobModel = jobModels.singleWhere((
@@ -356,7 +356,13 @@ class _JobTeamMappingState extends State<JobTeamMapping> {
                         child: Checkbox(
                             value: staffModel.isLeader,
                             onChanged: (value) {
-                              staffModel.isLeader = !staffModel.isLeader!;
+                              for(StaffModel staff in staffModels){
+                                staff.isLeader = false;
+
+                                if(staffModel.id==staff.id){
+                                  staff.isLeader = true;
+                                }
+                              }
                               setState(() {});
                             })),
                   )),

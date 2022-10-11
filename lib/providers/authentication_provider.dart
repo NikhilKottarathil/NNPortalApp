@@ -7,6 +7,7 @@ import 'package:nn_portal/models/user_model.dart';
 import 'package:nn_portal/presentation/components/pop_ups_loaders/visa_expire_alert.dart';
 import 'package:nn_portal/providers/jobs_provider.dart';
 import 'package:nn_portal/providers/log_provider.dart';
+import 'package:nn_portal/providers/team_provider.dart';
 import 'package:nn_portal/utils/firebase_notification_utils.dart';
 import 'package:nn_portal/utils/http_api_calls.dart';
 import 'package:provider/provider.dart';
@@ -36,7 +37,10 @@ class AuthenticationProvider extends ChangeNotifier {
      Provider.of<JobsProvider>(MyApp.navigatorKey.currentContext!,listen: false).getInitialJob();
      Provider.of<LogProvider>(MyApp.navigatorKey.currentContext!,listen: false).getLogs();
      Provider.of<LogProvider>(MyApp.navigatorKey.currentContext!,listen: false).initLog();
-
+     Provider.of<TeamProvider>(
+         MyApp.navigatorKey.currentContext!,
+         listen: false)
+         .getInitialData();
      Navigator.of(MyApp.navigatorKey.currentContext!).pushReplacementNamed('/home');
 
      if(userModel!.visaExpiry!=null){

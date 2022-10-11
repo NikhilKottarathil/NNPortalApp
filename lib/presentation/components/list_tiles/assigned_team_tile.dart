@@ -36,6 +36,8 @@ class AssignedTeamTile extends StatelessWidget {
                       child: Column(
                         children: [
                           Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+
                             children: [
                               const Expanded(
                                   flex: 1,
@@ -54,6 +56,8 @@ class AssignedTeamTile extends StatelessWidget {
                             height: 6,
                           ),
                           Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+
                             children: [
                               const Expanded(flex: 1, child: Text('Description')),
                               const Text(' : '),
@@ -64,6 +68,8 @@ class AssignedTeamTile extends StatelessWidget {
                             height: 6,
                           ),
                           Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+
                             children: [
                               const Expanded(
                                   flex: 1,
@@ -82,6 +88,7 @@ class AssignedTeamTile extends StatelessWidget {
                             height: 4,
                           ),
                           Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               const Expanded(
                                   flex: 1,
@@ -91,7 +98,7 @@ class AssignedTeamTile extends StatelessWidget {
                               const Text(' : '),
                               Expanded(
                                   flex: 3,
-                                  child: Text(model.vehicles??'',
+                                  child: Text(model.vehicleName??'',
                                       style:
                                       Theme.of(context).textTheme.bodyMedium)),
                             ],

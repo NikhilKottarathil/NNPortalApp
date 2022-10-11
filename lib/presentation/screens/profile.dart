@@ -81,6 +81,7 @@ class Profile extends StatelessWidget {
             const SizedBox(
               height: 20,
             ),
+            if(!isAdmin)
             button(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -113,10 +114,12 @@ class Profile extends StatelessWidget {
                     ),
                   );
                 }),
-            const SizedBox(
+            if(!isAdmin)
+              const SizedBox(
               height: 20,
             ),
-            button(
+            if(!isAdmin)
+              button(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
@@ -147,10 +150,12 @@ class Profile extends StatelessWidget {
                     ),
                   );
                 }),
-            const SizedBox(
+            if(!isAdmin)
+              const SizedBox(
               height: 20,
             ),
-            button(
+            if(!isAdmin)
+              button(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
@@ -183,7 +188,8 @@ class Profile extends StatelessWidget {
                         .clearLeaveForm();
                   });
                 }),
-            const SizedBox(
+            if(isAdmin)
+              const SizedBox(
               height: 20,
             ),
             if (isAdmin)
@@ -220,7 +226,8 @@ class Profile extends StatelessWidget {
                       ),
                     );
                   }),
-            const SizedBox(
+            if (isAdmin)
+              const SizedBox(
               height: 20,
             ),
             if (isAdmin)
@@ -257,9 +264,11 @@ class Profile extends StatelessWidget {
                       ),
                     );
                   }),
-            const SizedBox(
-              height: 20,
-            ),
+            if (isAdmin)
+              const SizedBox(
+                height: 20,
+              ),
+            if (isAdmin)
             notificationWidget(),
             const Spacer(),
             if (Provider.of<AuthenticationProvider>(context, listen: false)

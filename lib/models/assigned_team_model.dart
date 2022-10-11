@@ -12,6 +12,7 @@ class AssignedTeamModel {
   String? assignedBy;
   int? submitBy;
   String? submitOn;
+  String? vehicleName;
   List<JobTeamVehicles>? jobVehicles;
   String? vehicles;
 
@@ -30,6 +31,7 @@ class AssignedTeamModel {
         this.submitBy,
         this.submitOn,
         this.vehicles,
+        this.vehicleName,
         this.jobVehicles});
 
   AssignedTeamModel.fromJson(Map<String, dynamic> json) {
@@ -46,6 +48,7 @@ class AssignedTeamModel {
     assignedBy = json['assignedBy'];
     submitBy = json['submitBy'];
     submitOn = json['submitOn'];
+    vehicleName = json['vehicleName'];
     if (json['jobVehicles'] != null) {
       jobVehicles = <JobTeamVehicles>[];
       vehicles='';

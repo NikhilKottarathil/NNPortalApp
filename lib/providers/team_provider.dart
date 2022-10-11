@@ -55,6 +55,7 @@ class TeamProvider extends ChangeNotifier {
   }
 
   Future getAllStaffs() async {
+    staffsModels.clear();
     try {
       var response = await getDataRequest(
           urlAddress: 'Staffs/GetdlStaffs', isShowLoader: false);
