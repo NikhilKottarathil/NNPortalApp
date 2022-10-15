@@ -65,8 +65,10 @@ class _LoginState extends State<Login> {
               child: ClipPath(
                 clipper: BackgroundClipper(),
                 child: Container(
-                  height: height * .6,
-                  width: width - 60,
+                 constraints: BoxConstraints(
+                   maxHeight: height * .6,
+                   maxWidth: width - 60,
+                 ),
                   decoration: BoxDecoration(
                     color: AppColors.secondaryBase,
                   ),

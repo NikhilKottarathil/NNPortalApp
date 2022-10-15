@@ -7,6 +7,9 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:nn_portal/firebase_options.dart';
 import 'package:nn_portal/main.dart';
 import 'package:nn_portal/presentation/screens/home.dart';
+import 'package:nn_portal/presentation/screens/job_details.dart';
+import 'package:nn_portal/providers/job_details_provider.dart';
+import 'package:provider/provider.dart';
 
 late AndroidNotificationChannel channel;
 
@@ -27,7 +30,9 @@ initializeNotifications() async {
   getFirebaseMessagingToken();
   FirebaseMessaging.onMessage.listen(showFlutterNotification);
 
-  FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {});
+  FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+    notificationAction(message.data, 3);
+  });
 }
 
 Future<String?> getFirebaseMessagingToken() async {
@@ -64,9 +69,9 @@ Future<void> setupFlutterNotifications() async {
       onSelectNotification: (payload) {
     print('onSelectNotification $payload');
     if (payload != null) {
-      // Map<String, dynamic> messageData = json.decode(payload);
+      Map<String, dynamic> messageData = json.decode(payload);
       //
-      // notificationAction(messageData, 0);
+      notificationAction(messageData, 0);
     }
   });
 
@@ -114,21 +119,23 @@ void showFlutterNotification(RemoteMessage message) {
   }
 }
 
-Future<dynamic> selectNotification(String payload) async {
-  print('notification  selectNotification');
-  print(payload);
-  if (payload.isNotEmpty) {
-    Map<String, dynamic> messageData = json.decode(payload);
-
-    notificationAction(messageData, 0);
-  }
-}
+// Future<dynamic> selectNotification(String payload) async {
+//   print('notification  selectNotification');
+//   print(payload);
+//   if (payload.isNotEmpty) {
+//     Map<String, dynamic> messageData = json.decode(payload);
+//
+//     notificationAction(messageData, 0);
+//   }
+// }
 
 notificationAction(Map<String, dynamic> messageData, int delay) async {
-  Navigator.pushAndRemoveUntil(
+  int jobId=int.parse(messageData['jobId'].toString());
+  Provider.of<JobsDetailsProvider>(MyApp.navigatorKey.currentContext!,listen: false).setJobModel(jobId: jobId);
+  Navigator.push(
       MyApp.navigatorKey.currentContext!,
       MaterialPageRoute(
-        builder: (_) => const Home(),
+        builder: (_) => const JobDetails(),
       ),
-      (route) => false);
+      );
 }

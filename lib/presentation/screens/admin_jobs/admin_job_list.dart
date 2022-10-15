@@ -76,7 +76,7 @@ class _AdminJobListState extends State<AdminJobList> {
                                     Provider.of<JobsDetailsProvider>(context,
                                             listen: false)
                                         .setJobModel(
-                                            jobModel: value.models[index]);
+                                            jobId: value.models[index].id!);
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(

@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:nn_portal/constants/enums.dart';
 import 'package:nn_portal/main.dart';
 import 'package:nn_portal/models/user_model.dart';
+import 'package:nn_portal/presentation/components/pop_ups_loaders/show_snack_bar.dart';
 import 'package:nn_portal/presentation/components/pop_ups_loaders/visa_expire_alert.dart';
 import 'package:nn_portal/providers/jobs_provider.dart';
 import 'package:nn_portal/providers/log_provider.dart';
@@ -91,10 +92,10 @@ class AuthenticationProvider extends ChangeNotifier {
   Future<bool> sendNotification(DateTime dateTime) async {
     try {
       await postDataRequest(
-        requestBody: {'startdt':DateFormat('dd/MM/yyyy').format(dateTime)},
+        requestBody: {'startdt':DateFormat('yyyy-MM-dd').format(dateTime)},
           urlAddress: 'JobStaffMappings/SendPushNotifications', isShowLoader: false);
-      authSuccess();
 
+      showSnackBar(message: 'Successful');
       return true;
     } catch (e) {
       return false;

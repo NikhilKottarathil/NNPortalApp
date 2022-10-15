@@ -93,15 +93,19 @@ class _JobListState extends State<JobList> {
               const SizedBox(
                 height: 10,
               ),
+              jobTypeTile(jobTypeModel: value.jobTypeModels[1]),
+              const SizedBox(
+                height: 10,
+              ),
               Row(
                 children: [
                   Expanded(
-                      child: jobTypeTile(jobTypeModel: value.jobTypeModels[1])),
+                      child: jobTypeTile(jobTypeModel: value.jobTypeModels[2])),
                   const SizedBox(
                     width: 10,
                   ),
                   Expanded(
-                      child: jobTypeTile(jobTypeModel: value.jobTypeModels[2]))
+                      child: jobTypeTile(jobTypeModel: value.jobTypeModels[3]))
                 ],
               ),
               const SizedBox(
@@ -110,12 +114,12 @@ class _JobListState extends State<JobList> {
               Row(
                 children: [
                   Expanded(
-                      child: jobTypeTile(jobTypeModel: value.jobTypeModels[3])),
+                      child: jobTypeTile(jobTypeModel: value.jobTypeModels[4])),
                   const SizedBox(
                     width: 10,
                   ),
                   Expanded(
-                      child: jobTypeTile(jobTypeModel: value.jobTypeModels[4]))
+                      child: jobTypeTile(jobTypeModel: value.jobTypeModels[5]))
                 ],
               ),
               const SizedBox(
@@ -146,7 +150,7 @@ class _JobListState extends State<JobList> {
                                     Provider.of<JobsDetailsProvider>(context,
                                             listen: false)
                                         .setJobModel(
-                                            jobModel: value.models[index]);
+                                            jobId: value.models[index].id!);
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
@@ -203,7 +207,8 @@ Widget jobTypeTile({required JobTypeModel jobTypeModel}) {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Image.asset(jobTypeModel.keyName == 'Open'
+            Image.asset(jobTypeModel.keyName == 'Assigned'
+                ? 'assets/site_icon.png':jobTypeModel.keyName == 'Open'
                 ? 'assets/open_jobs.png'
                 : jobTypeModel.keyName == 'Pending'
                     ? 'assets/pending_jobs.png'

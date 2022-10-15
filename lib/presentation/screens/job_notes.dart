@@ -19,7 +19,7 @@ class JobNotes extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    if(!Provider.of<AuthenticationProvider>(context, listen: false)
+    if(Provider.of<AuthenticationProvider>(context, listen: false)
         .userModel!
         .onLeave! || Provider.of<AuthenticationProvider>(context, listen: false)
         .userModel!

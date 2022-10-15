@@ -83,16 +83,19 @@ class _JobTeamMappingState extends State<JobTeamMapping> {
                              hint: '',
 
                              action: (value){
+                               selectedJobModel=null;
                                if(value!=null && value.toString().trim().isNotEmpty) {
                                  if (jobModels.any((element) =>
                                  element.code == value)) {
                                    selectedJobModel = jobModels.singleWhere((
                                        element) => element.code == value);
-                                   setState(() {});
                                  }
                                }
+                               setState(() {});
+
                              },
                              textEditingController: jobTextEditController,
+
                              validator: (value) => jobModels.any((e) =>
                              e.code! ==
                                  jobTextEditController.text)
@@ -287,8 +290,8 @@ class _JobTeamMappingState extends State<JobTeamMapping> {
                                         teamId: selectedTeamModel!.id!,
                                         jobId: jobModels
                                             .singleWhere((element) =>
-                                                element.code ==
-                                                jobTextEditController.text)
+                                                element.code.toString() ==
+                                                jobTextEditController.text.toString())
                                             .id!, description: descriptionTextEditController.text,dateTime: dateTime)
                                     .then((value) {
                                   Navigator.of(context).pop();

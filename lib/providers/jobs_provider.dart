@@ -17,6 +17,7 @@ class JobsProvider extends ChangeNotifier {
 
   List<JobTypeModel> jobTypeModels = [
     JobTypeModel(displayName: 'All', keyName: 'All', isSelected: true),
+    JobTypeModel(displayName: 'Assigned', keyName: 'Assigned'),
     JobTypeModel(displayName: 'Open', keyName: 'Open'),
     JobTypeModel(displayName: 'Pending', keyName: 'Pending'),
     JobTypeModel(displayName: 'Completed', keyName: 'Completed'),

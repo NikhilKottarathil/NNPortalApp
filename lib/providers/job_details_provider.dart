@@ -18,6 +18,7 @@ import '../models/job_attachment_model.dart';
 
 class JobsDetailsProvider extends ChangeNotifier {
   JobModel? jobModel;
+  int jobId=0;
 
   List<JobDescriptionModel> jobDescriptionModels = [];
   List<JobAttachmentModel> jobAttachmentModels = [];
@@ -25,64 +26,81 @@ class JobsDetailsProvider extends ChangeNotifier {
   String assignedStaffs = '';
   List<int> assignedStaffListIds = [];
 
-  setJobModel({required JobModel jobModel}) {
-    this.jobModel = jobModel;
-    jobDescriptionModels.clear();
-    jobAttachmentModels.clear();
-    assignedStaffs = '';
-    assignedStaffListIds.clear();
-    pageStatus = PageStatus.initialState;
-    if (jobModel.jobStaffs != null && jobModel.jobStaffs!.isNotEmpty) {
-      for (var element in jobModel.jobStaffs!) {
-        if (element.isTeamLeader!) {
-          if (!assignedStaffListIds.contains(element.staffId!)) {
-            assignedStaffListIds.add(element.staffId!);
-            if (assignedStaffs == '') {
-              assignedStaffs = '${element.staffName ?? ''} (L)';
-            } else {
-              assignedStaffs = '$assignedStaffs,${element.staffName ?? ''} (L)';
-            }
-          }
-        }
-      }
-      for (var element in jobModel.jobStaffs!) {
-        if (element.isDriver!) {
-          if (!assignedStaffListIds.contains(element.staffId!)) {
-            assignedStaffListIds.add(element.staffId!);
-            if (assignedStaffs == '') {
-              assignedStaffs = '${element.staffName ?? ''} (D)';
-            } else {
-              assignedStaffs = '$assignedStaffs,${element.staffName ?? ''} (D)';
-            }
-          }
-        }
-      }
-      for (var element in jobModel.jobStaffs!) {
-        if (!assignedStaffListIds.contains(element.staffId!)) {
-          assignedStaffListIds.add(element.staffId!);
-          if (assignedStaffs == '') {
-            assignedStaffs = element.staffName ?? '';
-          } else {
-            assignedStaffs = '$assignedStaffs,${element.staffName ?? ''}';
-          }
-        }
-      }
-      jobModel.assignedStaff = assignedStaffs;
-    }
-    String assignedVehicles = '';
+  setJobModel({required int jobId}) async {
+    pageStatus = PageStatus.loading;
+    notifyListeners();
 
-    // if (jobModel.jobVehicles != null && jobModel.jobVehicles!.isNotEmpty) {
-    //   for (var element in jobModel.jobVehicles!) {
-    //     if (assignedVehicles == '') {
-    //       assignedVehicles = element.vehicleName!;
-    //     } else {
-    //       assignedVehicles = '$assignedVehicles, ${element.vehicleName!}';
-    //     }
-    //   }
-    //   jobModel.assignedVehicle = assignedVehicles;
-    // }
-    getDescriptions();
-    getAttachments();
+    try {
+      var response = await getDataRequest(
+        urlAddress: 'Jobs/$jobId'
+            '',
+        isShowLoader: false,
+      );
+
+      jobModel=JobModel.fromJson(response);
+      jobDescriptionModels.clear();
+      jobAttachmentModels.clear();
+      assignedStaffs = '';
+      assignedStaffListIds.clear();
+      if (jobModel!.jobStaffs != null && jobModel!.jobStaffs!.isNotEmpty) {
+        for (var element in jobModel!.jobStaffs!) {
+          if (element.isTeamLeader!) {
+            if (!assignedStaffListIds.contains(element.staffId!)) {
+              assignedStaffListIds.add(element.staffId!);
+              if (assignedStaffs == '') {
+                assignedStaffs = '${element.staffName ?? ''} (L)';
+              } else {
+                assignedStaffs =
+                '$assignedStaffs,${element.staffName ?? ''} (L)';
+              }
+            }
+          }
+        }
+        for (var element in jobModel!.jobStaffs!) {
+          if (element.isDriver!) {
+            if (!assignedStaffListIds.contains(element.staffId!)) {
+              assignedStaffListIds.add(element.staffId!);
+              if (assignedStaffs == '') {
+                assignedStaffs = '${element.staffName ?? ''} (D)';
+              } else {
+                assignedStaffs =
+                '$assignedStaffs,${element.staffName ?? ''} (D)';
+              }
+            }
+          }
+        }
+        for (var element in jobModel!.jobStaffs!) {
+          if (!assignedStaffListIds.contains(element.staffId!)) {
+            assignedStaffListIds.add(element.staffId!);
+            if (assignedStaffs == '') {
+              assignedStaffs = element.staffName ?? '';
+            } else {
+              assignedStaffs = '$assignedStaffs,${element.staffName ?? ''}';
+            }
+          }
+        }
+        jobModel!.assignedStaff = assignedStaffs;
+      }
+      String assignedVehicles = '';
+
+      // if (jobModel.jobVehicles != null && jobModel.jobVehicles!.isNotEmpty) {
+      //   for (var element in jobModel.jobVehicles!) {
+      //     if (assignedVehicles == '') {
+      //       assignedVehicles = element.vehicleName!;
+      //     } else {
+      //       assignedVehicles = '$assignedVehicles, ${element.vehicleName!}';
+      //     }
+      //   }
+      //   jobModel.assignedVehicle = assignedVehicles;
+      // }
+      getDescriptions();
+      getAttachments();
+    }
+    catch (e) {
+      debugPrint(e.toString());
+      pageStatus = PageStatus.failed;
+      notifyListeners();
+    }
   }
 
   Future getAttachments() async {
@@ -116,7 +134,7 @@ class JobsDetailsProvider extends ChangeNotifier {
     pageStatus = PageStatus.loading;
     notifyListeners();
 
-    // try {
+    try {
       var response = await postDataRequest(
         requestBody: {'id': jobVehicle.id, 'vehicleId': vehicleModel.id},
         method: 'put',
@@ -128,11 +146,11 @@ class JobsDetailsProvider extends ChangeNotifier {
 
       pageStatus = PageStatus.loaded;
       notifyListeners();
-    // } catch (e) {
-    //   debugPrint(e.toString());
-    //   pageStatus = PageStatus.failed;
-    //   notifyListeners();
-    // }
+    } catch (e) {
+      debugPrint(e.toString());
+      pageStatus = PageStatus.failed;
+      notifyListeners();
+    }
   }
 
   Future getDescriptions() async {

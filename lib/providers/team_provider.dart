@@ -93,6 +93,12 @@ class TeamProvider extends ChangeNotifier {
     try {
       List<Map<String,dynamic>> requestBody=[];
 
+      if(assignedStaffModels.isEmpty){
+        requestBody.add({
+        "teamId": teamModel.id,
+        "staffId":0,
+        });
+      }
       for (var element in assignedStaffModels) {
         requestBody.add(
           {

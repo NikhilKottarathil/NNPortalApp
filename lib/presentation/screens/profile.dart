@@ -78,7 +78,8 @@ class Profile extends StatelessWidget {
                 );
               }),
             ),
-            const SizedBox(
+            if(!isAdmin)
+              const SizedBox(
               height: 20,
             ),
             if(!isAdmin)

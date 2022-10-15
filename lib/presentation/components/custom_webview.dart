@@ -29,6 +29,7 @@ class _CustomWebViewState extends State<CustomWebView> {
       top: true,
       child: Scaffold(
 
+        appBar: AppBar(),
         extendBodyBehindAppBar: true,
 
         // appBar: AppBar(

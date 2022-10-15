@@ -31,7 +31,20 @@ class JobListTile extends StatelessWidget {
           children: [
             Text(jobModel.clientName!,style: Theme.of(context).textTheme.titleSmall!.copyWith(height: 1.5),),
             if(jobModel.openOn!=null)
-            Text(jobModel.openOn!,style:Theme.of(context).textTheme.bodySmall!.copyWith(height: 1.5),),
+            Row(
+              children: [
+                Text('Open On       :',style:Theme.of(context).textTheme.bodySmall!.copyWith(height: 1.5),),
+                Text(jobModel.openOn!.length>10?jobModel.openOn!.substring(0,10):jobModel.openOn!,style:Theme.of(context).textTheme.bodySmall!.copyWith(height: 1.5),),
+              ],
+            ),
+            if(jobModel.assignedFor!=null)
+
+              Row(
+              children: [
+                Text('Scheduled Date :',style:Theme.of(context).textTheme.bodySmall!.copyWith(height: 1.5),),
+                Text(jobModel.assignedFor!.length>10?jobModel.assignedFor!.substring(0,10):jobModel.assignedFor!,style:Theme.of(context).textTheme.bodySmall!.copyWith(height: 1.5),),
+              ],
+            ),
           ],
         ),
         // trailing: showTrailingIcon ? const Icon(Icons.arrow_forward_ios) : null,
