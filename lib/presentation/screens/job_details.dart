@@ -36,75 +36,76 @@ class _JobDetailsState extends State<JobDetails>
       ),
       body: Consumer<JobsDetailsProvider>(builder: (context, value, child) {
         return value.pageStatus == PageStatus.loaded
-            ? Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    JobFullDetails(
-                      jobModel: value.jobModel!,
+            ? SingleChildScrollView(
+              padding:
+              const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              child: Column(
+                children: [
+                  JobFullDetails(
+                    jobModel: value.jobModel!,
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  Container(
+                    // height: 300,
+                    decoration: BoxDecoration(
+                      // border: Border.all(color: AppColors.tertiary, width: 2),
+                      borderRadius: BorderRadius.circular(9),
+                      color: AppColors.tertiary.withOpacity(.5),
                     ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    Expanded(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          // border: Border.all(color: AppColors.tertiary, width: 2),
-                          borderRadius: BorderRadius.circular(9),
-                          color: AppColors.tertiary.withOpacity(.5),
-                        ),
-                        child: Column(
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                color: AppColors.tertiary,
-                                border: Border.all(color: AppColors.tertiary),
-                                borderRadius: const BorderRadius.only(
-                                    topLeft: Radius.circular(8),
-                                    topRight: Radius.circular(8)),
-                              ),
-                              padding: EdgeInsets.all(3),
-                              child: TabBar(
-                                  indicatorColor: Colors.grey,
-                                  labelStyle: const TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w600),
-                                  indicator: BoxDecoration(
-                                      color: AppColors.primaryBase,
-                                      borderRadius: BorderRadius.circular(8),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.grey.shade100,
-                                        )
-                                      ]),
-                                  onTap: (index) {
-                                    setState(() {});
-                                  },
-                                  controller: _tabController,
-                                  labelColor: AppColors.textLight,
-                                  unselectedLabelColor: AppColors.textDark,
-                                  tabs: const [
-                                    Tab(text: "Notes"),
-                                    Tab(text: "Attachments"),
+                    child: Column(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            color: AppColors.tertiary,
+                            border: Border.all(color: AppColors.tertiary),
+                            borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(8),
+                                topRight: Radius.circular(8)),
+                          ),
+                          padding: EdgeInsets.all(3),
+                          child: TabBar(
+                              indicatorColor: Colors.grey,
+                              labelStyle: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600),
+                              indicator: BoxDecoration(
+                                  color: AppColors.primaryBase,
+                                  borderRadius: BorderRadius.circular(8),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.shade100,
+                                    )
                                   ]),
-                            ),
-                            Expanded(
-                              child: TabBarView(
-                                  controller: _tabController,
-                                  children: [
-                                    JobNotes(),
-                                    JobAttachments(),
-                                  ]),
-                            ),
-                          ],
+                              onTap: (index) {
+                                setState(() {});
+                              },
+                              controller: _tabController,
+                              labelColor: AppColors.textLight,
+                              unselectedLabelColor: AppColors.textDark,
+                              tabs: const [
+                                Tab(text: "Notes"),
+                                Tab(text: "Attachments"),
+                              ]),
                         ),
-                      ),
+                        Container(
+                          // constraints: BoxConstraints(minHeight: MediaQuery.of(context).size.height*.75),
+                          height: MediaQuery.of(context).size.height*.6,
+
+                          child: TabBarView(
+                              controller: _tabController,
+                              children: [
+                                JobNotes(),
+                                JobAttachments(),
+                              ]),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              )
+                  ),
+                ],
+              ),
+            )
             : const CustomCircularProgressIndicator();
       }),
     );
