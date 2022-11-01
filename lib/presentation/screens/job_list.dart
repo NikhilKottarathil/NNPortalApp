@@ -10,6 +10,7 @@ import 'package:nn_portal/presentation/components/pop_ups_loaders/custom_circula
 import 'package:nn_portal/presentation/components/text_fields/text_field_search.dart';
 import 'package:nn_portal/presentation/drawers/home_drawer.dart';
 import 'package:nn_portal/presentation/screens/job_details.dart';
+import 'package:nn_portal/providers/authentication_provider.dart';
 import 'package:nn_portal/providers/job_details_provider.dart';
 import 'package:nn_portal/providers/jobs_provider.dart';
 import 'package:provider/provider.dart';
@@ -22,16 +23,17 @@ class JobList extends StatefulWidget {
 }
 
 class _JobListState extends State<JobList> {
-  ScrollController scrollController = ScrollController();
   TextEditingController searchTextEditingController = TextEditingController();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    scrollController.addListener(() {
-      if (scrollController.position.pixels ==
-          scrollController.position.maxScrollExtent) {
+    // Provider.of<JobsProvider>(context, listen: false). scrollController.
+
+    Provider.of<JobsProvider>(context, listen: false).scrollController.addListener(() {
+      if ( Provider.of<JobsProvider>(context, listen: false).scrollController.position.pixels ==
+          Provider.of<JobsProvider>(context, listen: false).scrollController.position.maxScrollExtent) {
         Provider.of<JobsProvider>(context, listen: false).loadMore();
       }
     });
@@ -90,10 +92,26 @@ class _JobListState extends State<JobList> {
                   ),
                 ),
               ),
+              if (Provider.of<AuthenticationProvider>(context, listen: false)
+                  .userModel!
+                  .roleId !=
+                  null &&
+                  Provider.of<AuthenticationProvider>(context, listen: false)
+                      .userModel!
+                      .roleId ==
+                      2)
               const SizedBox(
                 height: 10,
               ),
-              jobTypeTile(jobTypeModel: value.jobTypeModels[1]),
+              if (Provider.of<AuthenticationProvider>(context, listen: false)
+                  .userModel!
+                  .roleId !=
+                  null &&
+                  Provider.of<AuthenticationProvider>(context, listen: false)
+                      .userModel!
+                      .roleId ==
+                      2)
+              jobTypeTile(jobTypeModel: value.jobTypeModels[1],isCenter: true),
               const SizedBox(
                 height: 10,
               ),
@@ -143,7 +161,7 @@ class _JobListState extends State<JobList> {
                         ? ListView.separated(
                             itemCount: value.models.length,
                             // shrinkWrap: true,
-                            controller: scrollController,
+                            controller:  Provider.of<JobsProvider>(context, listen: false).scrollController,
                             itemBuilder: (BuildContext context, int index) {
                               return GestureDetector(
                                   onTap: () {
@@ -155,7 +173,11 @@ class _JobListState extends State<JobList> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (_) =>
-                                                const JobDetails()));
+                                                const JobDetails())).then((value){
+                                      Provider.of<JobsProvider>(context,
+                                          listen: false)
+                                          .refresh();
+                                    });
                                   },
                                   child: JobListTile(
                                       jobModel: value.models[index]));
@@ -182,7 +204,7 @@ class _JobListState extends State<JobList> {
   }
 }
 
-Widget jobTypeTile({required JobTypeModel jobTypeModel}) {
+Widget jobTypeTile({required JobTypeModel jobTypeModel,bool isCenter=false}) {
   return GestureDetector(
     onTap: () {
       Provider.of<JobsProvider>(MyApp.navigatorKey.currentContext!,
@@ -205,7 +227,7 @@ Widget jobTypeTile({required JobTypeModel jobTypeModel}) {
         ),
         padding: EdgeInsets.symmetric(vertical: 8,horizontal: 8),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment:isCenter?MainAxisAlignment.center: MainAxisAlignment.start,
           children: [
             Image.asset(jobTypeModel.keyName == 'Assigned'
                 ? 'assets/site_icon.png':jobTypeModel.keyName == 'Open'

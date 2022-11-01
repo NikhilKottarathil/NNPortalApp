@@ -24,8 +24,7 @@ class LogProvider extends ChangeNotifier {
   PageStatus pageStatus = PageStatus.initialState;
 
   List<LogModel> models = [];
-  List<VehicleModel> vehicleModels = [];
-  List<ToolModel> toolModels = [];
+
   List<JobModel> jobModels = [];
 
   changSelectedDate(DateTime dateTime) {
@@ -33,14 +32,14 @@ class LogProvider extends ChangeNotifier {
     getLogs();
   }
 
-  initLog() {
-    getVehicleList();
-    getToolList();
-    // getJobList();
-  }
+  // initLog() {
+  //   getVehicleList();
+  //   getToolList();
+  //   // getJobList();
+  // }
 
   Future getLogs() async {
-    pageStatus = PageStatus.loading; 
+    pageStatus = PageStatus.loading;
     notifyListeners();
 
     models.clear();
@@ -61,8 +60,8 @@ class LogProvider extends ChangeNotifier {
         StaffLogModel contentModel = StaffLogModel.fromJson(json);
         DateTime checkInTime =
             DateFormat('yyyy-MM-dd HH:mm:ss').parse(contentModel.checkIn!);
-        DateTime?  checkOutTime ;
-        if(contentModel.checkOut!=null) {
+        DateTime? checkOutTime;
+        if (contentModel.checkOut != null) {
           checkOutTime =
               DateFormat('yyyy-MM-dd HH:mm:ss').parse(contentModel.checkOut!);
         }
@@ -72,15 +71,15 @@ class LogProvider extends ChangeNotifier {
             checkOut: checkOutTime,
             locationName: json['locationName'],
             clientName: json['clientName'],
-            logType: contentModel.isMain!?LogType.workLog:LogType.siteLog,
+            logType: contentModel.isMain! ? LogType.workLog : LogType.siteLog,
             isCompleted: true));
       }
       for (var json in response['vehicleLogs']) {
         VehicleLogModel contentModel = VehicleLogModel.fromJson(json);
         DateTime checkInTime =
-        DateFormat('yyyy-MM-dd HH:mm:ss').parse(contentModel.checkIn!);
-        DateTime?  checkOutTime ;
-        if(contentModel.checkOut!=null) {
+            DateFormat('yyyy-MM-dd HH:mm:ss').parse(contentModel.checkIn!);
+        DateTime? checkOutTime;
+        if (contentModel.checkOut != null) {
           checkOutTime =
               DateFormat('yyyy-MM-dd HH:mm:ss').parse(contentModel.checkOut!);
         }
@@ -93,12 +92,12 @@ class LogProvider extends ChangeNotifier {
             logType: LogType.vehicleLog,
             isCompleted: true));
       }
- for (var json in response['toolLogs']) {
+      for (var json in response['toolLogs']) {
         ToolLogModel contentModel = ToolLogModel.fromJson(json);
         DateTime checkInTime =
-        DateFormat('yyyy-MM-dd HH:mm:ss').parse(contentModel.checkIn!);
-        DateTime?  checkOutTime ;
-        if(contentModel.checkOut!=null) {
+            DateFormat('yyyy-MM-dd HH:mm:ss').parse(contentModel.checkIn!);
+        DateTime? checkOutTime;
+        if (contentModel.checkOut != null) {
           checkOutTime =
               DateFormat('yyyy-MM-dd HH:mm:ss').parse(contentModel.checkOut!);
         }
@@ -122,8 +121,13 @@ class LogProvider extends ChangeNotifier {
   }
 
   Future<bool> addLog(
-      {required LogType logType,required TimeOfDay checkInTime, TimeOfDay? checkOutTime, String? vehicleId,
-         String? jobId,String? toolId,LogModel? logModel}) async {
+      {required LogType logType,
+      required TimeOfDay checkInTime,
+      TimeOfDay? checkOutTime,
+      String? vehicleId,
+      String? jobId,
+      String? toolId,
+      LogModel? logModel}) async {
     pageStatus = PageStatus.loading;
     notifyListeners();
 
@@ -133,48 +137,55 @@ class LogProvider extends ChangeNotifier {
       String checkInDateString = format.format(TimeUtils()
           .dateTimeFromTimeAndDate(checkInTime, dateTime: selectedDate));
 
-
       Map<String, dynamic> requestBody = {
         'jobId': 0,
         'checkIn': checkInDateString,
-
       };
-      if(checkOutTime!=null) {
+      if (checkOutTime != null) {
         String checkOutDateString = format.format(TimeUtils()
             .dateTimeFromTimeAndDate(checkOutTime, dateTime: selectedDate));
-        requestBody.addAll({'checkout': checkOutDateString,});
-      }else{
+        requestBody.addAll({
+          'checkout': checkOutDateString,
+        });
+      } else {
         requestBody.addAll({'checkout': ''});
-
       }
-      String apiUrl='Staffs/PostStaffLog';
-      if(logType==LogType.workLog || logType==LogType.siteLog){
-        if(logType==LogType.workLog){
-          requestBody.addAll({'isMain':true});
-        }else{
-          requestBody.addAll({'jobId': jobId,'isMain': false,});
+      String apiUrl = 'Staffs/PostStaffLog';
+      if (logType == LogType.workLog || logType == LogType.siteLog) {
+        if (logType == LogType.workLog) {
+          requestBody.addAll({'isMain': true});
+        } else {
+          requestBody.addAll({
+            'jobId': jobId,
+            'isMain': false,
+          });
         }
-        if(logModel==null){
-          apiUrl='Staffs/PostStaffLog';
-        }else{
-          apiUrl='Staffs/PutStaffLog/${logModel.staffLogModel!.id}';
-        }
-      }
-      if(logType==LogType.vehicleLog){
-        requestBody.addAll({'jobId': jobId,'vehicleId': vehicleId,});
-        if(logModel==null){
-          apiUrl='Vehicles/PostVehicleLog';
-        }else{
-          apiUrl='Vehicles/PutVehicleLog/${logModel.vehicleLogModel!.id}';
+        if (logModel == null) {
+          apiUrl = 'Staffs/PostStaffLog';
+        } else {
+          apiUrl = 'Staffs/PutStaffLog/${logModel.staffLogModel!.id}';
         }
       }
-      if(logType==LogType.toolLog){
-        requestBody.addAll({'jobId': jobId,
-          'toolId': toolId,});
-        if(logModel==null){
-          apiUrl='Tools/PostToolLog';
-        }else{
-          apiUrl='Tools/PutToolLog/${logModel.toolLogModel!.id}';
+      if (logType == LogType.vehicleLog) {
+        requestBody.addAll({
+          'jobId': jobId,
+          'vehicleId': vehicleId,
+        });
+        if (logModel == null) {
+          apiUrl = 'Vehicles/PostVehicleLog';
+        } else {
+          apiUrl = 'Vehicles/PutVehicleLog/${logModel.vehicleLogModel!.id}';
+        }
+      }
+      if (logType == LogType.toolLog) {
+        requestBody.addAll({
+          'jobId': jobId,
+          'toolId': toolId,
+        });
+        if (logModel == null) {
+          apiUrl = 'Tools/PostToolLog';
+        } else {
+          apiUrl = 'Tools/PutToolLog/${logModel.toolLogModel!.id}';
         }
       }
       print('addLog 2');
@@ -182,7 +193,7 @@ class LogProvider extends ChangeNotifier {
       var response = await postDataRequest(
           urlAddress: apiUrl,
           requestBody: requestBody,
-          method: logModel==null?'post':'put',
+          method: logModel == null ? 'post' : 'put',
           isShowLoader: false);
       getLogs();
 
@@ -197,44 +208,6 @@ class LogProvider extends ChangeNotifier {
     }
   }
 
-
-  Future getVehicleList() async {
-    vehicleModels.clear();
-    try {
-      var response = await getDataRequest(
-        urlAddress: 'Vehicles/GetdlVehicles',
-        isShowLoader: false,
-      );
-
-      // print(response);
-      for (var json in response) {
-        vehicleModels.add(VehicleModel.fromJson(json));
-      }
-
-      notifyListeners();
-    } catch (e) {
-      notifyListeners();
-    }
-  }
-
-  Future getToolList() async {
-    toolModels.clear();
-    try {
-      var response = await getDataRequest(
-        urlAddress: 'Tools/GetdlTools',
-        isShowLoader: false,
-      );
-
-      // print(response);
-      for (var json in response) {
-        toolModels.add(ToolModel.fromJson(json));
-      }
-
-      notifyListeners();
-    } catch (e) {
-      notifyListeners();
-    }
-  }
 
   Future getJobList({String searchString = ''}) async {
     notifyListeners();

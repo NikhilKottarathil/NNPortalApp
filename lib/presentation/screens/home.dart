@@ -5,6 +5,8 @@ import 'package:nn_portal/presentation/drawers/home_drawer.dart';
 import 'package:nn_portal/presentation/screens/job_list.dart';
 import 'package:nn_portal/presentation/screens/profile.dart';
 import 'package:nn_portal/presentation/screens/logs/logs.dart';
+import 'package:nn_portal/presentation/screens/teams/team_list.dart';
+import 'package:nn_portal/providers/authentication_provider.dart';
 import 'package:nn_portal/providers/jobs_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -22,14 +24,15 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _tabController=TabController(length: 3, vsync: this);
-
+    _tabController = TabController(length: 3, vsync: this);
   }
+
   void _onItemTapped(int index) {
     setState(() {
       _tabController!.animateTo(index);
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,46 +41,58 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
       //   centerTitle: true,
       // ),
       body: TabBarView(
-        physics: NeverScrollableScrollPhysics(),
-        children:  [
-          JobList(),
-          Logs(),
-          Profile(),
+        physics: const NeverScrollableScrollPhysics(),
+        children: [
+          const JobList(),
+          Provider.of<AuthenticationProvider>(context, listen: false)
+                      .userModel!
+                      .roleId! ==
+                  1
+              ? TeamList()
+              :const Logs(),
+           Profile(),
         ],
         controller: _tabController,
       ),
       bottomNavigationBar: _bottomNavigationBar(),
-
     );
   }
 
-  BottomNavigationBar _bottomNavigationBar()
-  {
+  BottomNavigationBar _bottomNavigationBar() {
     return BottomNavigationBar(
-      items:const  <BottomNavigationBarItem>[
-        BottomNavigationBarItem(
-          icon: Icon(Icons.list),
-          label: 'Jobs',
-          backgroundColor: Colors.white,
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.access_time),
-          label: 'Record',
-          backgroundColor:  Colors.white,
-        ),
-        BottomNavigationBarItem(
-          icon:  Icon(Icons.person),
-          label: 'Profile',
-          backgroundColor: Colors.white,
-        ),
-      ],
-      currentIndex: _tabController!.index,
-      selectedItemColor: AppColors.primaryBase,
-      backgroundColor: Colors.white,
+        items: <BottomNavigationBarItem>[
+          const BottomNavigationBarItem(
+            icon: Icon(Icons.list),
+            label: 'Jobs',
+            backgroundColor: Colors.white,
+          ),
+          BottomNavigationBarItem(
+            icon: Provider.of<AuthenticationProvider>(context, listen: false)
+                        .userModel!
+                        .roleId! ==
+                    1
+                ? const Icon(Icons.group_add)
+                : const Icon(Icons.access_time),
+            label: Provider.of<AuthenticationProvider>(context, listen: false)
+                        .userModel!
+                        .roleId! ==
+                    1
+                ? 'Teams'
+                : 'Record',
+            backgroundColor: Colors.white,
+          ),
+          const BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+            backgroundColor: Colors.white,
+          ),
+        ],
+        currentIndex: _tabController!.index,
+        selectedItemColor: AppColors.primaryBase,
+        backgroundColor: Colors.white,
         // unselectedItemColor: AppColors.textLightFifth,
         // selectedItemColor: AppColors.textLight,
         // backgroundColor: AppColors.primaryBase,
-      onTap: _onItemTapped
-    );
+        onTap: _onItemTapped);
   }
 }

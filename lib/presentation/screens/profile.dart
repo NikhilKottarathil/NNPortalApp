@@ -17,6 +17,7 @@ import 'package:nn_portal/providers/authentication_provider.dart';
 import 'package:nn_portal/providers/in_hand_provider.dart';
 import 'package:nn_portal/providers/leave_provider.dart';
 import 'package:nn_portal/providers/team_provider.dart';
+import 'package:nn_portal/utils/date_time_conversions.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -231,44 +232,44 @@ class Profile extends StatelessWidget {
               const SizedBox(
               height: 20,
             ),
-            if (isAdmin)
-              button(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Image.asset(
-                        'assets/work_icon.png',
-                        height: 24,
-                        width: 24,
-                      ),
-                      const SizedBox(
-                        width: 8,
-                      ),
-                      Text(
-                        "Teams",
-                        style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.textDark),
-                      ),
-                    ],
-                  ),
-                  onPressed: () {
-                    Provider.of<TeamProvider>(
-                            MyApp.navigatorKey.currentContext!,
-                            listen: false)
-                        .getInitialData();
-
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => TeamList(),
-                      ),
-                    );
-                  }),
-            if (isAdmin)
-              const SizedBox(
-                height: 20,
-              ),
+            // if (isAdmin)
+            //   button(
+            //       child: Row(
+            //         mainAxisAlignment: MainAxisAlignment.start,
+            //         children: [
+            //           Image.asset(
+            //             'assets/work_icon.png',
+            //             height: 24,
+            //             width: 24,
+            //           ),
+            //           const SizedBox(
+            //             width: 8,
+            //           ),
+            //           Text(
+            //             "Teams",
+            //             style: Theme.of(context).textTheme.labelLarge!.copyWith(
+            //                 fontWeight: FontWeight.bold,
+            //                 color: AppColors.textDark),
+            //           ),
+            //         ],
+            //       ),
+            //       onPressed: () {
+            //         Provider.of<TeamProvider>(
+            //                 MyApp.navigatorKey.currentContext!,
+            //                 listen: false)
+            //             .getInitialData();
+            //
+            //         Navigator.push(
+            //           context,
+            //           MaterialPageRoute(
+            //             builder: (_) => TeamList(),
+            //           ),
+            //         );
+            //       }),
+            // if (isAdmin)
+            //   const SizedBox(
+            //     height: 20,
+            //   ),
             if (isAdmin)
             notificationWidget(),
             const Spacer(),
@@ -362,6 +363,7 @@ class Profile extends StatelessWidget {
                 Expanded(
                   child: DatePickerTextField(
                     dateTime: dateTime,
+                    startDate: DateTime.now().subtract(const Duration(days: 365)),
                     callback: (date) {
                       dateTime = date;
                     },

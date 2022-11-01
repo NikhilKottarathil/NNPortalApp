@@ -121,6 +121,17 @@ class LeaveTile extends StatelessWidget {
                 ),
               ],
             ),
+          ),
+          if(leaveModel.note!=null)
+          Text.rich(
+            TextSpan(
+              children: [
+                const  TextSpan(text: 'Note     : ',style: TextStyle(fontWeight: FontWeight.bold)),
+                TextSpan(
+                  text:leaveModel.note??'No notes',
+                ),
+              ],
+            ),
           )
         ],
       ),

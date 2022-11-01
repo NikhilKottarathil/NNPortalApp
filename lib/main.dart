@@ -21,17 +21,53 @@ import 'package:nn_portal/utils/firebase_notification.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 
+import 'providers/app_provider.dart';
+
+@pragma('vm:entry-point')
+Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  try {
+    await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform);
+  }catch(e){
+    print('firebase error $e');
+  }
+  // showFlutterNotification(message);
+  // If you're going to use other Firebase services in the background, such as Firestore,
+  // make sure you call `initializeApp` before using other Firebase services.
+  print('Handling a background message ${message.messageId}');
+}
+
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  try {
+    await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform);
+  }catch(e){
+    print('firebase error $e');
+  }
+  // FirebaseMessaging messaging = FirebaseMessaging.instance;
+  //
+  // NotificationSettings settings = await messaging.requestPermission(
+  //   alert: true,
+  //   announcement: false,
+  //   badge: true,
+  //   carPlay: false,
+  //   criticalAlert: false,
+  //   provisional: false,
+  //   sound: true,
+  // );
+  // await setupFlutterNotifications();
+  // FirebaseMessaging.instance.getInitialMessage().then((message) {
+  //   print('nnotification getInitialMessage $message');
+  //   if (message != null) {
+  //    notificationAction(message.data, 5);
+  //   }
+  // });
   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
-  await setupFlutterNotifications();
 
-  runApp(RestartWidget(child: const MyApp()));
-
+  // runApp(RestartWidget(child: ));
+runApp(const MyApp());
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
       statusBarBrightness: Brightness.light // status bar color
@@ -53,7 +89,10 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     // TODO: implement initState
     super.initState();
+
+
     initializeNotifications();
+
   }
 
   @override
@@ -69,10 +108,11 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(create: (_) => InHandProvider()),
         ChangeNotifierProvider(create: (_) => LeaveProvider()),
         ChangeNotifierProvider(create: (_) => TeamProvider()),
+        ChangeNotifierProvider(create: (_) => AppProvider()),
       ],
       child: MaterialApp(
         navigatorKey: MyApp.navigatorKey,
-        title: 'NN Portal',
+        title: 'Netnnet',
         onGenerateRoute: AppRouter().onGenerateRoute,
         debugShowCheckedModeBanner: false,
         theme: ThemeData(

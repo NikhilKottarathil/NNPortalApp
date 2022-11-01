@@ -11,6 +11,7 @@ class LeaveModel {
   bool? isActive;
   String? submitBy;
   String? submitOn;
+  String? note;
 
   LeaveModel({this.id,
     this.staffId,
@@ -23,7 +24,7 @@ class LeaveModel {
     this.approvedOn,
     this.isActive,
     this.submitBy,
-    this.submitOn});
+    this.submitOn,this.note});
 
   LeaveModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -38,6 +39,7 @@ class LeaveModel {
     isActive = json['isActive'];
     submitBy = json['submitBy'];
     submitOn = json['submitOn'];
+    note = json['note'];
   }
 
   Map<String, dynamic> toJson() {
@@ -54,6 +56,7 @@ class LeaveModel {
     data['isActive'] = this.isActive;
     data['submitBy'] = this.submitBy;
     data['submitOn'] = this.submitOn;
+    data['note'] = this.note;
     return data;
   }
 }

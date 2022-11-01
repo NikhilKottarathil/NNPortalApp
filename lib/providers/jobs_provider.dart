@@ -13,8 +13,10 @@ class JobsProvider extends ChangeNotifier {
   int pageSize = 15;
   String searchString = '';
   List<JobModel> models = [];
-  List<JobModel> jobSuggestionModels = [];
+  bool isRefresh=false;
+  ScrollController scrollController = ScrollController();
 
+  double scrollPosition=0.0;
   List<JobTypeModel> jobTypeModels = [
     JobTypeModel(displayName: 'All', keyName: 'All', isSelected: true),
     JobTypeModel(displayName: 'Assigned', keyName: 'Assigned'),
@@ -27,16 +29,22 @@ class JobsProvider extends ChangeNotifier {
   getInitialJob() {
     pageStatus = PageStatus.loading;
     notifyListeners();
-
+    isRefresh=false;
     pageIndex = 1;
     models.clear();
     getJobCounts();
     getJobs();
-    getJobSuggestions();
+  }
+  refresh(){
+    scrollPosition=scrollController.offset;
+    isRefresh=true;
+    getJobs();
+    getJobCounts();
   }
 
   searchJobs(String text) {
     if (searchString != text) {
+      isRefresh=false;
       searchString = text;
       pageStatus = PageStatus.loading;
       notifyListeners();
@@ -45,6 +53,7 @@ class JobsProvider extends ChangeNotifier {
       models.clear();
       getJobs();
     }
+
   }
 
   changeJobType(JobTypeModel jobTypeModel) {
@@ -56,6 +65,7 @@ class JobsProvider extends ChangeNotifier {
     }
     pageStatus = PageStatus.loading;
     notifyListeners();
+    isRefresh=false;
 
     pageIndex = 1;
     models.clear();
@@ -64,6 +74,7 @@ class JobsProvider extends ChangeNotifier {
 
   loadMore() {
     if (totalPages > pageIndex) {
+      isRefresh=false;
       pageStatus = PageStatus.loadMore;
       notifyListeners();
       pageIndex++;
@@ -73,14 +84,16 @@ class JobsProvider extends ChangeNotifier {
 
   Future getJobs() async {
     notifyListeners();
-
+if(isRefresh){
+  models.clear();
+}
     try {
       var response = await postDataRequest(
           urlAddress: 'Jobs/GetStaffJobs',
           requestBody: {
             'filterText': searchString,
-            'pageIndex': pageIndex.toString(),
-            'pageSize': pageSize.toString(),
+            'pageIndex':isRefresh?'1':pageIndex.toString(),
+            'pageSize': isRefresh?((pageIndex*pageSize).toString()):pageSize.toString(),
             'status': jobTypeModels
                 .singleWhere((element) => element.isSelected)
                 .keyName
@@ -93,6 +106,11 @@ class JobsProvider extends ChangeNotifier {
 
       pageStatus = PageStatus.loaded;
       notifyListeners();
+      if(isRefresh){
+        await Future.delayed(const Duration(milliseconds: 100));
+       scrollController.animateTo(scrollPosition, duration: const Duration(milliseconds: 1), curve: Curves.ease);
+      }
+
     } catch (e) {
       print(e);
       pageStatus = PageStatus.failed;
@@ -108,10 +126,11 @@ class JobsProvider extends ChangeNotifier {
           urlAddress: 'Reports/GetStaffBasicData', isShowLoader: false);
 
       jobTypeModels[0].count = response['totalJobs'] ?? 0;
-      jobTypeModels[1].count = response['openJobs'] ?? 0;
-      jobTypeModels[2].count = response['pendingJobs'] ?? 0;
-      jobTypeModels[3].count = response['completedJobs'] ?? 0;
-      jobTypeModels[4].count = response['closedJobs'] ?? 0;
+      jobTypeModels[1].count = response['assignedJobs'] ?? 0;
+      jobTypeModels[2].count = response['openJobs'] ?? 0;
+      jobTypeModels[3].count = response['pendingJobs'] ?? 0;
+      jobTypeModels[4].count = response['completedJobs'] ?? 0;
+      jobTypeModels[5].count = response['closedJobs'] ?? 0;
 
       notifyListeners();
     } catch (e) {
@@ -119,25 +138,5 @@ class JobsProvider extends ChangeNotifier {
     }
   }
 
-  Future getJobSuggestions() async {
-    try {
-      jobSuggestionModels.clear();
-      var response = await getDataRequest(
-        // requestBody: {
-        //   'filterText': '',
-        //   'pageIndex':1,
-        //   'pageSize': 10,
-        //   'status':'All'
-        // },
-          urlAddress: 'Jobs/GetdlJobs', isShowLoader: false);
 
-      print('job suggectionCount ${response.length}');
-      for (var json in response) {
-        jobSuggestionModels.add(JobModel.fromJson(json));
-      }
-      notifyListeners();
-    } catch (e) {
-      debugPrint(e.toString());
-    }
-  }
 }

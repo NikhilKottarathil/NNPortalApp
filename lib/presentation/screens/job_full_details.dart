@@ -5,6 +5,7 @@ import 'package:nn_portal/models/job_model.dart';
 import 'package:nn_portal/presentation/components/custom_webview.dart';
 import 'package:nn_portal/presentation/components/pop_ups_loaders/change_job_vehicle.dart';
 import 'package:nn_portal/providers/job_details_provider.dart';
+import 'package:nn_portal/utils/date_time_conversions.dart';
 import 'package:provider/provider.dart';
 
 class JobFullDetails extends StatefulWidget {
@@ -43,8 +44,33 @@ class _JobFullDetailsState extends State<JobFullDetails> {
             const SizedBox(height: 8),
             FAWidget(field: 'Client', answer: widget.jobModel.clientName!),
             const SizedBox(height: 8),
-            if(widget.jobModel.openOn!=null)
-            FAWidget(field: 'Open On', answer: widget.jobModel.openOn!),
+            if (widget.jobModel.openOn != null)
+              FAWidget(
+                field: 'Open On',
+                answer: DateTimeConversion()
+                    .convertToDateFormat(inputString: widget.jobModel.openOn!),
+              ),
+            if (widget.jobModel.assignedFor != null) const SizedBox(height: 8),
+            if (widget.jobModel.assignedFor != null)
+              FAWidget(
+                field: 'Scheduled Date',
+                answer: DateTimeConversion().convertToDateFormat(
+                    inputString: widget.jobModel.assignedFor!),
+              ),
+            if (widget.jobModel.completedOn != null) const SizedBox(height: 8),
+            if (widget.jobModel.completedOn != null)
+              FAWidget(
+                field: 'Completed On',
+                answer: DateTimeConversion().convertToDateFormat(
+                    inputString: widget.jobModel.completedOn!),
+              ),
+            if (widget.jobModel.closedOn != null) const SizedBox(height: 8),
+            if (widget.jobModel.closedOn != null)
+              FAWidget(
+                field: 'Closed On',
+                answer: DateTimeConversion().convertToDateFormat(
+                    inputString: widget.jobModel.closedOn!),
+              ),
             if (widget.jobModel.jobVehicles != null &&
                 widget.jobModel.jobVehicles!.isNotEmpty)
               const SizedBox(height: 8),
@@ -110,19 +136,16 @@ class _JobFullDetailsState extends State<JobFullDetails> {
 
             if (widget.jobModel.assignedStaff != null)
               FAWidget(field: 'Staffs', answer: widget.jobModel.assignedStaff!),
-            if (widget.jobModel.description != null)
-              const SizedBox(height: 8),
+            if (widget.jobModel.description != null) const SizedBox(height: 8),
 
             if (widget.jobModel.description != null)
               FAWidget(
                   field: 'Description', answer: widget.jobModel.description!),
-            if (widget.jobModel.comment != null)
-              const SizedBox(height: 8),
+            if (widget.jobModel.comment != null) const SizedBox(height: 8),
 
             if (widget.jobModel.comment != null)
               FAWidget(field: 'Comments', answer: widget.jobModel.comment!),
-            if (widget.jobModel.imageUrl != null)
-              const SizedBox(height: 8),
+            if (widget.jobModel.imageUrl != null) const SizedBox(height: 8),
 
             if (widget.jobModel.imageUrl != null)
               Row(
@@ -148,9 +171,17 @@ class _JobFullDetailsState extends State<JobFullDetails> {
                     flex: 7,
                     child: GestureDetector(
                       onTap: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (_)=>CustomWebView(url: widget.jobModel.imageUrl !)));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => CustomWebView(
+                                    url: widget.jobModel.imageUrl!)));
                       },
-                      child: Text('Open',textAlign: TextAlign.start,style: TextStyle(color: Colors.blue),),
+                      child: Text(
+                        'Open',
+                        textAlign: TextAlign.start,
+                        style: TextStyle(color: Colors.blue),
+                      ),
                     ),
                   ),
                   const SizedBox(

@@ -4,6 +4,7 @@ import 'package:nn_portal/constants/app_colors.dart';
 import 'package:nn_portal/main.dart';
 import 'package:nn_portal/models/job_model.dart';
 import 'package:nn_portal/models/vehicle_model.dart';
+import 'package:nn_portal/providers/app_provider.dart';
 import 'package:nn_portal/providers/job_details_provider.dart';
 import 'package:nn_portal/providers/log_provider.dart';
 import 'package:provider/provider.dart';
@@ -87,12 +88,12 @@ changeJobVehicle({
                         ),
                         itemSubmitted: (item) =>
                             setState(() => selectedVehicleModel = item),
-                        suggestions: Provider.of<LogProvider>(alertContext,
+                        suggestions: Provider.of<AppProvider>(alertContext,
                                 listen: false)
                             .vehicleModels,
                         suggestionsAmount: 10,
                         itemBuilder: (alertContext, suggestion) => Padding(
-                          padding: EdgeInsets.all(12.0),
+                          padding:const  EdgeInsets.all(12.0),
                           child: Text(suggestion.vehicleNo!),
                         ),
                         itemSorter: (a, b) => 0,

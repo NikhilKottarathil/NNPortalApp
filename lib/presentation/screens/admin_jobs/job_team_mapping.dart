@@ -15,6 +15,7 @@ import 'package:nn_portal/presentation/components/text_fields/date_picker_text_f
 import 'package:nn_portal/presentation/components/text_fields/text_field_custom.dart';
 import 'package:nn_portal/presentation/screens/admin_jobs/assigned_teams.dart';
 import 'package:nn_portal/presentation/screens/teams/add_staff_to_team.dart';
+import 'package:nn_portal/providers/app_provider.dart';
 import 'package:nn_portal/providers/assign_team_provider.dart';
 import 'package:nn_portal/providers/jobs_provider.dart';
 import 'package:nn_portal/providers/log_provider.dart';
@@ -418,15 +419,15 @@ class _JobTeamMappingState extends State<JobTeamMapping> {
     await Future.delayed(const Duration(milliseconds: 10));
 
     showLoader();
-    await Provider.of<JobsProvider>(
+    await Provider.of<AppProvider>(
         MyApp.navigatorKey.currentContext!,
         listen: false)
         .getJobSuggestions();
     teamModels = Provider.of<TeamProvider>(context, listen: false).teamModels;
     jobModels =
-        Provider.of<JobsProvider>(context, listen: false).jobSuggestionModels;
+        Provider.of<AppProvider>(context, listen: false).jobSuggestionModels;
     vehicleModels =
-        Provider.of<LogProvider>(context, listen: false).vehicleModels;
+        Provider.of<AppProvider>(context, listen: false).vehicleModels;
     if (widget.parentPage == 'team') {
       teamTextEditController.text = widget.teamModel!.teamName!;
       await Future.delayed(const Duration(milliseconds: 10));

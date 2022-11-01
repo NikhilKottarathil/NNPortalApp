@@ -25,12 +25,19 @@ class JobAttachments extends StatelessWidget {
   bool isViewOnly=false;
   @override
   Widget build(BuildContext context) {
-
-    if(!Provider.of<AuthenticationProvider>(context, listen: false)
+    if( Provider.of<AuthenticationProvider>(context, listen: false)
         .userModel!
-        .onLeave! || Provider.of<AuthenticationProvider>(context, listen: false)
-        .userModel!
-        .roleId! == 1 ){
+        .onLeave!
+        ||
+        Provider.of<AuthenticationProvider>(context, listen: false)
+            .userModel!
+            .roleId! == 1
+        ||
+        Provider.of<JobsDetailsProvider>(context, listen: false)
+            .jobModel!.status =='Completed'
+        ||
+        Provider.of<JobsDetailsProvider>(context, listen: false)
+            .jobModel!.status =='Closed'){
       isViewOnly=true;
     }
     double fileSize = MediaQuery.of(context).size.width * .15;

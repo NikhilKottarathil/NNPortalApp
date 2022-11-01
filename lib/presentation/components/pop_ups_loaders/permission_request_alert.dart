@@ -38,7 +38,7 @@ Future showStoragePermissionRequest() async {
            const Padding(
               padding:  EdgeInsets.all(20.0),
               child: Text(
-                'NN Portal needs access to your storage, so give permission access your storage',
+                'Netnnet needs access to your storage, so give permission access your storage',
               ),
             ),
             Row(

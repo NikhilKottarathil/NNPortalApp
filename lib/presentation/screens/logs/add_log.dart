@@ -9,7 +9,9 @@ import 'package:nn_portal/models/vehicle_model.dart';
 import 'package:nn_portal/presentation/components/app_bars/app_bar_default.dart';
 import 'package:nn_portal/presentation/components/list_tiles/job_list_tile.dart';
 import 'package:nn_portal/presentation/components/pop_ups_loaders/show_snack_bar.dart';
+import 'package:nn_portal/presentation/components/text_fields/auto_complete_text_field.dart';
 import 'package:nn_portal/presentation/components/text_fields/time_picker_text_field.dart';
+import 'package:nn_portal/providers/app_provider.dart';
 import 'package:nn_portal/providers/log_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -31,6 +33,7 @@ class _AddLogState extends State<AddLog> {
   VehicleModel? selectedVehicleModel;
   ToolModel? selectedToolModel;
   JobModel? selectedJobModel;
+  TextEditingController jobTextController=TextEditingController();
   GlobalKey<AutoCompleteTextFieldState<VehicleModel>> vehicleKey =
       GlobalKey<AutoCompleteTextFieldState<VehicleModel>>();
   GlobalKey<AutoCompleteTextFieldState<ToolModel>> toolKey =
@@ -223,57 +226,81 @@ class _AddLogState extends State<AddLog> {
               width: double.infinity,
             ),
             if (selectedJobModel == null)
-              AutoCompleteTextField<JobModel>(
-                key: jobKey,
-                controller: jobTextEditController,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                      borderSide: const BorderSide(
-                        width: 0,
-                        style: BorderStyle.none,
-                      ),
-                      borderRadius: BorderRadius.circular(8)),
-                  filled: true,
-                  fillColor: AppColors.tertiary,
-                  hintText: "Enter location or client",
-                  suffixIcon: GestureDetector(
-                    onTap: () async {
-                      await Provider.of<LogProvider>(context,
-                          listen: false)
-                          .getJobList(
-                          searchString:
-                          jobTextEditController.text);
-                      jobTextEditController.text =
-                          jobTextEditController.text + '';
-                    },
-                    child: Icon(
-                      Icons.search,
-                      color: AppColors.iconColor,
-                    ),
-                  ),
-                ),
-                itemSubmitted: (item) =>
-                    setState(() => selectedJobModel = item),
+              CustomAutoCompleteTextField(
+                hint: 'Enter location or client',
+                textEditingController:jobTextEditController ,
+                onSuggestionSelected: (value){
+                  selectedJobModel= Provider.of<AppProvider>(context, listen: false)
+                      .jobSuggestionModels.firstWhere((element) => value==element.code);
+                  setState(() {
+
+                  });
+                },
+                validator: (value) =>
+                Provider.of<AppProvider>(context, listen: false)
+                    .jobSuggestionModels
+                    .map((e) => e.code)
+                    .toList()
+                    .contains(value)
+                    ? null
+                    : 'Please fill',
                 suggestions:
-                Provider.of<LogProvider>(context, listen: true)
-                    .jobModels,
-                suggestionsAmount: 10,
-                itemBuilder: (context, suggestion) => Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 10.0, vertical: 6),
-                  child: JobListTile(
-                    jobModel: suggestion,
-                  ),
-                ),
-                itemSorter: (a, b) => 0,
-                itemFilter: (suggestion, input) =>
-                suggestion.locationName!
-                    .toLowerCase()
-                    .startsWith(input.toLowerCase()) ||
-                    suggestion.clientName!
-                        .toLowerCase()
-                        .contains(''),
+                Provider.of<AppProvider>(context, listen: false)
+                    .jobSuggestionModels
+                    .map((e) => e.code.toString())
+                    .toList(),
               ),
+              // AutoCompleteTextField<JobModel>(
+              //   key: jobKey,
+              //   controller: jobTextEditController,
+              //   decoration: InputDecoration(
+              //     border: OutlineInputBorder(
+              //         borderSide: const BorderSide(
+              //           width: 0,
+              //           style: BorderStyle.none,
+              //         ),
+              //         borderRadius: BorderRadius.circular(8)),
+              //     filled: true,
+              //     fillColor: AppColors.tertiary,
+              //     hintText: "Enter location or client",
+              //     suffixIcon: GestureDetector(
+              //       onTap: () async {
+              //         await Provider.of<LogProvider>(context,
+              //             listen: false)
+              //             .getJobList(
+              //             searchString:
+              //             jobTextEditController.text);
+              //         jobTextEditController.text =
+              //             jobTextEditController.text + '';
+              //       },
+              //       child: Icon(
+              //         Icons.search,
+              //         color: AppColors.iconColor,
+              //       ),
+              //     ),
+              //   ),
+              //   itemSubmitted: (item) =>
+              //       setState(() => selectedJobModel = item),
+              //   suggestions:
+              //   Provider.of<LogProvider>(context, listen: true)
+              //       .jobModels,
+              //   suggestionsAmount: 10,
+              //   itemBuilder: (context, suggestion) => Padding(
+              //     padding: const EdgeInsets.symmetric(
+              //         horizontal: 10.0, vertical: 6),
+              //     child: JobListTile(
+              //       jobModel: suggestion,
+              //     ),
+              //   ),
+              //   itemSorter: (a, b) => 0,
+              //   itemFilter: (suggestion, input) =>
+              //   suggestion.locationName!
+              //       .toLowerCase()
+              //       .startsWith(input.toLowerCase()) ||
+              //       suggestion.clientName!
+              //           .toLowerCase()
+              //           .contains(''),
+              // ),
             if (selectedJobModel != null)
               JobListTile(
                 jobModel: selectedJobModel!,
@@ -318,35 +345,59 @@ class _AddLogState extends State<AddLog> {
               width: double.infinity,
             ),
             if (selectedVehicleModel == null)
-              AutoCompleteTextField<VehicleModel>(
-                key: vehicleKey,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                      borderSide: const BorderSide(
-                        width: 0,
-                        style: BorderStyle.none,
-                      ),
-                      borderRadius: BorderRadius.circular(8)),
-                  filled: true,
-                  fillColor: AppColors.tertiary,
-                  hintText: "Search Vehicle",
-                ),
-                itemSubmitted: (item) =>
-                    setState(() => selectedVehicleModel = item),
+              CustomAutoCompleteTextField(
+                hint: 'Search Vehicle',
+                textEditingController:TextEditingController() ,
+                onSuggestionSelected: (value){
+                  selectedVehicleModel= Provider.of<AppProvider>(context, listen: false)
+                      .vehicleModels.firstWhere((element) => value==element.vehicleNo);
+                  setState(() {
+
+                  });
+                },
+                validator: (value) =>
+                Provider.of<AppProvider>(context, listen: false)
+                    .vehicleModels
+                    .map((e) => e.vehicleNo)
+                    .toList()
+                    .contains(value)
+                    ? null
+                    : 'Please fill',
                 suggestions:
-                Provider.of<LogProvider>(context, listen: false)
-                    .vehicleModels,
-                suggestionsAmount: 10,
-                itemBuilder: (context, suggestion) => Padding(
-                  padding: EdgeInsets.all(12.0),
-                  child: Text(suggestion.vehicleNo!),
-                ),
-                itemSorter: (a, b) => 0,
-                itemFilter: (suggestion, input) => suggestion
-                    .vehicleNo!
-                    .toLowerCase()
-                    .startsWith(input.toLowerCase()),
+                Provider.of<AppProvider>(context, listen: false)
+                    .vehicleModels
+                    .map((e) => e.vehicleNo.toString())
+                    .toList(),
               ),
+              // AutoCompleteTextField<VehicleModel>(
+              //   key: vehicleKey,
+              //   decoration: InputDecoration(
+              //     border: OutlineInputBorder(
+              //         borderSide: const BorderSide(
+              //           width: 0,
+              //           style: BorderStyle.none,
+              //         ),
+              //         borderRadius: BorderRadius.circular(8)),
+              //     filled: true,
+              //     fillColor: AppColors.tertiary,
+              //     hintText: "Search Vehicle",
+              //   ),
+              //   itemSubmitted: (item) =>
+              //       setState(() => selectedVehicleModel = item),
+              //   suggestions:
+              //   Provider.of<AppProvider>(context, listen: false)
+              //       .vehicleModels,
+              //   suggestionsAmount: 10,
+              //   itemBuilder: (context, suggestion) => Padding(
+              //     padding: EdgeInsets.all(12.0),
+              //     child: Text(suggestion.vehicleNo!),
+              //   ),
+              //   itemSorter: (a, b) => 0,
+              //   itemFilter: (suggestion, input) => suggestion
+              //       .vehicleNo!
+              //       .toLowerCase()
+              //       .startsWith(input.toLowerCase()),
+              // ),
             if (selectedVehicleModel != null)
               Container(
                 decoration: BoxDecoration(
@@ -401,35 +452,59 @@ class _AddLogState extends State<AddLog> {
               width: double.infinity,
             ),
             if (selectedToolModel == null)
-              AutoCompleteTextField<ToolModel>(
-                key: toolKey,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                      borderSide: const BorderSide(
-                        width: 0,
-                        style: BorderStyle.none,
-                      ),
-                      borderRadius: BorderRadius.circular(8)),
-                  filled: true,
-                  fillColor: AppColors.tertiary,
-                  hintText: "Search Tool",
-                ),
-                itemSubmitted: (item) =>
-                    setState(() => selectedToolModel = item),
+              CustomAutoCompleteTextField(
+                hint: 'Search Tool',
+                textEditingController:TextEditingController() ,
+                onSuggestionSelected: (value){
+                  selectedToolModel= Provider.of<AppProvider>(context, listen: false)
+                      .toolModels.firstWhere((element) => value==element.toolName);
+                  setState(() {
+
+                  });
+                },
+                validator: (value) =>
+                Provider.of<AppProvider>(context, listen: false)
+                    .toolModels
+                    .map((e) => e.toolName)
+                    .toList()
+                    .contains(value)
+                    ? null
+                    : 'Please fill',
                 suggestions:
-                Provider.of<LogProvider>(context, listen: false)
-                    .toolModels,
-                suggestionsAmount: 10,
-                itemBuilder: (context, suggestion) => Padding(
-                  padding: EdgeInsets.all(12.0),
-                  child: Text(suggestion.toolName!),
-                ),
-                itemSorter: (a, b) => 0,
-                itemFilter: (suggestion, input) => suggestion
-                    .toolName!
-                    .toLowerCase()
-                    .startsWith(input.toLowerCase()),
+                Provider.of<AppProvider>(context, listen: false)
+                    .toolModels
+                    .map((e) => e.toolName.toString())
+                    .toList(),
               ),
+              // AutoCompleteTextField<ToolModel>(
+              //   key: toolKey,
+              //   decoration: InputDecoration(
+              //     border: OutlineInputBorder(
+              //         borderSide: const BorderSide(
+              //           width: 0,
+              //           style: BorderStyle.none,
+              //         ),
+              //         borderRadius: BorderRadius.circular(8)),
+              //     filled: true,
+              //     fillColor: AppColors.tertiary,
+              //     hintText: "Search Tool",
+              //   ),
+              //   itemSubmitted: (item) =>
+              //       setState(() => selectedToolModel = item),
+              //   suggestions:
+              //   Provider.of<AppProvider>(context, listen: false)
+              //       .toolModels,
+              //   suggestionsAmount: 10,
+              //   itemBuilder: (context, suggestion) => Padding(
+              //     padding: EdgeInsets.all(12.0),
+              //     child: Text(suggestion.toolName!),
+              //   ),
+              //   itemSorter: (a, b) => 0,
+              //   itemFilter: (suggestion, input) => suggestion
+              //       .toolName!
+              //       .toLowerCase()
+              //       .startsWith(input.toLowerCase()),
+              // ),
             if (selectedToolModel != null)
               Container(
                 decoration: BoxDecoration(

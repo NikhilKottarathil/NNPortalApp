@@ -19,11 +19,19 @@ class JobNotes extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    if(Provider.of<AuthenticationProvider>(context, listen: false)
+    if( Provider.of<AuthenticationProvider>(context, listen: false)
         .userModel!
-        .onLeave! || Provider.of<AuthenticationProvider>(context, listen: false)
+        .onLeave!
+        ||
+        Provider.of<AuthenticationProvider>(context, listen: false)
         .userModel!
-        .roleId! == 1 ){
+        .roleId! == 1
+        ||
+        Provider.of<JobsDetailsProvider>(context, listen: false)
+        .jobModel!.status =='Completed'
+        ||
+        Provider.of<JobsDetailsProvider>(context, listen: false)
+        .jobModel!.status =='Closed'){
       isViewOnly=true;
     }
     return Scaffold(

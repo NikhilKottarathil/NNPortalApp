@@ -6,6 +6,7 @@ import 'package:nn_portal/utils/time_utils.dart';
 class DatePickerTextField extends StatelessWidget {
   String? label;
   String? hint;
+  DateTime? startDate;
 
   FormFieldValidator<String> validator;
 
@@ -19,6 +20,8 @@ class DatePickerTextField extends StatelessWidget {
     this.dateTime,
     required this.callback,
     required this.validator,
+    this.startDate
+
   }) : super(key: key);
 
   final TextEditingController textEditingController = TextEditingController();
@@ -43,7 +46,7 @@ class DatePickerTextField extends StatelessWidget {
             dateTime = await showDatePicker(
                 context: context,
                 initialDate: dateTime ?? DateTime.now(),
-                firstDate: DateTime.now(),
+                firstDate: startDate??DateTime.now(),
                 lastDate: DateTime.now().add(const Duration(days: 365)));
             if (dateTime != null) {
               callback(dateTime);

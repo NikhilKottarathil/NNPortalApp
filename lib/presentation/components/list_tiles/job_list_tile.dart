@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nn_portal/constants/app_colors.dart';
 import 'package:nn_portal/models/job_model.dart';
+import 'package:nn_portal/utils/date_time_conversions.dart';
 
 class JobListTile extends StatelessWidget {
   final JobModel jobModel;
@@ -22,29 +23,101 @@ class JobListTile extends StatelessWidget {
               ? 'assets/project_job.png'
               : 'assets/site_job.png',
           color: Colors.black,
-          height:62,
-          width:62,
+          height: 62,
+          width: 62,
         ),
         title: Text(jobModel.locationName!),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(jobModel.clientName!,style: Theme.of(context).textTheme.titleSmall!.copyWith(height: 1.5),),
-            if(jobModel.openOn!=null)
-            Row(
-              children: [
-                Text('Open On       :',style:Theme.of(context).textTheme.bodySmall!.copyWith(height: 1.5),),
-                Text(jobModel.openOn!.length>10?jobModel.openOn!.substring(0,10):jobModel.openOn!,style:Theme.of(context).textTheme.bodySmall!.copyWith(height: 1.5),),
-              ],
+            Text(
+              jobModel.clientName!,
+              style:
+                  Theme.of(context).textTheme.titleSmall!.copyWith(height: 1.5),
             ),
-            if(jobModel.assignedFor!=null)
-
+            if (jobModel.openOn != null)
               Row(
-              children: [
-                Text('Scheduled Date :',style:Theme.of(context).textTheme.bodySmall!.copyWith(height: 1.5),),
-                Text(jobModel.assignedFor!.length>10?jobModel.assignedFor!.substring(0,10):jobModel.assignedFor!,style:Theme.of(context).textTheme.bodySmall!.copyWith(height: 1.5),),
-              ],
-            ),
+                children: [
+                  Text(
+                    'Open On          : ',
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodySmall!
+                        .copyWith(height: 1.5),
+                  ),
+                  Text(
+                    DateTimeConversion()
+                        .convertToDateFormat(inputString: jobModel.openOn!),
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodySmall!
+                        .copyWith(height: 1.5),
+                  ),
+                ],
+              ),
+            if (jobModel.assignedFor != null && jobModel.status == 'Assigned')
+              Row(
+                children: [
+                  Text(
+                    'Scheduled Date : ',
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodySmall!
+                        .copyWith(height: 1.5),
+                  ),
+                  Text(
+                    DateTimeConversion().convertToDateFormat(
+                        inputString: jobModel.assignedFor!,
+                        inputFormat: 'yyyy-MM-dd'),
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodySmall!
+                        .copyWith(height: 1.5),
+                  ),
+                ],
+              ),
+            if (jobModel.completedOn != null && jobModel.status == 'Completed')
+              Row(
+                children: [
+                  Text(
+                    'Completed On  : ',
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodySmall!
+                        .copyWith(height: 1.5),
+                  ),
+                  Text(
+                    DateTimeConversion().convertToDateFormat(
+                        inputString: jobModel.completedOn!,
+                        inputFormat: 'yyyy-MM-ddThh:mm:ss'),
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodySmall!
+                        .copyWith(height: 1.5),
+                  ),
+                ],
+              ),
+            if (jobModel.closedOn != null && jobModel.status == 'Closed')
+              Row(
+                children: [
+                  Text(
+                    'Closed On       : ',
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodySmall!
+                        .copyWith(height: 1.5),
+                  ),
+                  Text(
+                    DateTimeConversion().convertToDateFormat(
+                        inputString: jobModel.closedOn!,
+                        inputFormat: 'yyyy-MM-ddThh:mm:ss'),
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodySmall!
+                        .copyWith(height: 1.5),
+                  ),
+                ],
+              ),
           ],
         ),
         // trailing: showTrailingIcon ? const Icon(Icons.arrow_forward_ios) : null,

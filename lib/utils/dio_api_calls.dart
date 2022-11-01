@@ -71,8 +71,7 @@ Future fileUploadWithDio(
       // var responseBody = jsonDecode(response.);
       // print(responseBody);
       if (response.statusCode == 200) {
-        debugPrint(
-            '============= dio end ${AppStrings.apiAddress+urlAddress} post api =============== \n$responseBody');
+        debugPrint('============= dio end ${AppStrings.apiAddress+urlAddress} post api =============== \n$responseBody');
         if (responseBody['success'] != null) {
           if (responseBody['success']) {
             return responseBody['result'];
