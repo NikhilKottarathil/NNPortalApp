@@ -1,3 +1,4 @@
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -22,13 +23,15 @@ class AuthenticationProvider extends ChangeNotifier {
   UserModel? userModel;
 
   int? visaExpiringDays;
-  int warningCheckDays=15;
+  int warningCheckDays = 15;
 
   Future<bool> attemptAutoLogin() async {
     try {
       var response = await getDataRequest(
-          urlAddress: 'Authenticate/CheckToken', isShowLoader: false,isShowSnackBar: false);
-      userModel=UserModel.fromJson(response);
+          urlAddress: 'Authenticate/CheckToken',
+          isShowLoader: false,
+          isShowSnackBar: false);
+      userModel = UserModel.fromJson(response);
       authSuccess();
 
       return true;
@@ -36,24 +39,29 @@ class AuthenticationProvider extends ChangeNotifier {
       return false;
     }
   }
-   authSuccess()async{
-     await Provider.of<AppProvider>(MyApp.navigatorKey.currentContext!,listen: false).init();
 
-     Provider.of<JobsProvider>(MyApp.navigatorKey.currentContext!,listen: false).getInitialJob();
-     Provider.of<LogProvider>(MyApp.navigatorKey.currentContext!,listen: false).getLogs();
-     Provider.of<TeamProvider>(
-         MyApp.navigatorKey.currentContext!,
-         listen: false)
-         .getInitialData();
-     Navigator.of(MyApp.navigatorKey.currentContext!).pushReplacementNamed('/home');
+  authSuccess() async {
+    await Provider.of<AppProvider>(MyApp.navigatorKey.currentContext!,
+            listen: false)
+        .init();
 
-     if(userModel!.visaExpiry!=null){
-       DateTime? visaExpireDateTime=DateFormat('dd-MM-yyyy').parse(userModel!.visaExpiry!);
-        visaExpiringDays=visaExpireDateTime.difference(DateTime.now()).inDays;
-        if(visaExpiringDays!<warningCheckDays){
-          showVisaExpireAlert();
-        }
-     }
+    Provider.of<JobsProvider>(MyApp.navigatorKey.currentContext!, listen: false)
+        .getInitialJob();
+    Provider.of<LogProvider>(MyApp.navigatorKey.currentContext!, listen: false)
+        .getLogs();
+    Provider.of<TeamProvider>(MyApp.navigatorKey.currentContext!, listen: false)
+        .getInitialData();
+    Navigator.of(MyApp.navigatorKey.currentContext!)
+        .pushReplacementNamed('/home');
+    visaExpiringDays=null;
+    if (userModel!.visaExpiry != null) {
+      DateTime? visaExpireDateTime =
+          DateFormat('dd-MM-yyyy').parse(userModel!.visaExpiry!);
+      visaExpiringDays = visaExpireDateTime.difference(DateTime.now()).inDays;
+      if (visaExpiringDays! < warningCheckDays) {
+        showVisaExpireAlert();
+      }
+    }
   }
 
   Future<bool> login({required email, required password}) async {
@@ -61,13 +69,18 @@ class AuthenticationProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      String? firebaseToken=await getFirebaseMessagingToken();
+      String? firebaseToken = await getFirebaseMessagingToken();
+      bool isAndroid= Platform.isAndroid;
       var response = await postDataRequest(
           urlAddress: 'Authenticate',
-          requestBody: {'username': email, 'password': password,
-          'firebaseToken':firebaseToken},
+          requestBody: {
+            'username': email,
+            'password': password,
+            'isAndroid':isAndroid,
+            'firebaseToken': firebaseToken
+          },
           isShowLoader: false);
-      userModel=UserModel.fromJson(response);
+      userModel = UserModel.fromJson(response);
 
       print('login $response');
       SharedPreferences sharedPreferences =
@@ -84,19 +97,19 @@ class AuthenticationProvider extends ChangeNotifier {
       return false;
     }
   }
-  Future logOut() async {
 
-    SharedPreferences sharedPreferences =
-    await SharedPreferences.getInstance();
+  Future logOut() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     sharedPreferences.clear();
     RestartWidget.restartApp(MyApp.navigatorKey.currentContext!);
-
   }
+
   Future<bool> sendNotification(DateTime dateTime) async {
     try {
       await postDataRequest(
-        requestBody: {'startdt':DateFormat('yyyy-MM-dd').format(dateTime)},
-          urlAddress: 'JobStaffMappings/SendPushNotifications', isShowLoader: false);
+          requestBody: {'startdt': DateFormat('yyyy-MM-dd').format(dateTime)},
+          urlAddress: 'JobStaffMappings/SendPushNotifications',
+          isShowLoader: false);
 
       showSnackBar(message: 'Successful');
       return true;

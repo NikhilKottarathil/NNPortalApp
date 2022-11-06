@@ -47,108 +47,113 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
-    return SafeArea(
-      top: true,
-      child: Scaffold(
-        backgroundColor: AppColors.primaryBase,
-        body: ListView(
-          children: [
-            SizedBox(
-              height: height * .042,
-            ),
-            Image.asset('assets/app_logo.png',
-                height: width * .3 * (161 / 147), width: width * .3),
-            SizedBox(
-              height: height * .016,
-            ),
-            Align(
-              alignment: Alignment.center,
-              child: ClipPath(
-                clipper: BackgroundClipper(),
-                child: Container(
-                 constraints: BoxConstraints(
-                   maxHeight: height * .6,
-                   maxWidth: width - 60,
-                 ),
-                  decoration: BoxDecoration(
-                    color: AppColors.secondaryBase,
-                  ),
-                  padding: const EdgeInsets.all(20),
-                  child: Stack(
-                    children: [
-                      Form(
-                        key: _formKey,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            SizedBox(
-                              height: height * .042,
-                            ),
-                            Text(
-                              'Login',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headline5!
-                                  .apply(color: AppColors.textLight),
-                            ),
-                            SizedBox(
-                              height: height * .062,
-                            ),
-                            BasicTextField(
-                              label: 'Email',
-                              textEditingController: emailTextEditingController,
-                              validator: (value) {
-                                return value!.isEmpty ? 'Enter email' : null;
-                              },
-                              textInputType: TextInputType.emailAddress,
-                            ),
-                            SizedBox(
-                              height: height * .042,
-                            ),
-                            BasicTextField(
-                                label: 'Password',
-                                textEditingController:
-                                    passwordTextEditingController,
+    return WillPopScope(
+      onWillPop: () async{
+        return false;
+      },
+      child: SafeArea(
+        top: true,
+        child: Scaffold(
+          backgroundColor: AppColors.primaryBase,
+          body: ListView(
+            children: [
+              SizedBox(
+                height: height * .042,
+              ),
+              Image.asset('assets/app_logo.png',
+                  height: width * .3 * (161 / 147), width: width * .3),
+              SizedBox(
+                height: height * .016,
+              ),
+              Align(
+                alignment: Alignment.center,
+                child: ClipPath(
+                  clipper: BackgroundClipper(),
+                  child: Container(
+                   constraints: BoxConstraints(
+                     maxHeight: height * .6,
+                     maxWidth: width - 60,
+                   ),
+                    decoration: BoxDecoration(
+                      color: AppColors.secondaryBase,
+                    ),
+                    padding: const EdgeInsets.all(20),
+                    child: Stack(
+                      children: [
+                        Form(
+                          key: _formKey,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              SizedBox(
+                                height: height * .042,
+                              ),
+                              Text(
+                                'Login',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline5!
+                                    .apply(color: AppColors.textLight),
+                              ),
+                              SizedBox(
+                                height: height * .062,
+                              ),
+                              BasicTextField(
+                                label: 'User name',
+                                textEditingController: emailTextEditingController,
                                 validator: (value) {
-                                  return value!.isEmpty ? 'Enter password' : null;
+                                  return value!.isEmpty ? 'Enter User name' : null;
                                 },
-                                maxLength: 25,
-                                textInputType: TextInputType.visiblePassword),
-                          ],
+                                textInputType: TextInputType.emailAddress,
+                              ),
+                              SizedBox(
+                                height: height * .042,
+                              ),
+                              BasicTextField(
+                                  label: 'Password',
+                                  textEditingController:
+                                      passwordTextEditingController,
+                                  validator: (value) {
+                                    return value!.isEmpty ? 'Enter password' : null;
+                                  },
+                                  maxLength: 25,
+                                  textInputType: TextInputType.visiblePassword),
+                            ],
+                          ),
                         ),
-                      ),
-                      Align(
-                        alignment: Alignment.bottomRight,
-                        child: FloatingActionButton(
-                          onPressed: () {
-                            if (_formKey.currentState!.validate()) {
-                              Provider.of<AuthenticationProvider>(context,
-                                      listen: false)
-                                  .login(
-                                      email: emailTextEditingController.text,
-                                      password:
-                                          passwordTextEditingController.text);
-                            }
-                          },
-                          backgroundColor: AppColors.textLight,
-                          child: Consumer<AuthenticationProvider>(
-                              builder: (context, value, child) {
-                            if (value.formStatus == FormStatus.loading) {
-                              return const  CustomCircularProgressIndicator();
-                            }
-                            return const  Icon(
-                              Icons.arrow_forward_ios,
-                              color: Colors.black,
-                            );
-                          }),
+                        Align(
+                          alignment: Alignment.bottomRight,
+                          child: FloatingActionButton(
+                            onPressed: () {
+                              if (_formKey.currentState!.validate()) {
+                                Provider.of<AuthenticationProvider>(context,
+                                        listen: false)
+                                    .login(
+                                        email: emailTextEditingController.text,
+                                        password:
+                                            passwordTextEditingController.text);
+                              }
+                            },
+                            backgroundColor: AppColors.textLight,
+                            child: Consumer<AuthenticationProvider>(
+                                builder: (context, value, child) {
+                              if (value.formStatus == FormStatus.loading) {
+                                return const  CustomCircularProgressIndicator();
+                              }
+                              return const  Icon(
+                                Icons.arrow_forward_ios,
+                                color: Colors.black,
+                              );
+                            }),
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
