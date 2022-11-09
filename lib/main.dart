@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -46,17 +48,16 @@ void main() async {
   }catch(e){
     print('firebase error $e');
   }
-  // FirebaseMessaging messaging = FirebaseMessaging.instance;
-  //
-  // NotificationSettings settings = await messaging.requestPermission(
-  //   alert: true,
-  //   announcement: false,
-  //   badge: true,
-  //   carPlay: false,
-  //   criticalAlert: false,
-  //   provisional: false,
-  //   sound: true,
-  // );
+  if (Platform.isIOS) {
+        await FirebaseMessaging.instance.requestPermission(sound: true, badge: true, alert: true, provisional: false);
+
+        await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+          alert: true,
+          badge: true,
+          sound: true,
+        );
+      }
+
   // await setupFlutterNotifications();
   // FirebaseMessaging.instance.getInitialMessage().then((message) {
   //   print('nnotification getInitialMessage $message');

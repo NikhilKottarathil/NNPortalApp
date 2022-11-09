@@ -38,7 +38,10 @@ await  Future.delayed(Duration(seconds: 5));
   if (initialMessage != null) {
     notificationAction(initialMessage.data, 3);
   }
-  FirebaseMessaging.onMessage.listen(showFlutterNotification);
+  FirebaseMessaging.onMessage.listen((message){
+    print('showFlutterNotification onmessage ');
+    showFlutterNotification(message);
+  });
 
   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
     print('nnotification  onMessageOpenedApp $message');
@@ -208,6 +211,7 @@ void showFlutterNotification(RemoteMessage message) async{
         //      one that already exists in example app.
         icon: 'launch_background',
       ),
+      iOS: const DarwinNotificationDetails()
     ),
     payload: json.encode(message.data),
   );
