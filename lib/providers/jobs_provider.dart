@@ -35,6 +35,9 @@ class JobsProvider extends ChangeNotifier {
     getJobCounts();
     getJobs();
   }
+  resetToAllJobs(){
+    changeJobType(jobTypeModels[0]);
+  }
   refresh(){
     scrollPosition=scrollController.offset;
     isRefresh=true;
@@ -98,7 +101,7 @@ if(isRefresh){
                 .singleWhere((element) => element.isSelected)
                 .keyName
           },
-          isShowLoader: false);
+          isShowLoader: isRefresh);
       totalPages = (response['totalCount'] / pageSize).ceil();
       for (var json in response['items']) {
         models.add(JobModel.fromJson(json));

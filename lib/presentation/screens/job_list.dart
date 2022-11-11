@@ -31,9 +31,17 @@ class _JobListState extends State<JobList> {
     super.initState();
     // Provider.of<JobsProvider>(context, listen: false). scrollController.
 
-    Provider.of<JobsProvider>(context, listen: false).scrollController.addListener(() {
-      if ( Provider.of<JobsProvider>(context, listen: false).scrollController.position.pixels ==
-          Provider.of<JobsProvider>(context, listen: false).scrollController.position.maxScrollExtent) {
+    Provider.of<JobsProvider>(context, listen: false)
+        .scrollController
+        .addListener(() {
+      if (Provider.of<JobsProvider>(context, listen: false)
+              .scrollController
+              .position
+              .pixels ==
+          Provider.of<JobsProvider>(context, listen: false)
+              .scrollController
+              .position
+              .maxScrollExtent) {
         Provider.of<JobsProvider>(context, listen: false).loadMore();
       }
     });
@@ -46,157 +54,181 @@ class _JobListState extends State<JobList> {
         title: const Text('Find your jobs'),
         automaticallyImplyLeading: false,
         centerTitle: true,
+        actions: const [
+          IconButton(onPressed: refresh, icon: Icon(Icons.refresh))
+        ],
       ),
       // drawer: HomeDrawer(),
       body: Consumer<JobsProvider>(builder: (context, value, child) {
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              GestureDetector(
-                onTap: () {
-                  Provider.of<JobsProvider>(MyApp.navigatorKey.currentContext!,
-                          listen: false)
-                      .changeJobType(value.jobTypeModels[0]);
-                },
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  padding: const EdgeInsets.all(4),
-                  decoration: BoxDecoration(
-                      color: AppColors.secondaryBase,
-                     boxShadow: value.jobTypeModels[0].isSelected? [
-                        BoxShadow(
-                            color: Colors.grey.shade400,
-                            offset: Offset(0, 1),
-                            spreadRadius: 1,
-                            blurRadius: 1)
-                      ]:null,
-                      borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(8),
-                          topRight: Radius.circular(8))),
-                  child: Column(
-                    children: [
-                      Image.asset(
-                        'assets/all_jobs.png',
-                        height: 48,
-                      ),
-                      Text(
-                        'All Jobs',
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleLarge!
-                            .copyWith(color: AppColors.textLight, fontSize: 20,fontWeight: value.jobTypeModels[0].isSelected?FontWeight.bold:FontWeight.normal),
-                      )
-                    ],
+          child: RefreshIndicator(
+            onRefresh: refresh,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    Provider.of<JobsProvider>(
+                            MyApp.navigatorKey.currentContext!,
+                            listen: false)
+                        .changeJobType(value.jobTypeModels[0]);
+                  },
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    padding: const EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                        color: AppColors.secondaryBase,
+                        boxShadow: value.jobTypeModels[0].isSelected
+                            ? [
+                                BoxShadow(
+                                    color: Colors.grey.shade400,
+                                    offset: const Offset(0, 1),
+                                    spreadRadius: 1,
+                                    blurRadius: 1)
+                              ]
+                            : null,
+                        borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(8),
+                            topRight: Radius.circular(8))),
+                    child: Column(
+                      children: [
+                        Image.asset(
+                          'assets/all_jobs.png',
+                          height: 48,
+                        ),
+                        Text(
+                          'All Jobs',
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleLarge!
+                              .copyWith(
+                                  color: AppColors.textLight,
+                                  fontSize: 20,
+                                  fontWeight: value.jobTypeModels[0].isSelected
+                                      ? FontWeight.bold
+                                      : FontWeight.normal),
+                        )
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              if (Provider.of<AuthenticationProvider>(context, listen: false)
-                  .userModel!
-                  .roleId !=
-                  null &&
-                  Provider.of<AuthenticationProvider>(context, listen: false)
-                      .userModel!
-                      .roleId ==
-                      2)
-              const SizedBox(
-                height: 10,
-              ),
-              if (Provider.of<AuthenticationProvider>(context, listen: false)
-                  .userModel!
-                  .roleId !=
-                  null &&
-                  Provider.of<AuthenticationProvider>(context, listen: false)
-                      .userModel!
-                      .roleId ==
-                      2)
-              jobTypeTile(jobTypeModel: value.jobTypeModels[1],isCenter: true),
-              const SizedBox(
-                height: 10,
-              ),
-              Row(
-                children: [
-                  Expanded(
-                      child: jobTypeTile(jobTypeModel: value.jobTypeModels[2])),
+                if (Provider.of<AuthenticationProvider>(context, listen: false)
+                            .userModel!
+                            .roleId !=
+                        null &&
+                    Provider.of<AuthenticationProvider>(context, listen: false)
+                            .userModel!
+                            .roleId ==
+                        2)
                   const SizedBox(
-                    width: 10,
+                    height: 10,
                   ),
-                  Expanded(
-                      child: jobTypeTile(jobTypeModel: value.jobTypeModels[3]))
-                ],
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Row(
-                children: [
-                  Expanded(
-                      child: jobTypeTile(jobTypeModel: value.jobTypeModels[4])),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  Expanded(
-                      child: jobTypeTile(jobTypeModel: value.jobTypeModels[5]))
-                ],
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              TextFieldSearch(
-                searchTextEditingController: searchTextEditingController,
-                hintText: 'Search ',
-                searchAction: () {
-                  Provider.of<JobsProvider>(context, listen: false)
-                      .searchJobs(searchTextEditingController.text);
-                },
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Expanded(
-                child: value.pageStatus == PageStatus.loading
-                    ? CustomCircularProgressIndicator()
-                    : value.models.isNotEmpty
-                        ? ListView.separated(
-                            itemCount: value.models.length,
-                            // shrinkWrap: true,
-                            controller:  Provider.of<JobsProvider>(context, listen: false).scrollController,
-                            itemBuilder: (BuildContext context, int index) {
-                              return GestureDetector(
-                                  onTap: () {
-                                    Provider.of<JobsDetailsProvider>(context,
-                                            listen: false)
-                                        .setJobModel(
-                                            jobId: value.models[index].id!);
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (_) =>
-                                                const JobDetails())).then((value){
-                                      Provider.of<JobsProvider>(context,
-                                          listen: false)
-                                          .refresh();
-                                    });
-                                  },
-                                  child: JobListTile(
-                                      jobModel: value.models[index]));
-                            },
-                            separatorBuilder:
-                                (BuildContext context, int index) {
-                              return const SizedBox(
-                                height: 10,
-                              );
-                            },
-                          )
-                        : const NoItemsFound(),
-              ),
-              if (value.pageStatus == PageStatus.loadMore)
-                const Center(
-                  child:  SizedBox(
-                      height: 50,width: 50, child:  CustomCircularProgressIndicator()),
+                if (Provider.of<AuthenticationProvider>(context, listen: false)
+                            .userModel!
+                            .roleId !=
+                        null &&
+                    Provider.of<AuthenticationProvider>(context, listen: false)
+                            .userModel!
+                            .roleId ==
+                        2)
+                  jobTypeTile(
+                      jobTypeModel: value.jobTypeModels[1], isCenter: true),
+                const SizedBox(
+                  height: 10,
                 ),
-            ],
+                Row(
+                  children: [
+                    Expanded(
+                        child:
+                            jobTypeTile(jobTypeModel: value.jobTypeModels[2])),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Expanded(
+                        child:
+                            jobTypeTile(jobTypeModel: value.jobTypeModels[3]))
+                  ],
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                        child:
+                            jobTypeTile(jobTypeModel: value.jobTypeModels[4])),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Expanded(
+                        child:
+                            jobTypeTile(jobTypeModel: value.jobTypeModels[5]))
+                  ],
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                TextFieldSearch(
+                  searchTextEditingController: searchTextEditingController,
+                  hintText: 'Search ',
+                  searchAction: () {
+                    Provider.of<JobsProvider>(context, listen: false)
+                        .searchJobs(searchTextEditingController.text);
+                  },
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Expanded(
+                  child: value.pageStatus == PageStatus.loading
+                      ? const CustomCircularProgressIndicator()
+                      : value.models.isNotEmpty
+                          ? ListView.separated(
+                              itemCount: value.models.length,
+                              // shrinkWrap: true,
+                              controller: Provider.of<JobsProvider>(context,
+                                      listen: false)
+                                  .scrollController,
+                              itemBuilder: (BuildContext context, int index) {
+                                return GestureDetector(
+                                    onTap: () {
+                                      Provider.of<JobsDetailsProvider>(context,
+                                              listen: false)
+                                          .setJobModel(
+                                              jobId: value.models[index].id!);
+                                      Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (_) =>
+                                                      const JobDetails()))
+                                          .then((value) {
+                                        Provider.of<JobsProvider>(context,
+                                                listen: false)
+                                            .refresh();
+                                      });
+                                    },
+                                    child: JobListTile(
+                                        jobModel: value.models[index]));
+                              },
+                              separatorBuilder:
+                                  (BuildContext context, int index) {
+                                return const SizedBox(
+                                  height: 10,
+                                );
+                              },
+                            )
+                          : const NoItemsFound(),
+                ),
+                if (value.pageStatus == PageStatus.loadMore)
+                  const Center(
+                    child: SizedBox(
+                        height: 50,
+                        width: 50,
+                        child: CustomCircularProgressIndicator()),
+                  ),
+              ],
+            ),
           ),
         );
       }),
@@ -204,11 +236,18 @@ class _JobListState extends State<JobList> {
   }
 }
 
-Widget jobTypeTile({required JobTypeModel jobTypeModel,bool isCenter=false}) {
+Future refresh() async {
+  await Provider.of<JobsProvider>(MyApp.navigatorKey.currentContext!,
+          listen: false)
+      .refresh();
+}
+
+Widget jobTypeTile(
+    {required JobTypeModel jobTypeModel, bool isCenter = false}) {
   return GestureDetector(
     onTap: () {
       Provider.of<JobsProvider>(MyApp.navigatorKey.currentContext!,
-          listen: false)
+              listen: false)
           .changeJobType(jobTypeModel);
     },
     child: Container(
@@ -217,26 +256,34 @@ Widget jobTypeTile({required JobTypeModel jobTypeModel,bool isCenter=false}) {
           // border:
           //     jobTypeModel.isSelected ? Border.all(color: Colors.grey) : null,
           borderRadius: BorderRadius.circular(4),
-          boxShadow:jobTypeModel.isSelected? [
-            BoxShadow(
-                color: Colors.grey.shade400,
-                offset: Offset(0, 1),
-                spreadRadius: 1,
-                blurRadius: 1)
-          ]:null,
+          boxShadow: jobTypeModel.isSelected
+              ? [
+                  BoxShadow(
+                      color: Colors.grey.shade400,
+                      offset: Offset(0, 1),
+                      spreadRadius: 1,
+                      blurRadius: 1)
+                ]
+              : null,
         ),
-        padding: EdgeInsets.symmetric(vertical: 8,horizontal: 8),
+        padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
         child: Row(
-          mainAxisAlignment:isCenter?MainAxisAlignment.center: MainAxisAlignment.start,
+          mainAxisAlignment:
+              isCenter ? MainAxisAlignment.center : MainAxisAlignment.start,
           children: [
-            Image.asset(jobTypeModel.keyName == 'Assigned'
-                ? 'assets/site_icon.png':jobTypeModel.keyName == 'Open'
-                ? 'assets/open_jobs.png'
-                : jobTypeModel.keyName == 'Pending'
-                    ? 'assets/pending_jobs.png'
-                    : jobTypeModel.keyName == 'Completed'
-                        ? 'assets/completed_jobs.png'
-                        : 'assets/closed_jobs.png',height: 24,width: 24,),
+            Image.asset(
+              jobTypeModel.keyName == 'Assigned'
+                  ? 'assets/site_icon.png'
+                  : jobTypeModel.keyName == 'Open'
+                      ? 'assets/open_jobs.png'
+                      : jobTypeModel.keyName == 'Pending'
+                          ? 'assets/pending_jobs.png'
+                          : jobTypeModel.keyName == 'Completed'
+                              ? 'assets/completed_jobs.png'
+                              : 'assets/closed_jobs.png',
+              height: 24,
+              width: 24,
+            ),
             const SizedBox(
               width: 9,
             ),

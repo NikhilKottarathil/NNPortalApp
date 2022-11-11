@@ -44,6 +44,8 @@ class _JobFullDetailsState extends State<JobFullDetails> {
             const SizedBox(height: 8),
             FAWidget(field: 'Client', answer: widget.jobModel.clientName!),
             const SizedBox(height: 8),
+            FAWidget(field: 'Status', answer: widget.jobModel.status!),
+            const SizedBox(height: 8),
             if (widget.jobModel.openOn != null)
               FAWidget(
                 field: 'Open On',
@@ -177,8 +179,8 @@ class _JobFullDetailsState extends State<JobFullDetails> {
                                 builder: (_) => CustomWebView(
                                     url: widget.jobModel.imageUrl!)));
                       },
-                      child: Text(
-                        'Open',
+                      child:  Text(
+                        'Open File',
                         textAlign: TextAlign.start,
                         style: TextStyle(color: Colors.blue),
                       ),
