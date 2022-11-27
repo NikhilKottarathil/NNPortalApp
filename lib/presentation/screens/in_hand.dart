@@ -31,10 +31,28 @@ class InHand extends StatelessWidget {
                       itemBuilder: (BuildContext context, int index) {
                         return GestureDetector(
                             onTap: () {
+                              LogModel logModel=value.models[index];
+                              int id=0;
+                              int staffId=0;
+                              int userId=Provider.of<AuthenticationProvider>(context,listen: false).userModel!.id!;
+                              if(logModel.logType==LogType.siteLog || logModel.logType==LogType.workLog){
+                                id=logModel.staffLogModel!.id!;
+                                staffId=logModel.staffLogModel!.staffId??0;
+                              }
+                              if(logModel.logType==LogType.vehicleLog){
+                                id=logModel.vehicleLogModel!.id!;
+                                staffId=logModel.vehicleLogModel!.staffId??0;
+
+                              }
+                              if(logModel.logType==LogType.toolLog){
+                                id=logModel.toolLogModel!.id!;
+                                staffId=logModel.toolLogModel!.staffId??0;
+                              }
+
                               if (!Provider.of<AuthenticationProvider>(context,
                                       listen: false)
                                   .userModel!
-                                  .onLeave!) {
+                                  .onLeave! && id !=0 && userId==staffId) {
                                 Navigator.of(context).push(MaterialPageRoute(
                                     builder: (_) => AddLog(
                                           logType: value.models[index].logType,

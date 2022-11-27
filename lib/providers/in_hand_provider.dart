@@ -26,6 +26,7 @@ class InHandProvider extends ChangeNotifier {
   List<LogModel> models = [];
 LogType? logType;
 
+
 setLogType(LogType logType){
   this.logType=logType;
 }
@@ -33,7 +34,7 @@ setLogType(LogType logType){
     pageStatus = PageStatus.loading;
     notifyListeners();
     models.clear();
-    try {
+    // try {
 
       String apiUrl='';
 
@@ -66,8 +67,10 @@ setLogType(LogType logType){
       if(logType==LogType.vehicleLog) {
         for (var json in response) {
           VehicleLogModel contentModel = VehicleLogModel.fromJson(json);
-          DateTime checkInTime =
-          DateFormat('yyyy-MM-dd HH:mm:ss').parse(contentModel.checkIn!);
+          DateTime checkInTime =DateTime.now();
+          if(contentModel.checkIn!=null) {
+            DateFormat('yyyy-MM-dd HH:mm:ss').parse(contentModel.checkIn!);
+          }
           DateTime? checkOutTime;
           if (contentModel.checkOut != null) {
             checkOutTime =
@@ -84,10 +87,12 @@ setLogType(LogType logType){
         }
       }
       if(logType==LogType.toolLog) {
-        for (var json in response['toolLogs']) {
+        for (var json in response) {
           ToolLogModel contentModel = ToolLogModel.fromJson(json);
-          DateTime checkInTime =
-          DateFormat('yyyy-MM-dd HH:mm:ss').parse(contentModel.checkIn!);
+          DateTime checkInTime =DateTime.now();
+          if(contentModel.checkIn!=null) {
+            DateFormat('yyyy-MM-dd HH:mm:ss').parse(contentModel.checkIn!);
+          }
           DateTime? checkOutTime;
           if (contentModel.checkOut != null) {
             checkOutTime =
@@ -107,12 +112,12 @@ setLogType(LogType logType){
 
       notifyListeners();
       return true;
-    } catch (e) {
-      debugPrint(e.toString());
-      pageStatus = PageStatus.failed;
-      notifyListeners();
-      return false;
-    }
+    // } catch (e) {
+    //   debugPrint(e.toString());
+    //   pageStatus = PageStatus.failed;
+    //   notifyListeners();
+    //   return false;
+    // }
   }
 
 
