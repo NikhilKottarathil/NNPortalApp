@@ -14,6 +14,7 @@ class LogModel {
   ToolLogModel? toolLogModel;
   String? locationName;
   String? clientName;
+  int logId;
 
   LogModel(
       {required this.checkIn,
@@ -24,5 +25,6 @@ class LogModel {
       this.vehicleLogModel,
         this.toolLogModel,
       this.clientName,
+       required this.logId,
       this.locationName});
 }

@@ -5,8 +5,9 @@ import 'package:intl/intl.dart';
 
 class LogTile extends StatefulWidget {
   final LogModel logModel;
+ final bool isTimeVisible;
 
-  const LogTile({Key? key, required this.logModel}) : super(key: key);
+  const LogTile({Key? key, required this.logModel,this.isTimeVisible=true}) : super(key: key);
 
   @override
   State<LogTile> createState() => _LogTileState();
@@ -59,7 +60,7 @@ class _LogTileState extends State<LogTile> {
                       const SizedBox(width: 8,),
                       Flexible(
                         child: Text(
-                            'Check In    :  ${DateFormat('hh:mm a').format(widget.logModel.checkIn)}',
+                            'Check In    :  ${widget.isTimeVisible?DateFormat('hh:mm a').format(widget.logModel.checkIn):''}',
                             style: Theme.of(context).textTheme.titleSmall),
                       ),
                     ],

@@ -66,6 +66,7 @@ class LogProvider extends ChangeNotifier {
               DateFormat('yyyy-MM-dd HH:mm:ss').parse(contentModel.checkOut!);
         }
         models.add(LogModel(
+            logId: contentModel.id ?? 0,
             staffLogModel: contentModel,
             checkIn: checkInTime,
             checkOut: checkOutTime,
@@ -84,6 +85,7 @@ class LogProvider extends ChangeNotifier {
               DateFormat('yyyy-MM-dd HH:mm:ss').parse(contentModel.checkOut!);
         }
         models.add(LogModel(
+            logId: contentModel.id ?? 0,
             vehicleLogModel: contentModel,
             checkIn: checkInTime,
             checkOut: checkOutTime,
@@ -101,7 +103,9 @@ class LogProvider extends ChangeNotifier {
           checkOutTime =
               DateFormat('yyyy-MM-dd HH:mm:ss').parse(contentModel.checkOut!);
         }
+
         models.add(LogModel(
+            logId: contentModel.id ?? 0,
             toolLogModel: contentModel,
             checkIn: checkInTime,
             checkOut: checkOutTime,
@@ -207,7 +211,6 @@ class LogProvider extends ChangeNotifier {
       return false;
     }
   }
-
 
   Future getJobList({String searchString = ''}) async {
     notifyListeners();

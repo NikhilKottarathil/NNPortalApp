@@ -64,7 +64,7 @@ class InHand extends StatelessWidget {
                               }
                               // Provider.of<InHandProvider>(context).onTileTap(index:index);
                             },
-                            child: LogTile(logModel: value.models[index]));
+                            child: LogTile(logModel: value.models[index],isTimeVisible: value.models[index].logId!=0,));
                       },
                       separatorBuilder: (BuildContext context, int index) {
                         return const SizedBox(
