@@ -43,9 +43,17 @@ class _JobFullDetailsState extends State<JobFullDetails> {
             FAWidget(field: 'Location', answer: widget.jobModel.locationName!),
             const SizedBox(height: 8),
             FAWidget(field: 'Client', answer: widget.jobModel.clientName!),
+
             const SizedBox(height: 8),
+            FAWidget(field: 'Code', answer: widget.jobModel.code!),
+            const SizedBox(height: 8),
+            if (widget.jobModel.ticketNo != null)
+              FAWidget(field: 'Ticket NO', answer: widget.jobModel.ticketNo!),
+            if (widget.jobModel.ticketNo != null)
+              const SizedBox(height: 8),
             FAWidget(field: 'Status', answer: widget.jobModel.status!),
             const SizedBox(height: 8),
+
             if (widget.jobModel.openOn != null)
               FAWidget(
                 field: 'Open On',
@@ -179,7 +187,7 @@ class _JobFullDetailsState extends State<JobFullDetails> {
                                 builder: (_) => CustomWebView(
                                     url: widget.jobModel.imageUrl!)));
                       },
-                      child:  Text(
+                      child: Text(
                         'Open File',
                         textAlign: TextAlign.start,
                         style: TextStyle(color: Colors.blue),
