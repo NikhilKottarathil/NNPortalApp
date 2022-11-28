@@ -24,6 +24,8 @@ class AuthenticationProvider extends ChangeNotifier {
 
   int? visaExpiringDays;
   int warningCheckDays = 15;
+  int androidVersion=1;
+  int iosVersion=1;
 
   Future<bool> attemptAutoLogin() async {
     try {

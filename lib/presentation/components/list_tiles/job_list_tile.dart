@@ -35,6 +35,12 @@ class JobListTile extends StatelessWidget {
               style:
                   Theme.of(context).textTheme.titleSmall!.copyWith(height: 1.5),
             ),
+            Text(
+              '${jobModel.code??''}, ${jobModel.ticketNo??''}' ,
+              style:
+              Theme.of(context).textTheme.titleSmall!.copyWith(height: 1.5),
+            ),
+
             if (jobModel.openOn != null)
               Row(
                 children: [

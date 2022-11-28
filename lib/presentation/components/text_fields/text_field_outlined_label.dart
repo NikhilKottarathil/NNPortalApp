@@ -44,45 +44,47 @@ class TextFieldOutlineLabel extends StatelessWidget {
           height: 8,
           width: double.infinity,
         ),
-        TextFormField(
-          keyboardType: textInputType,
-          maxLength: maxLength,
-          minLines: minLines,
-          maxLines: maxLines,
-          controller: textEditingController,
-          validator: validator,
-          cursorColor: AppColors.textDark,
-          enableSuggestions:
-              textInputType == TextInputType.visiblePassword ? false : true,
-          autocorrect:
-              textInputType == TextInputType.visiblePassword ? false : true,
+        Flexible(
+          child: TextFormField(
+            keyboardType: textInputType,
+            maxLength: maxLength,
+            minLines: minLines,
+            maxLines: maxLines,
+            controller: textEditingController,
+            validator: validator,
+            cursorColor: AppColors.textDark,
+            enableSuggestions:
+                textInputType == TextInputType.visiblePassword ? false : true,
+            autocorrect:
+                textInputType == TextInputType.visiblePassword ? false : true,
 
-          style: Theme.of(context)
-              .textTheme
-              .bodyMedium!
-              .copyWith(height: 1.5,),
-          decoration: InputDecoration(
-              counterText: '',
-              prefixIcon: prefixIcon,
-              hintText: hint,
-              contentPadding:
-                  const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
-              errorStyle: Theme.of(context)
-                  .textTheme
-                  .bodySmall!
-                  .copyWith(color: Colors.red),
-              border: OutlineInputBorder(
-                  borderSide: BorderSide(color: AppColors.textDarFourth)),
-              focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: AppColors.textDarFourth)),
-              disabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: AppColors.textDarFourth)),
-              enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: AppColors.textDarFourth)),
-              errorBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: AppColors.textDarFourth)),
-              focusedErrorBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: AppColors.textDarFourth))),
+            style: Theme.of(context)
+                .textTheme
+                .bodyMedium!
+                .copyWith(height: 1.5,),
+            decoration: InputDecoration(
+                counterText: '',
+                prefixIcon: prefixIcon,
+                hintText: hint,
+                contentPadding:
+                    const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+                errorStyle: Theme.of(context)
+                    .textTheme
+                    .bodySmall!
+                    .copyWith(color: Colors.red),
+                border: OutlineInputBorder(
+                    borderSide: BorderSide(color: AppColors.textDarFourth)),
+                focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: AppColors.textDarFourth)),
+                disabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: AppColors.textDarFourth)),
+                enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: AppColors.textDarFourth)),
+                errorBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: AppColors.textDarFourth)),
+                focusedErrorBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: AppColors.textDarFourth))),
+          ),
         ),
       ],
     );

@@ -103,8 +103,8 @@ class AdminJobsProvider extends ChangeNotifier {
                 element.text == state.locationTextEditController.text.trim())
             .id
             .toString(),
-        'description': state.ticketCallerTextEditController.text,
-        'comment': state.ticketCallerTextEditController.text,
+        'description': state.descriptionTextEditController.text,
+        'comment': state.commentsTextEditController.text,
         'ticketNo': state.ticketNoTextEditController.text,
         'ticketCaller': state.ticketCallerTextEditController.text,
         'ticketCreatedOn': DateFormat('yyyy-MM-dd').format(DateTime.now()),

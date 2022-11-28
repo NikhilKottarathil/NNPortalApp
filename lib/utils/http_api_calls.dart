@@ -4,7 +4,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:nn_portal/constants/app_constanrs.dart';
 import 'package:nn_portal/constants/app_strings.dart';
 
 import 'package:nn_portal/presentation/components/pop_ups_loaders/show_loader.dart';
@@ -38,7 +37,7 @@ Future postDataRequest(
         showLoader();
       }
 
-      final uri = Uri.parse(apiAddress + urlAddress);
+      final uri = Uri.parse(AppStrings.apiAddress + urlAddress);
       Map<String, String> headers = {"Content-Type": "application/json"};
 
       SharedPreferences sharedPreferences=await SharedPreferences.getInstance();
@@ -65,7 +64,7 @@ Future postDataRequest(
       print(response.body);
       if (response.statusCode == 200 || response.statusCode == 404) {
         debugPrint(
-            '============= end ${apiAddress+urlAddress} post api =============== \n $responseBody');
+            '============= end ${AppStrings.apiAddress+urlAddress} post api =============== \n $responseBody');
 
         if (responseBody['success'] != null) {
           if (responseBody['success']) {
@@ -92,7 +91,7 @@ Future postDataRequest(
       }
     } catch (e) {
       debugPrint(
-          '============= fail ${apiAddress+urlAddress} post api =============== \n error $e');
+          '============= fail ${AppStrings.apiAddress+urlAddress} post api =============== \n error $e');
 
       print(e);
       String message = e.toString().substring(10);

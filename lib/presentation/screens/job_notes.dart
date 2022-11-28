@@ -189,7 +189,7 @@ class JobNotes extends StatelessWidget {
             actionsPadding: const EdgeInsets.all(0),
             buttonPadding: const EdgeInsets.all(0),
             insetPadding:
-                const EdgeInsets.only(left: 14, right: 14, bottom: 50),
+                const EdgeInsets.only(top:54,left: 14, right: 14, bottom: 50),
             content: Form(
               key: _formKey,
               child: SizedBox(
@@ -209,18 +209,20 @@ class JobNotes extends StatelessWidget {
                     ),
 
 
-                    TextFieldOutlineLabel(
-                      textEditingController: textEditingController,
-                      label: 'Enter your note',
-                      textInputType: TextInputType.multiline,
-                      hint: 'Write here...',
-                      minLines: 8,
-                      maxLines: 100,
-                      validator: (String? value) {
-                        print(
-                            'validator $value  ${value!.trim().isEmpty ? 'Please fill' : null}');
-                        return value.trim().isEmpty ? 'Please fill' : null;
-                      },
+                    Flexible(
+                      child: TextFieldOutlineLabel(
+                        textEditingController: textEditingController,
+                        label: 'Enter your note',
+                        textInputType: TextInputType.multiline,
+                        hint: 'Write here...',
+                        minLines: 8,
+                        maxLines: 1000,
+                        validator: (String? value) {
+                          print(
+                              'validator $value  ${value!.trim().isEmpty ? 'Please fill' : null}');
+                          return value.trim().isEmpty ? 'Please fill' : null;
+                        },
+                      ),
                     ),
                     const SizedBox(
                       height: 10,
