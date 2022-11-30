@@ -112,9 +112,9 @@ class AddJobState extends State<AddJob> {
       appBar: appBarDefault(title: 'Add Job'),
       body: Form(
         key: _formKey,
-        child: Padding(
+        child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-          child: ListView(
+          child: Column(
             children: [
               CustomAutoCompleteTextField(
                 hint: 'Client',
@@ -134,7 +134,7 @@ class AddJobState extends State<AddJob> {
                         .toList(),
               ),
               const SizedBox(
-                height: 20,
+                height: 12,
               ),
               CustomAutoCompleteTextField(
                 hint: 'Location',
@@ -154,7 +154,7 @@ class AddJobState extends State<AddJob> {
                         .toList(),
               ),
               const SizedBox(
-                height: 20,
+                height: 12,
               ),
               MultiSelectList(
                 title: 'Type',
@@ -162,7 +162,7 @@ class AddJobState extends State<AddJob> {
                 isMultiSelect: false,
               ),
               const SizedBox(
-                height: 16,
+                height: 10,
               ),
               MultiSelectList(
                 title: 'Status',
@@ -170,7 +170,7 @@ class AddJobState extends State<AddJob> {
                 isMultiSelect: false,
               ),
               const SizedBox(
-                height: 20,
+                height: 10,
               ),
               TextFieldCustom(
                 label: 'Ticket No',
@@ -178,7 +178,7 @@ class AddJobState extends State<AddJob> {
                 validator: (String? value) => null,
               ),
               const SizedBox(
-                height: 20,
+                height: 12,
               ),
               TextFieldCustom(
                 label: 'Ticket Caller',
@@ -186,23 +186,27 @@ class AddJobState extends State<AddJob> {
                 validator: (String? value) => null,
               ),
               const SizedBox(
-                height: 20,
+                height: 12,
               ),
               TextFieldCustom(
                 label: 'Description',
                 textEditingController: descriptionTextEditController,
+                maxLines: 10000,
+                minLines: 4,
                 validator: (String? value) => null,
               ),
               const SizedBox(
-                height: 20,
+                height: 12,
               ),
               TextFieldCustom(
                 label: 'Comments',
+                maxLines: 1000,
+                minLines: 2,
                 textEditingController: commentsTextEditController,
                 validator: (String? value) => null,
               ),
               const SizedBox(
-                height: 20,
+                height: 12,
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -282,7 +286,7 @@ class AddJobState extends State<AddJob> {
                 ],
               ),
               const SizedBox(
-                height: 40,
+                height: 30,
               ),
               ElevatedButton(
                   onPressed: () {

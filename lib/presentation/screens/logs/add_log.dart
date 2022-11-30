@@ -90,7 +90,7 @@ class _AddLogState extends State<AddLog> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBarDefault(title: 'Add Work Log'),
+      appBar: appBarDefault(title: '${widget.logModel==null?'Add':'Edit'} ${widget.logType==LogType.workLog?'Work log':widget.logType==LogType.siteLog?'Site log':widget.logType==LogType.toolLog?'Tool log':'Vehicle log'}'),
       body: Form(
         key: _formKey,
         child: Padding(
