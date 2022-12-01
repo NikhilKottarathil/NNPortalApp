@@ -73,7 +73,7 @@ class LeaveProvider extends ChangeNotifier {
     try {
       var requestBody = {
         'leaveFrom': DateFormat('yyyy-MM-dd').format(fromDate!),
-        'leaveTo': DateFormat('yyyy-MM-dd').format(fromDate!),
+        'leaveTo': DateFormat('yyyy-MM-dd').format(tillDate!),
         'reason': reasonTextEditController.text,
       };
       String url='StaffLeaves';

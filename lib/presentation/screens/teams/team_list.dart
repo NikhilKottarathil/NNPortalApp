@@ -65,11 +65,14 @@ class TeamList extends StatelessWidget {
                           )
                         : const NoItemsFound(),
               ),
-
+              const SizedBox(
+                height: 70,
+              ),
             ],
           ),
         );
       }),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppColors.primaryBase,
         onPressed: () {

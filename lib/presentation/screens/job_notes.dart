@@ -61,13 +61,24 @@ class JobNotes extends StatelessWidget {
                               value.jobDescriptionModels[index].comment ?? '',
                               style: const TextStyle(height: 1.5),
                             ),
-                            const SizedBox(height: 6),
+                            const SizedBox(height: 2),
+                            const Divider(),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(value.jobDescriptionModels[index]
-                                        .commentOn ??
-                                    'Unknown date',style: Theme.of(context).textTheme.labelMedium,),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:CrossAxisAlignment.start,
+                                    children: [
+                                      Text(value.jobDescriptionModels[index]
+                                          .staffName??
+                                          'Unknown User',style: Theme.of(context).textTheme.bodySmall!.copyWith(fontSize: 13),),
+                                      Text(value.jobDescriptionModels[index]
+                                              .commentOn ??
+                                          'Unknown date',style: Theme.of(context).textTheme.bodySmall!.copyWith(fontSize: 11),),
+                                    ],
+                                  ),
+                                ),
                                 if(!Provider.of<AuthenticationProvider>(context, listen: false)
                                     .userModel!
                                     .onLeave!)
