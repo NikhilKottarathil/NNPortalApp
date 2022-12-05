@@ -171,7 +171,9 @@ class _JobTeamMappingState extends State<JobTeamMapping> {
                       label: 'Assigned For',
                       dateTime: dateTime,
                       validator: (String? value) => null,
-                      callback: (date) {},
+                      callback: (date) {
+                        dateTime=date;
+                      },
                     ),
                     const SizedBox(
                       height: 12,
@@ -283,20 +285,22 @@ class _JobTeamMappingState extends State<JobTeamMapping> {
                                 showSnackBar(
                                     message: 'More than one leader selected');
                               } else {
-                                Provider.of<AssignTeamProvider>(
-                                        MyApp.navigatorKey.currentContext!,
-                                        listen: false)
-                                    .add(
-                                        staffModels: staffModels,
-                                        teamId: selectedTeamModel!.id!,
-                                        jobId: jobModels
-                                            .singleWhere((element) =>
-                                                element.code.toString() ==
-                                                jobTextEditController.text.toString())
-                                            .id!, description: descriptionTextEditController.text,dateTime: dateTime)
-                                    .then((value) {
-                                  Navigator.of(context).pop();
-                                });
+
+                                // int jobId=jobModels
+                                //     .singleWhere((element) =>
+                                // element.code.toString() ==
+                                //     jobTextEditController.text.toString())
+                                //     .id!;
+                                // Provider.of<AssignTeamProvider>(
+                                //         MyApp.navigatorKey.currentContext!,
+                                //         listen: false)
+                                //     .add(
+                                //         staffModels: staffModels,
+                                //         teamId: selectedTeamModel!.id!,
+                                //         jobId: jobId, description: descriptionTextEditController.text,dateTime: dateTime)
+                                //     .then((value) {
+                                //   Navigator.of(context).pop();
+                                // });
                               }
                             }
                           },
@@ -423,11 +427,10 @@ class _JobTeamMappingState extends State<JobTeamMapping> {
         MyApp.navigatorKey.currentContext!,
         listen: false)
         .getJobSuggestions();
-    teamModels = Provider.of<TeamProvider>(context, listen: false).teamModels;
-    jobModels =
-        Provider.of<AppProvider>(context, listen: false).jobSuggestionModels;
+    teamModels = Provider.of<TeamProvider>(MyApp.navigatorKey.currentContext!, listen: false).teamModels;
+    jobModels = Provider.of<AppProvider>(MyApp.navigatorKey.currentContext!, listen: false).jobSuggestionModels;
     vehicleModels =
-        Provider.of<AppProvider>(context, listen: false).vehicleModels;
+        Provider.of<AppProvider>(MyApp.navigatorKey.currentContext!, listen: false).vehicleModels;
     if (widget.parentPage == 'team') {
       teamTextEditController.text = widget.teamModel!.teamName!;
       await Future.delayed(const Duration(milliseconds: 10));

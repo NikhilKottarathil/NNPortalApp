@@ -13,29 +13,31 @@ import 'package:nn_portal/providers/job_details_provider.dart';
 import 'package:provider/provider.dart';
 
 class JobNotes extends StatelessWidget {
-   JobNotes({Key? key}) : super(key: key);
+  JobNotes({Key? key}) : super(key: key);
 
-  bool isViewOnly=false;
+  bool isViewOnly = false;
+
   @override
   Widget build(BuildContext context) {
-
-    if( Provider.of<AuthenticationProvider>(context, listen: false)
-        .userModel!
-        .onLeave!
-        ||
-        Provider.of<AuthenticationProvider>(context, listen: false)
-        .userModel!
-        .roleId! == 1
-        ||
+    if (Provider.of<AuthenticationProvider>(context, listen: false)
+            .userModel!
+            .onLeave! ||
+        Provider.of<AuthenticationProvider>(context,
+                    listen: false)
+                .userModel!
+                .roleId! ==
+            1 ||
         Provider.of<JobsDetailsProvider>(context, listen: false)
-        .jobModel!.status =='Completed'
-        ||
+                .jobModel!
+                .status ==
+            'Completed' ||
         Provider.of<JobsDetailsProvider>(context, listen: false)
-        .jobModel!.status =='Closed'){
-      isViewOnly=true;
+                .jobModel!
+                .status ==
+            'Closed') {
+      isViewOnly = true;
     }
     return Scaffold(
-
       backgroundColor: Colors.transparent,
       body: Consumer<JobsDetailsProvider>(builder: (context, value, child) {
         return value.pageStatus == PageStatus.loading ||
@@ -47,13 +49,12 @@ class JobNotes extends StatelessWidget {
                     padding: const EdgeInsets.all(10),
                     itemCount: value.jobDescriptionModels.length,
                     shrinkWrap: true,
-
                     itemBuilder: (context, index) {
                       return Container(
                         decoration: BoxDecoration(
                             color: AppColors.tertiary,
                             borderRadius: BorderRadius.circular(8)),
-                        padding:const  EdgeInsets.all(12),
+                        padding: const EdgeInsets.all(12),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -68,59 +69,82 @@ class JobNotes extends StatelessWidget {
                               children: [
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment:CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      Text(value.jobDescriptionModels[index]
-                                          .staffName??
-                                          'Unknown User',style: Theme.of(context).textTheme.bodySmall!.copyWith(fontSize: 13),),
-                                      Text(value.jobDescriptionModels[index]
-                                              .commentOn ??
-                                          'Unknown date',style: Theme.of(context).textTheme.bodySmall!.copyWith(fontSize: 11),),
+                                      Text(
+                                        value.jobDescriptionModels[index]
+                                                .staffName ??
+                                            'Unknown User',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodySmall!
+                                            .copyWith(fontSize: 13),
+                                      ),
+                                      Text(
+                                        value.jobDescriptionModels[index]
+                                                .commentOn ??
+                                            'Unknown date',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodySmall!
+                                            .copyWith(fontSize: 11),
+                                      ),
                                     ],
                                   ),
                                 ),
-                                if(!Provider.of<AuthenticationProvider>(context, listen: false)
-                                    .userModel!
-                                    .onLeave!)
-                                Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    IconButton(
-                                      constraints: const BoxConstraints(),
-                                      padding:const EdgeInsets.only(right: 13),
-                                      icon:  Image.asset('assets/edit.png'),
-                                      iconSize: 21,
-
-                                      onPressed: () {
-                                        addNote(
-                                            jobDescriptionModel: value
-                                                .jobDescriptionModels[index]);
-                                      },
-                                    ),
-                                    IconButton(
-                                      constraints: const BoxConstraints(),
-                                      padding: EdgeInsets.zero,
-                                      icon:  Image.asset('assets/delete.png'),
-                                      iconSize: 21,
-                                      onPressed: () {
-                                        showCustomAlertDialog(
-                                            message: 'Are you sure to delete?',
-                                            negativeButtonText: 'Cancel',
-                                            positiveButtonText: 'CONFIRM',
-                                            positiveButtonAction: () {
-                                              Provider.of<JobsDetailsProvider>(
-                                                  MyApp.navigatorKey
-                                                      .currentContext!,
-                                                  listen: false)
-                                                  .deleteDescription(
-                                                  jobDescriptionModel:
-                                                  value.jobDescriptionModels[index]);
-                                              Navigator.pop(context);
-                                            });
-                                      },
-                                    ),
-                                  ],
-                                )
+                                if (!Provider.of<AuthenticationProvider>(
+                                            context,
+                                            listen: false)
+                                        .userModel!
+                                        .onLeave! &&
+                                    Provider.of<AuthenticationProvider>(context,
+                                                listen: false)
+                                            .userModel!
+                                            .staffId ==
+                                        value.jobDescriptionModels[index]
+                                            .staffId)
+                                  Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      IconButton(
+                                        constraints: const BoxConstraints(),
+                                        padding:
+                                            const EdgeInsets.only(right: 13),
+                                        icon: Image.asset('assets/edit.png'),
+                                        iconSize: 21,
+                                        onPressed: () {
+                                          addNote(
+                                              jobDescriptionModel: value
+                                                  .jobDescriptionModels[index]);
+                                        },
+                                      ),
+                                      IconButton(
+                                        constraints: const BoxConstraints(),
+                                        padding: EdgeInsets.zero,
+                                        icon: Image.asset('assets/delete.png'),
+                                        iconSize: 21,
+                                        onPressed: () {
+                                          showCustomAlertDialog(
+                                              message:
+                                                  'Are you sure to delete?',
+                                              negativeButtonText: 'Cancel',
+                                              positiveButtonText: 'CONFIRM',
+                                              positiveButtonAction: () {
+                                                Provider.of<JobsDetailsProvider>(
+                                                        MyApp.navigatorKey
+                                                            .currentContext!,
+                                                        listen: false)
+                                                    .deleteDescription(
+                                                        jobDescriptionModel:
+                                                            value.jobDescriptionModels[
+                                                                index]);
+                                                Navigator.pop(context);
+                                              });
+                                        },
+                                      ),
+                                    ],
+                                  )
                               ],
                             )
                           ],
@@ -166,13 +190,20 @@ class JobNotes extends StatelessWidget {
                     },
                   );
       }),
-      floatingActionButton:!isViewOnly? FloatingActionButton(
-        backgroundColor: AppColors.secondaryBase,
-        onPressed: () {
-          addNote();
-        },
-        child:  Image.asset('assets/add_note.png',height: 32,width: 32,fit: BoxFit.fill,),
-      ):null,
+      floatingActionButton: !isViewOnly
+          ? FloatingActionButton(
+              backgroundColor: AppColors.secondaryBase,
+              onPressed: () {
+                addNote();
+              },
+              child: Image.asset(
+                'assets/add_note.png',
+                height: 32,
+                width: 32,
+                fit: BoxFit.fill,
+              ),
+            )
+          : null,
     );
   }
 
@@ -200,7 +231,7 @@ class JobNotes extends StatelessWidget {
             actionsPadding: const EdgeInsets.all(0),
             buttonPadding: const EdgeInsets.all(0),
             insetPadding:
-                const EdgeInsets.only(top:54,left: 14, right: 14, bottom: 50),
+                const EdgeInsets.only(top: 54, left: 14, right: 14, bottom: 50),
             content: Form(
               key: _formKey,
               child: SizedBox(
@@ -218,8 +249,6 @@ class JobNotes extends StatelessWidget {
                         child: const Icon(Icons.clear),
                       ),
                     ),
-
-
                     Flexible(
                       child: TextFieldOutlineLabel(
                         textEditingController: textEditingController,
@@ -243,23 +272,23 @@ class JobNotes extends StatelessWidget {
                         SizedBox(
                           height: 20,
                           width: 20,
-                          
                           child: Checkbox(
                               value: isCompleted,
-                              fillColor: MaterialStateProperty.all(AppColors.primaryBase),
+                              fillColor: MaterialStateProperty.all(
+                                  AppColors.primaryBase),
                               onChanged: (value) {
                                 stateSetter(() {
                                   isCompleted = value!;
                                 });
                               }),
                         ),
-                       const SizedBox(
+                        const SizedBox(
                           width: 10,
                         ),
                         const Text('Is Completed'),
                       ],
                     ),
-                   const SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     Row(
