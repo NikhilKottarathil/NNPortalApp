@@ -15,7 +15,7 @@ import 'package:provider/provider.dart';
 class JobNotes extends StatelessWidget {
   JobNotes({Key? key}) : super(key: key);
 
-  bool isViewOnly = false;
+   bool isViewOnly = false;
 
   @override
   Widget build(BuildContext context) {

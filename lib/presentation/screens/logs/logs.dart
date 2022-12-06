@@ -40,21 +40,21 @@ class _LogsState extends State<Logs> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: CalendarAppBar(
-        onDateChanged: (value) {
-          Provider.of<LogProvider>(context, listen: false)
-              .changSelectedDate(value);
-        },
-        firstDate: DateTime(2020, 1, 1),
-        lastDate: DateTime.now(),
-        backButton: false,
-        fullCalendar: true,
-        accent: AppColors.primaryBase,
-        padding: 0,
-      ),
-      body: Consumer<LogProvider>(builder: (context, value, child) {
-        return Padding(
+    return Consumer<LogProvider>(builder: (context, value, child) {
+      return Scaffold(
+        appBar: CalendarAppBar(
+          onDateChanged: (value) {
+            Provider.of<LogProvider>(context, listen: false)
+                .changSelectedDate(value);
+          },
+          firstDate: DateTime(2020, 1, 1),
+          lastDate: DateTime.now(),
+          backButton: false,
+          fullCalendar: true,
+          accent: AppColors.primaryBase,
+          padding: 0,
+        ),
+        body: Padding(
           padding: const EdgeInsets.only(left: 10, right: 10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -67,20 +67,27 @@ class _LogsState extends State<Logs> with SingleTickerProviderStateMixin {
                         itemBuilder: (BuildContext context, int index) {
                           return GestureDetector(
                               onTap: () {
-                                if(!Provider.of<AuthenticationProvider>(context, listen: false)
-                                    .userModel!
-                                    .onLeave!) {
+                                if (!Provider.of<AuthenticationProvider>(
+                                            context,
+                                            listen: false)
+                                        .userModel!
+                                        .onLeave! &&
+                                    value.isInTime) {
                                   Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (_) =>
-                                          AddLog(
-                                            logType: value.models[index]
-                                                .logType,
+                                      builder: (_) => AddLog(
+                                            logType:
+                                                value.models[index].logType,
                                             logModel: value.models[index],
                                           )));
                                 }
                                 // Navigator.push(context, MaterialPageRoute(builder: (_)=>const JobDetails()));
                               },
-                              child: LogTile(logModel: value.models[index]));
+                              child: LogTile(
+                                logModel: value.models[index],
+                                deleteAction: value.isInTime?() {
+                                  value.delete(value.models[index]);
+                                }:null,
+                              ));
                         },
                         separatorBuilder: (BuildContext context, int index) {
                           return const SizedBox(
@@ -92,15 +99,16 @@ class _LogsState extends State<Logs> with SingleTickerProviderStateMixin {
               ),
             ],
           ),
-        );
-      }),
-      floatingActionButton:
-          !Provider.of<AuthenticationProvider>(context, listen: false)
-                  .userModel!
-                  .onLeave!
-              ? floatingActionBubble()
-              : null,
-    );
+        ),
+        floatingActionButton:
+            !Provider.of<AuthenticationProvider>(context, listen: false)
+                        .userModel!
+                        .onLeave! &&
+                    value.isInTime
+                ? floatingActionBubble()
+                : null,
+      );
+    });
   }
 
   FloatingActionBubble floatingActionBubble() {

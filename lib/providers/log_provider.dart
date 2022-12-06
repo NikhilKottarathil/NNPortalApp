@@ -20,15 +20,21 @@ import 'package:nn_portal/utils/time_utils.dart';
 import 'package:provider/provider.dart';
 
 class LogProvider extends ChangeNotifier {
+  static DateTime today = DateTime.now();
   DateTime selectedDate = DateTime.now();
   PageStatus pageStatus = PageStatus.initialState;
 
   List<LogModel> models = [];
 
   List<JobModel> jobModels = [];
+  DateTime yesterday =
+      DateTime(today.year, today.month, today.day - 1, 0, 0, 0, 0, 0);
+
+  bool isInTime = true;
 
   changSelectedDate(DateTime dateTime) {
     selectedDate = dateTime;
+    isInTime = !selectedDate.difference(yesterday).isNegative;
     getLogs();
   }
 
@@ -209,6 +215,29 @@ class LogProvider extends ChangeNotifier {
       pageStatus = PageStatus.failed;
       notifyListeners();
       return false;
+    }
+  }
+
+  Future delete(LogModel logModel) async {
+
+    String urlAddress = '';
+    if (logModel.logType == LogType.workLog ||
+        logModel.logType == LogType.siteLog) {
+      urlAddress = 'Staffs/DeleteStaffLog/${logModel.staffLogModel!.id}';
+    } else if (logModel.logType == LogType.vehicleLog) {
+      urlAddress = 'Vehicles/DeleteVehicleLog/${logModel.vehicleLogModel!.id}';
+    } else if (logModel.logType == LogType.toolLog) {
+      urlAddress = 'Tools/DeleteToolLog/${logModel.toolLogModel!.id}';
+    }
+    try {
+      var response = await deleteDataRequest(
+          urlAddress: urlAddress, isShowLoader: true);
+
+      models.remove(logModel);
+      notifyListeners();
+
+    } catch (e) {
+      print(e);
     }
   }
 
