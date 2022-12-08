@@ -73,6 +73,7 @@ class _LogsState extends State<Logs> with SingleTickerProviderStateMixin {
                                         .userModel!
                                         .onLeave! &&
                                     value.isInTime) {
+
                                   Navigator.of(context).push(MaterialPageRoute(
                                       builder: (_) => AddLog(
                                             logType:

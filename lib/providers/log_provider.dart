@@ -23,6 +23,7 @@ class LogProvider extends ChangeNotifier {
   static DateTime today = DateTime.now();
   DateTime selectedDate = DateTime.now();
   PageStatus pageStatus = PageStatus.initialState;
+  List<JobModel> jobSuggestionModels = [];
 
   List<LogModel> models = [];
 
@@ -219,7 +220,6 @@ class LogProvider extends ChangeNotifier {
   }
 
   Future delete(LogModel logModel) async {
-
     String urlAddress = '';
     if (logModel.logType == LogType.workLog ||
         logModel.logType == LogType.siteLog) {
@@ -230,37 +230,29 @@ class LogProvider extends ChangeNotifier {
       urlAddress = 'Tools/DeleteToolLog/${logModel.toolLogModel!.id}';
     }
     try {
-      var response = await deleteDataRequest(
-          urlAddress: urlAddress, isShowLoader: true);
+      var response =
+          await deleteDataRequest(urlAddress: urlAddress, isShowLoader: true);
 
       models.remove(logModel);
       notifyListeners();
-
     } catch (e) {
       print(e);
     }
   }
 
-  Future getJobList({String searchString = ''}) async {
-    notifyListeners();
-
+  Future getJobSuggestions() async {
     try {
-      var response = await postDataRequest(
-          urlAddress: 'Jobs/GetStaffJobs',
-          requestBody: {
-            'filterText': searchString,
-            'pageIndex': 0.toString(),
-            'pageSize': 100.toString()
-          },
-          isShowLoader: false);
-      for (var json in response['items']) {
-        jobModels.add(JobModel.fromJson(json));
-      }
+      jobSuggestionModels.clear();
+      var response = await getDataRequest(
+          urlAddress: 'Jobs/GetdlJobsforsitelog', isShowLoader: true);
 
+      print('job suggectionCount ${response.length}');
+      for (var json in response) {
+        jobSuggestionModels.add(JobModel.fromJson(json));
+      }
       notifyListeners();
     } catch (e) {
-      print(e);
-      notifyListeners();
+      debugPrint(e.toString());
     }
   }
 }

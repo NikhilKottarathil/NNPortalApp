@@ -46,7 +46,9 @@ class _AddLogState extends State<AddLog> {
   void initState() {
     // TODO: implement initState
     super.initState();
-
+    Provider.of<LogProvider>(
+        context,
+        listen: false).getJobSuggestions();
     if (widget.logModel != null) {
       checkInTime = TimeOfDay(
           hour: widget.logModel!.checkIn.hour,
@@ -230,14 +232,14 @@ class _AddLogState extends State<AddLog> {
                 hint: 'Enter location or client',
                 textEditingController:jobTextEditController ,
                 onSuggestionSelected: (value){
-                  selectedJobModel= Provider.of<AppProvider>(context, listen: false)
+                  selectedJobModel= Provider.of<LogProvider>(context, listen: false)
                       .jobSuggestionModels.firstWhere((element) => value==element.code);
                   setState(() {
 
                   });
                 },
                 validator: (value) =>
-                Provider.of<AppProvider>(context, listen: false)
+                Provider.of<LogProvider>(context, listen: false)
                     .jobSuggestionModels
                     .map((e) => e.code)
                     .toList()
@@ -245,7 +247,7 @@ class _AddLogState extends State<AddLog> {
                     ? null
                     : 'Please fill',
                 suggestions:
-                Provider.of<AppProvider>(context, listen: false)
+                Provider.of<LogProvider>(context, listen: false)
                     .jobSuggestionModels
                     .map((e) => e.code.toString())
                     .toList(),
