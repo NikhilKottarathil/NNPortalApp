@@ -164,14 +164,14 @@ class AddJobState extends State<AddJob> {
               const SizedBox(
                 height: 10,
               ),
-              MultiSelectList(
-                title: 'Status',
-                multiSelectItemModels: status,
-                isMultiSelect: false,
-              ),
-              const SizedBox(
-                height: 10,
-              ),
+              // MultiSelectList(
+              //   title: 'Status',
+              //   multiSelectItemModels: status,
+              //   isMultiSelect: false,
+              // ),
+              // const SizedBox(
+              //   height: 10,
+              // ),
               TextFieldCustom(
                 label: 'Ticket No',
                 textEditingController: ticketNoTextEditController,
@@ -294,10 +294,7 @@ class AddJobState extends State<AddJob> {
                       Provider.of<AdminJobsProvider>(
                               MyApp.navigatorKey.currentContext!,
                               listen: false)
-                          .addOrEdit(state: this,jobModel: widget.jobModel)
-                          .then((value) {
-                        Navigator.of(context).pop();
-                      });
+                          .addOrEdit(state: this,jobModel: widget.jobModel);
                     }
                   },
                   child: SizedBox(

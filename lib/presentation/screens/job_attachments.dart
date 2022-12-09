@@ -15,30 +15,35 @@ import 'package:nn_portal/providers/authentication_provider.dart';
 import 'package:nn_portal/providers/job_details_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../constants/enums.dart';
 
 class JobAttachments extends StatelessWidget {
-   JobAttachments({Key? key}) : super(key: key);
+  JobAttachments({Key? key}) : super(key: key);
 
   final List<String> imageFormats = const ['jpg', 'png', 'raw', 'svg'];
-  bool isViewOnly=false;
+  bool isViewOnly = false;
+
   @override
   Widget build(BuildContext context) {
-    if( Provider.of<AuthenticationProvider>(context, listen: false)
-        .userModel!
-        .onLeave!
-        ||
-        Provider.of<AuthenticationProvider>(context, listen: false)
+    if (Provider.of<AuthenticationProvider>(context, listen: false)
             .userModel!
-            .roleId! == 1
-        ||
+            .onLeave! ||
+        Provider.of<AuthenticationProvider>(context,
+                    listen: false)
+                .userModel!
+                .roleId! ==
+            1 ||
         Provider.of<JobsDetailsProvider>(context, listen: false)
-            .jobModel!.status =='Completed'
-        ||
+                .jobModel!
+                .status ==
+            'Completed' ||
         Provider.of<JobsDetailsProvider>(context, listen: false)
-            .jobModel!.status =='Closed'){
-      isViewOnly=true;
+                .jobModel!
+                .status ==
+            'Closed') {
+      isViewOnly = true;
     }
     double fileSize = MediaQuery.of(context).size.width * .15;
     return Scaffold(
@@ -74,14 +79,16 @@ class JobAttachments extends StatelessWidget {
                           children: [
                             GestureDetector(
                               onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (_) => CustomWebView(
-                                              url: value
-                                                  .jobAttachmentModels[index]
-                                                  .uploadUrl!,
-                                            )));
+                                // Navigator.push(
+                                //     context,
+                                //     MaterialPageRoute(
+                                //         builder: (_) => CustomWebView(
+                                //               url: value
+                                //                   .jobAttachmentModels[index]
+                                //                   .uploadUrl!,
+                                //             )));
+                                _launchUrl(value
+                                    .jobAttachmentModels[index].uploadUrl!);
                               },
                               child: imageFormats.contains(value
                                       .jobAttachmentModels[index].uploadUrl!
@@ -136,26 +143,51 @@ class JobAttachments extends StatelessWidget {
                                 children: [
                                   Text(
                                     'Date  :  ${value.jobAttachmentModels[index].uploadedOn!.substring(0, 10)}',
-                                    style: Theme.of(context).textTheme.bodyMedium,
+                                    style:
+                                        Theme.of(context).textTheme.bodyMedium,
                                   ),
-                                  SizedBox(height: 6,),
+                                  SizedBox(
+                                    height: 5,
+                                  ),
+                                  Text(
+                                    'Time  :  ${value.jobAttachmentModels[index].uploadedOn!.substring(11, value.jobAttachmentModels[index].uploadedOn!.length )}',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium,
+                                  ),
+                                  SizedBox(
+                                    height: 3,
+                                  ),
                                   Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                        'Time  :  ${value.jobAttachmentModels[index].uploadedOn!.substring(10, value.jobAttachmentModels[index].uploadedOn!.length - 1)}',
+                                        value.jobAttachmentModels[index]
+                                            .staffName ??
+                                            'Unknown User',
                                         style: Theme.of(context)
                                             .textTheme
-                                            .bodyMedium,
+                                            .bodySmall!
+                                            .copyWith(fontSize: 13),
                                       ),
-                                      if(!Provider.of<AuthenticationProvider>(context, listen: false)
+
+                                      if (!Provider.of<AuthenticationProvider>(
+                                              context,
+                                              listen: false)
                                           .userModel!
-                                          .onLeave!)
-                                      IconButton(
-                                        constraints: const BoxConstraints(),
-                                        padding: EdgeInsets.zero,
-                                        icon:  Image.asset('assets/delete.png'),
-                                        iconSize: 21,
+                                          .onLeave! && Provider.of<AuthenticationProvider>(context,
+                                          listen: false)
+                                          .userModel!
+                                          .staffId ==
+                                          value.jobAttachmentModels[index]
+                                              .staffId)
+                                        IconButton(
+                                          constraints: const BoxConstraints(),
+                                          padding: EdgeInsets.zero,
+                                          icon:
+                                              Image.asset('assets/delete.png'),
+                                          iconSize: 21,
                                           onPressed: () {
                                             showCustomAlertDialog(
                                                 message: 'Are you sure?',
@@ -173,8 +205,7 @@ class JobAttachments extends StatelessWidget {
                                                   Navigator.pop(context);
                                                 });
                                           },
-
-                                      )
+                                        )
                                     ],
                                   )
                                 ],
@@ -220,44 +251,53 @@ class JobAttachments extends StatelessWidget {
                     },
                   );
       }),
-      floatingActionButton:!isViewOnly? FloatingActionButton(
-        backgroundColor: AppColors.secondaryBase,
-        child: const Icon(Icons.attach_file),
-        onPressed: () async {
-          bool isGranted = await Permission.storage.request().isGranted;
-          if (isGranted) {
-            FilePickerResult? result = await FilePicker.platform.pickFiles(
-              type: FileType.custom,
-              allowedExtensions: [
-                'jpg',
-                'png',
-                'raw',
-                'svg',
-                'pdf',
-                'doc',
-                'docx',
-                'xls',
-                'xlsx',
-                'ppt',
-                'pptx',
-                'txt',
-                'html',
-              ],
-            );
-            if (result != null) {
-              File file = File(result.files.single.path!);
-              Provider.of<JobsDetailsProvider>(
-                      MyApp.navigatorKey.currentContext!,
-                      listen: false)
-                  .addAttachment(file);
-            } else {
-              // User canceled the picker
-            }
-          } else {
-            await showStoragePermissionRequest();
-          }
-        },
-      ):null,
+      floatingActionButton: !isViewOnly
+          ? FloatingActionButton(
+              backgroundColor: AppColors.secondaryBase,
+              child: const Icon(Icons.attach_file),
+              onPressed: () async {
+                bool isGranted = await Permission.storage.request().isGranted;
+                if (isGranted) {
+                  FilePickerResult? result =
+                      await FilePicker.platform.pickFiles(
+                    type: FileType.custom,
+                    allowedExtensions: [
+                      'jpg',
+                      'png',
+                      'raw',
+                      'svg',
+                      'pdf',
+                      'doc',
+                      'docx',
+                      'xls',
+                      'xlsx',
+                      'ppt',
+                      'pptx',
+                      'txt',
+                      'html',
+                    ],
+                  );
+                  if (result != null) {
+                    File file = File(result.files.single.path!);
+                    Provider.of<JobsDetailsProvider>(
+                            MyApp.navigatorKey.currentContext!,
+                            listen: false)
+                        .addAttachment(file);
+                  } else {
+                    // User canceled the picker
+                  }
+                } else {
+                  await showStoragePermissionRequest();
+                }
+              },
+            )
+          : null,
     );
+  }
+}
+
+Future<void> _launchUrl(String _url) async {
+  if (!await launchUrl(Uri.parse(_url),mode:LaunchMode.externalApplication )) {
+    throw 'Could not launch $_url';
   }
 }

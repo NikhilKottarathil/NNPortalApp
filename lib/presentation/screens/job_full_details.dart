@@ -7,6 +7,7 @@ import 'package:nn_portal/presentation/components/pop_ups_loaders/change_job_veh
 import 'package:nn_portal/providers/job_details_provider.dart';
 import 'package:nn_portal/utils/date_time_conversions.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class JobFullDetails extends StatefulWidget {
   final JobModel jobModel;
@@ -181,11 +182,12 @@ class _JobFullDetailsState extends State<JobFullDetails> {
                     flex: 7,
                     child: GestureDetector(
                       onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) => CustomWebView(
-                                    url: widget.jobModel.imageUrl!)));
+                        // Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (_) => CustomWebView(
+                        //             url: widget.jobModel.imageUrl!)));
+                        _launchUrl(widget.jobModel.imageUrl!);
                       },
                       child: Text(
                         'Open File',
@@ -238,5 +240,10 @@ class _JobFullDetailsState extends State<JobFullDetails> {
         ),
       ],
     );
+  }
+}
+Future<void> _launchUrl(String _url) async {
+  if (!await launchUrl(Uri.parse(_url),mode:LaunchMode.externalApplication )) {
+    throw 'Could not launch $_url';
   }
 }

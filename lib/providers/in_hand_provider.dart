@@ -68,7 +68,7 @@ class InHandProvider extends ChangeNotifier {
         VehicleLogModel contentModel = VehicleLogModel.fromJson(json);
         DateTime checkInTime = DateTime.now();
         if (contentModel.checkIn != null) {
-          DateFormat('yyyy-MM-dd HH:mm:ss').parse(contentModel.checkIn!);
+          checkInTime= DateFormat('yyyy-MM-dd HH:mm:ss').parse(contentModel.checkIn!);
         }
         DateTime? checkOutTime;
         if (contentModel.checkOut != null) {
@@ -83,6 +83,7 @@ class InHandProvider extends ChangeNotifier {
             checkOut: checkOutTime,
             locationName: json['locationName'],
             clientName: json['clientName'],
+            staffName: contentModel.staffName,
             logType: LogType.vehicleLog,
             isCompleted: true));
       }
@@ -92,7 +93,7 @@ class InHandProvider extends ChangeNotifier {
         ToolLogModel contentModel = ToolLogModel.fromJson(json);
         DateTime checkInTime = DateTime.now();
         if (contentModel.checkIn != null) {
-          DateFormat('yyyy-MM-dd HH:mm:ss').parse(contentModel.checkIn!);
+          checkInTime= DateFormat('yyyy-MM-dd HH:mm:ss').parse(contentModel.checkIn!);
         }
         DateTime? checkOutTime;
         if (contentModel.checkOut != null) {
@@ -106,6 +107,7 @@ class InHandProvider extends ChangeNotifier {
             checkOut: checkOutTime,
             locationName: json['locationName'],
             clientName: json['clientName'],
+            staffName: contentModel.staffName,
             logType: LogType.toolLog,
             isCompleted: true));
       }

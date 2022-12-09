@@ -15,6 +15,8 @@ class LogModel {
   String? locationName;
   String? clientName;
   int logId;
+  String?staffName;
+
 
   LogModel(
       {required this.checkIn,
@@ -26,5 +28,6 @@ class LogModel {
         this.toolLogModel,
       this.clientName,
        required this.logId,
+        this.staffName,
       this.locationName});
 }

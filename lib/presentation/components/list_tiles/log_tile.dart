@@ -10,11 +10,13 @@ class LogTile extends StatefulWidget {
   final LogModel logModel;
   final bool isTimeVisible;
   final Function? deleteAction;
+  final bool isFromInHand;
 
   const LogTile(
       {Key? key,
       required this.logModel,
       this.isTimeVisible = true,
+      this.isFromInHand = false,
       this.deleteAction})
       : super(key: key);
 
@@ -38,7 +40,6 @@ class _LogTileState extends State<LogTile> {
               Expanded(
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
-
                   children: [
                     Image.asset(
                       widget.logModel.logType == LogType.workLog
@@ -58,54 +59,90 @@ class _LogTileState extends State<LogTile> {
                         child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Text(
-                        //     widget.logModel.logType == LogType.workLog
-                        //         ? 'Staff'
-                        //         : widget.logModel.logType == LogType.siteLog
-                        //         ? 'Staff Job'
-                        //         : widget.logModel.logType == LogType.vehicleLog
-                        //         ? 'Vehicle'
-                        //         : 'Tool',
-                        //     style: Theme.of(context).textTheme.titleMedium),
-                        // const SizedBox(height: 4,),
-                        Row(
-                          children: [
-                            Image.asset(
-                              'assets/check_in.png',
-                              height: 21,
-                              width: 21,
-                            ),
-                            const SizedBox(
-                              width: 8,
-                            ),
-                            Flexible(
-                              child: Text(
-                                  'Check In    :  ${widget.isTimeVisible ? DateFormat('hh:mm a').format(widget.logModel.checkIn) : ''}',
-                                  style: Theme.of(context).textTheme.titleSmall),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 4,
-                        ),
-
-                        Row(
-                          children: [
-                            Image.asset(
-                              'assets/check_out.png',
-                              height: 21,
-                              width: 21,
-                            ),
-                            const SizedBox(
-                              width: 8,
-                            ),
-                            Flexible(
-                              child: Text(
-                                  'Check Out :  ${(widget.logModel.checkOut != null && widget.logModel.checkOut != '') ? DateFormat('hh:mm a').format(widget.logModel.checkOut!) : ''}',
-                                  style: Theme.of(context).textTheme.titleSmall),
-                            ),
-                          ],
-                        ),
+                        if (widget.isFromInHand)
+                          Row(
+                            children: [
+                              Image.asset(
+                                'assets/check_in.png',
+                                height: 21,
+                                width: 21,
+                              ),
+                              const SizedBox(
+                                width: 8,
+                              ),
+                              Flexible(
+                                child: Text(
+                                    'Date         :  ${widget.isTimeVisible ? DateFormat('dd-MM-yyyy').format(widget.logModel.checkIn) : ''}',
+                                    style:
+                                        Theme.of(context).textTheme.titleSmall),
+                              ),
+                            ],
+                          ),
+                        if (widget.isFromInHand)
+                          const SizedBox(
+                            height: 4,
+                          ),
+                        if (widget.isFromInHand)
+                          Row(
+                            children: [
+                              Image.asset(
+                                'assets/check_in.png',
+                                height: 21,
+                                width: 21,
+                              ),
+                              const SizedBox(
+                                width: 8,
+                              ),
+                              Flexible(
+                                child: Text(
+                                    'Check In   :  ${widget.isTimeVisible ? DateFormat('hh:mm a').format(widget.logModel.checkIn) : ''}',
+                                    style:
+                                        Theme.of(context).textTheme.titleSmall),
+                              ),
+                            ],
+                          ),
+                        if (!widget.isFromInHand)
+                          Row(
+                            children: [
+                              Image.asset(
+                                'assets/check_in.png',
+                                height: 21,
+                                width: 21,
+                              ),
+                              const SizedBox(
+                                width: 8,
+                              ),
+                              Flexible(
+                                child: Text(
+                                    'Check In    :  ${widget.isTimeVisible ? DateFormat('hh:mm a').format(widget.logModel.checkIn) : ''}',
+                                    style:
+                                        Theme.of(context).textTheme.titleSmall),
+                              ),
+                            ],
+                          ),
+                        if (!widget.isFromInHand)
+                          const SizedBox(
+                            height: 4,
+                          ),
+                        if (!widget.isFromInHand)
+                          Row(
+                            children: [
+                              Image.asset(
+                                'assets/check_out.png',
+                                height: 21,
+                                width: 21,
+                              ),
+                              const SizedBox(
+                                width: 8,
+                              ),
+                              Flexible(
+                                child: Text(
+                                    'Check Out :  ${(widget.logModel.checkOut != null && widget.logModel.checkOut != '') ? DateFormat('hh:mm a').format(widget.logModel.checkOut!) : ''}',
+                                    style:
+                                        Theme.of(context).textTheme.titleSmall),
+                              ),
+                            ],
+                          ),
                       ],
                     )),
                   ],
@@ -195,6 +232,27 @@ class _LogTileState extends State<LogTile> {
                         style: Theme.of(context).textTheme.bodySmall,
                       )
                     ],
+                  ),
+                ),
+              ],
+            ),
+          if (widget.isFromInHand && widget.logModel.staffName != null)
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Image.asset(
+                  'assets/project_job.png',
+                  color: Colors.black,
+                  height: 21,
+                  width: 21,
+                ),
+                const SizedBox(
+                  width: 8,
+                ),
+                Flexible(
+                  child: Text(
+                    widget.logModel.staffName ?? 'Unknown user',
+                    style: Theme.of(context).textTheme.bodyMedium,
                   ),
                 ),
               ],

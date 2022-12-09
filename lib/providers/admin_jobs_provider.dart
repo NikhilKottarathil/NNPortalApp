@@ -24,6 +24,8 @@ class AdminJobsProvider extends ChangeNotifier {
   List<MultiSelectItemModel> clients = [];
   List<MultiSelectItemModel> locations = [];
 
+  bool isAddEnabled = true;
+
   getInitialJob() {
     pageStatus = PageStatus.loading;
     notifyListeners();
@@ -84,76 +86,86 @@ class AdminJobsProvider extends ChangeNotifier {
     }
   }
 
-  Future<bool> addOrEdit(
+  Future addOrEdit(
       {JobModel? jobModel, required AddJobState state}) async {
     // pageStatus = PageStatus.loading;
-    notifyListeners();
+    // notifyListeners();
 
     print('inside');
-    bool isNew=jobModel==null;
-    // try {
-      Map<String, String> requestBody = {
-        'clientId': clients
-            .singleWhere((element) =>
-                element.text == state.clientTextEditController.text.trim())
-            .id
-            .toString(),
-        'locationId': locations
-            .singleWhere((element) =>
-                element.text == state.locationTextEditController.text.trim())
-            .id
-            .toString(),
-        'description': state.descriptionTextEditController.text,
-        'comment': state.commentsTextEditController.text,
-        'ticketNo': state.ticketNoTextEditController.text,
-        'ticketCaller': state.ticketCallerTextEditController.text,
-        'ticketCreatedOn': DateFormat('yyyy-MM-dd').format(DateTime.now()),
-        'openOn': DateFormat('yyyy-MM-dd').format(DateTime.now()),
-        'flag': 'False',
-        'status': state.status
-            .singleWhere((element) => element.isSelected)
-            .id
-            .toString(),
-        'prev': state.status.last.isSelected ? 'True' : 'False',
-        'submitBy': Provider.of<AuthenticationProvider>(
-                MyApp.navigatorKey.currentContext!,
-                listen: false)
-            .userModel!
-            .id
-            .toString()
-      };
-      if(!isNew){
-        requestBody.addAll({'id':jobModel.id.toString()});
-      }
-      List<String> fileAddresses = [];
-      List<File> files = [];
-      if(state.file!=null){
-        files.add(state.file!);
-        fileAddresses.add('imageFile');
-      }
-      var response = await showUploadFileAlert(
-        urlAddress: isNew?'Jobs':'Jobs/${jobModel.id}',
-        requestBody: requestBody,
-        files: files,
-        fileAddresses: fileAddresses,
-        method: isNew?'post':'put',
-      );
+    if (isAddEnabled) {
+      try {
+        isAddEnabled = false;
+        bool isNew = jobModel == null;
 
-      if(isNew) {
-        models.insert(0, JobModel.fromJson(response));
-      }else{
-        models[models.indexWhere((element) => element.id==jobModel.id)]=JobModel.fromJson(response);
+        Map<String, String> requestBody = {
+          'clientId': clients
+              .singleWhere((element) =>
+                  element.text == state.clientTextEditController.text)
+              .id
+              .toString(),
+          'locationId': locations
+              .singleWhere((element) =>
+                  element.text == state.locationTextEditController.text)
+              .id
+              .toString(),
+          'description': state.descriptionTextEditController.text,
+          'comment': state.commentsTextEditController.text,
+          'ticketNo': state.ticketNoTextEditController.text,
+          'ticketCaller': state.ticketCallerTextEditController.text,
+          'ticketCreatedOn': DateFormat('yyyy-MM-dd').format(DateTime.now()),
+          'openOn': DateFormat('yyyy-MM-dd').format(DateTime.now()),
+          'flag': 'False',
+          'prev': state.status.last.isSelected ? 'True' : 'False',
+          'submitBy': Provider.of<AuthenticationProvider>(
+                  MyApp.navigatorKey.currentContext!,
+                  listen: false)
+              .userModel!
+              .id
+              .toString()
+        };
+        if(isNew){
+          requestBody.addAll({'status': state.status
+              .singleWhere((element) => element.isSelected)
+              .id
+              .toString(),});
+        }
+        if (!isNew) {
+          requestBody.addAll({'id': jobModel.id.toString()});
+        }
+        List<String> fileAddresses = [];
+        List<File> files = [];
+        if (state.file != null) {
+          files.add(state.file!);
+          fileAddresses.add('imageFile');
+        }
+        var response = await showUploadFileAlert(
+          urlAddress: isNew ? 'Jobs' : 'Jobs/${jobModel.id}',
+          requestBody: requestBody,
+          files: files,
+          fileAddresses: fileAddresses,
+          method: isNew ? 'post' : 'put',
+        );
+        if (isNew) {
+          models.insert(0, JobModel.fromJson(response));
+        } else {
+          models[models.indexWhere((element) => element.id == jobModel.id)] =
+              JobModel.fromJson(response);
+        }
+        // pageStatus = PageStatus.loaded;
+        notifyListeners();
+        isAddEnabled = true;
 
+        Navigator.of(MyApp.navigatorKey.currentContext!).pop();
+
+        return true;
+      } catch (e) {
+        isAddEnabled = true;
+        debugPrint(e.toString());
+        // pageStatus = PageStatus.failed;
+        notifyListeners();
+        return false;
       }
-      // pageStatus = PageStatus.loaded;
-      notifyListeners();
-      return true;
-    // } catch (e) {
-    //   debugPrint(e.toString());
-    //   // pageStatus = PageStatus.failed;
-    //   notifyListeners();
-    //   return false;
-    // }
+    }
   }
 
   Future<bool> delete({required JobModel jobModel}) async {

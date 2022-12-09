@@ -299,9 +299,10 @@ class JobsDetailsProvider extends ChangeNotifier {
             .userModel!
             .id
             .toString(),
-        'uploadedOn': dateString
       };
-      var response = await showUploadFileAlert(
+      // 'uploadedOn': dateString
+
+    var response = await showUploadFileAlert(
           urlAddress: 'JobAttachments',
           requestBody: requestBody,
           files: [file],
