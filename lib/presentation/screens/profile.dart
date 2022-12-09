@@ -18,16 +18,26 @@ import 'package:nn_portal/providers/in_hand_provider.dart';
 import 'package:nn_portal/providers/leave_provider.dart';
 import 'package:nn_portal/providers/team_provider.dart';
 import 'package:nn_portal/utils/date_time_conversions.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class Profile extends StatelessWidget {
+class Profile extends StatefulWidget {
   Profile({Key? key}) : super(key: key);
 
+  @override
+  State<Profile> createState() => _ProfileState();
+}
+
+class _ProfileState extends State<Profile> {
   bool isAdmin = false;
+
+
+  String version = '1.0.1';
 
   @override
   Widget build(BuildContext context) {
+
     if (Provider.of<AuthenticationProvider>(context, listen: false)
                 .userModel!
                 .roleId !=
@@ -38,6 +48,7 @@ class Profile extends StatelessWidget {
             1) {
       isAdmin = true;
     }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Profile'),
@@ -335,6 +346,13 @@ class Profile extends StatelessWidget {
             const SizedBox(
               height: 10,
             ),
+            Text(
+              'Version $version',
+              style: Theme.of(context).textTheme.labelMedium,
+            ),
+            const SizedBox(
+              height: 4,
+            ),
           ],
         ),
       ),
@@ -409,5 +427,15 @@ class Profile extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> getVersion() async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+
+    version=packageInfo.version;
+    print('version $version');
+    setState(() {
+
+    });
   }
 }
