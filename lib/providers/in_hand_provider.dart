@@ -93,6 +93,7 @@ class InHandProvider extends ChangeNotifier {
         ToolLogModel contentModel = ToolLogModel.fromJson(json);
         DateTime checkInTime = DateTime.now();
         if (contentModel.checkIn != null) {
+          print(contentModel.checkIn);
           checkInTime= DateFormat('yyyy-MM-dd HH:mm:ss').parse(contentModel.checkIn!);
         }
         DateTime? checkOutTime;

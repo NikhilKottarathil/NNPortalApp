@@ -122,7 +122,7 @@ class _JobListState extends State<JobList> {
                             .roleId ==
                         2)
                   const SizedBox(
-                    height: 10,
+                    height: 5,
                   ),
                 if (Provider.of<AuthenticationProvider>(context, listen: false)
                             .userModel!
@@ -135,7 +135,7 @@ class _JobListState extends State<JobList> {
                   jobTypeTile(
                       jobTypeModel: value.jobTypeModels[1], isCenter: true),
                 const SizedBox(
-                  height: 10,
+                  height: 5,
                 ),
                 Row(
                   children: [
@@ -143,7 +143,7 @@ class _JobListState extends State<JobList> {
                         child:
                             jobTypeTile(jobTypeModel: value.jobTypeModels[2])),
                     const SizedBox(
-                      width: 10,
+                      width: 5,
                     ),
                     Expanded(
                         child:
@@ -151,7 +151,7 @@ class _JobListState extends State<JobList> {
                   ],
                 ),
                 const SizedBox(
-                  height: 10,
+                  height: 5,
                 ),
                 Row(
                   children: [
@@ -159,7 +159,7 @@ class _JobListState extends State<JobList> {
                         child:
                             jobTypeTile(jobTypeModel: value.jobTypeModels[4])),
                     const SizedBox(
-                      width: 10,
+                      width: 5,
                     ),
                     Expanded(
                         child:
@@ -167,7 +167,28 @@ class _JobListState extends State<JobList> {
                   ],
                 ),
                 const SizedBox(
-                  height: 20,
+                  height: 5,
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                        child:
+                            jobTypeTile(jobTypeModel: value.jobTypeModels[6])),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    Expanded(
+                        child:
+                            jobTypeTile(jobTypeModel: value.jobTypeModels[7]))
+                  ],
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+
+                        jobTypeTile(jobTypeModel: value.jobTypeModels[8],isCenter: true),
+                const SizedBox(
+                  height: 10,
                 ),
                 TextFieldSearch(
                   searchTextEditingController: searchTextEditingController,
@@ -178,7 +199,7 @@ class _JobListState extends State<JobList> {
                   },
                 ),
                 const SizedBox(
-                  height: 10,
+                  height: 7,
                 ),
                 Expanded(
                   child: value.pageStatus == PageStatus.loading
@@ -214,7 +235,7 @@ class _JobListState extends State<JobList> {
                               separatorBuilder:
                                   (BuildContext context, int index) {
                                 return const SizedBox(
-                                  height: 10,
+                                  height: 7,
                                 );
                               },
                             )
@@ -274,11 +295,11 @@ Widget jobTypeTile(
             Image.asset(
               jobTypeModel.keyName == 'Assigned'
                   ? 'assets/site_icon.png'
-                  : jobTypeModel.keyName == 'Open'
+                  : jobTypeModel.keyName.contains('Open')
                       ? 'assets/open_jobs.png'
-                      : jobTypeModel.keyName == 'Pending'
+                      : jobTypeModel.keyName.contains('Pending')
                           ? 'assets/pending_jobs.png'
-                          : jobTypeModel.keyName == 'Completed'
+                          : jobTypeModel.keyName.contains('Completed')
                               ? 'assets/completed_jobs.png'
                               : 'assets/closed_jobs.png',
               height: 24,

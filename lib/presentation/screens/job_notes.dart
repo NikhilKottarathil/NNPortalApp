@@ -27,10 +27,7 @@ class JobNotes extends StatelessWidget {
                 .userModel!
                 .roleId! ==
             1 ||
-        Provider.of<JobsDetailsProvider>(context, listen: false)
-                .jobModel!
-                .status ==
-            'Completed' ||
+
         Provider.of<JobsDetailsProvider>(context, listen: false)
                 .jobModel!
                 .status ==
@@ -93,11 +90,7 @@ class JobNotes extends StatelessWidget {
                                     ],
                                   ),
                                 ),
-                                if (!Provider.of<AuthenticationProvider>(
-                                            context,
-                                            listen: false)
-                                        .userModel!
-                                        .onLeave! &&
+                                if (!isViewOnly &&
                                     Provider.of<AuthenticationProvider>(context,
                                                 listen: false)
                                             .userModel!
