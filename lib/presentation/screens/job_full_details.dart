@@ -50,8 +50,7 @@ class _JobFullDetailsState extends State<JobFullDetails> {
             const SizedBox(height: 8),
             if (widget.jobModel.ticketNo != null)
               FAWidget(field: 'Ticket NO', answer: widget.jobModel.ticketNo!),
-            if (widget.jobModel.ticketNo != null)
-              const SizedBox(height: 8),
+            if (widget.jobModel.ticketNo != null) const SizedBox(height: 8),
             FAWidget(field: 'Status', answer: widget.jobModel.status!),
             const SizedBox(height: 8),
 
@@ -68,6 +67,13 @@ class _JobFullDetailsState extends State<JobFullDetails> {
                 answer: DateTimeConversion().convertToDateFormat(
                     inputString: widget.jobModel.assignedFor!),
               ),
+            if (widget.jobModel.pendingOn != null) const SizedBox(height: 8),
+            if (widget.jobModel.pendingOn != null)
+              FAWidget(
+                field: 'Pending On',
+                answer: DateTimeConversion().convertToDateFormat(
+                    inputString: widget.jobModel.pendingOn!),
+              ),
             if (widget.jobModel.completedOn != null) const SizedBox(height: 8),
             if (widget.jobModel.completedOn != null)
               FAWidget(
@@ -75,6 +81,7 @@ class _JobFullDetailsState extends State<JobFullDetails> {
                 answer: DateTimeConversion().convertToDateFormat(
                     inputString: widget.jobModel.completedOn!),
               ),
+
             if (widget.jobModel.closedOn != null) const SizedBox(height: 8),
             if (widget.jobModel.closedOn != null)
               FAWidget(
@@ -242,8 +249,9 @@ class _JobFullDetailsState extends State<JobFullDetails> {
     );
   }
 }
+
 Future<void> _launchUrl(String _url) async {
-  if (!await launchUrl(Uri.parse(_url),mode:LaunchMode.externalApplication )) {
+  if (!await launchUrl(Uri.parse(_url), mode: LaunchMode.externalApplication)) {
     throw 'Could not launch $_url';
   }
 }

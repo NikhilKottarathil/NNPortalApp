@@ -82,6 +82,27 @@ class JobListTile extends StatelessWidget {
                   ),
                 ],
               ),
+            if (jobModel.pendingOn != null && jobModel.status == 'Pending')
+              Row(
+                children: [
+                  Text(
+                    'Pending On : ',
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodySmall!
+                        .copyWith(height: 1.5),
+                  ),
+                  Text(
+                    DateTimeConversion().convertToDateFormat(
+                        inputString: jobModel.pendingOn!,
+                        inputFormat: 'yyyy-MM-dd'),
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodySmall!
+                        .copyWith(height: 1.5),
+                  ),
+                ],
+              ),
             if (jobModel.completedOn != null && jobModel.status == 'Completed')
               Row(
                 children: [

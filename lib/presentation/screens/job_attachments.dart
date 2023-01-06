@@ -30,15 +30,10 @@ class JobAttachments extends StatelessWidget {
     if (Provider.of<AuthenticationProvider>(context, listen: false)
             .userModel!
             .onLeave! ||
-        Provider.of<AuthenticationProvider>(context,
-                    listen: false)
+        Provider.of<AuthenticationProvider>(context, listen: false)
                 .userModel!
                 .roleId! ==
             1 ||
-        Provider.of<JobsDetailsProvider>(context, listen: false)
-                .jobModel!
-                .status ==
-            'Completed' ||
         Provider.of<JobsDetailsProvider>(context, listen: false)
                 .jobModel!
                 .status ==
@@ -150,10 +145,9 @@ class JobAttachments extends StatelessWidget {
                                     height: 5,
                                   ),
                                   Text(
-                                    'Time  :  ${value.jobAttachmentModels[index].uploadedOn!.substring(11, value.jobAttachmentModels[index].uploadedOn!.length )}',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium,
+                                    'Time  :  ${value.jobAttachmentModels[index].uploadedOn!.substring(11, value.jobAttachmentModels[index].uploadedOn!.length)}',
+                                    style:
+                                        Theme.of(context).textTheme.bodyMedium,
                                   ),
                                   SizedBox(
                                     height: 3,
@@ -164,24 +158,21 @@ class JobAttachments extends StatelessWidget {
                                     children: [
                                       Text(
                                         value.jobAttachmentModels[index]
-                                            .staffName ??
+                                                .staffName ??
                                             'Unknown User',
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodySmall!
                                             .copyWith(fontSize: 13),
                                       ),
-
-                                      if (!Provider.of<AuthenticationProvider>(
-                                              context,
-                                              listen: false)
-                                          .userModel!
-                                          .onLeave! && Provider.of<AuthenticationProvider>(context,
-                                          listen: false)
-                                          .userModel!
-                                          .staffId ==
-                                          value.jobAttachmentModels[index]
-                                              .staffId)
+                                      if (!isViewOnly &&
+                                          Provider.of<AuthenticationProvider>(
+                                                      context,
+                                                      listen: false)
+                                                  .userModel!
+                                                  .staffId ==
+                                              value.jobAttachmentModels[index]
+                                                  .staffId)
                                         IconButton(
                                           constraints: const BoxConstraints(),
                                           padding: EdgeInsets.zero,
@@ -261,11 +252,46 @@ class JobAttachments extends StatelessWidget {
                   FilePickerResult? result =
                       await FilePicker.platform.pickFiles(
                     type: FileType.custom,
+                    // allowedExtensions: [
+                    //   'jpg',
+                    //   'png',
+                    //   'raw',
+                    //   'svg',
+                    //   'pdf',
+                    //   'doc',
+                    //   'docx',
+                    //   'xls',
+                    //   'xlsx',
+                    //   'ppt',
+                    //   'pptx',
+                    //   'txt',
+                    //   'html',
+                    // ],
                     allowedExtensions: [
                       'jpg',
+                      'jpeg',
+                      'jpe',
+                      'jif',
+                      'jfif',
+                      'jfi',
                       'png',
+                      'apng',
+                      'webp',
+                      'tif',
+                      'tiff',
+                      'bmp',
+                      'BMPf',
                       'raw',
+                      'arw',
+                      'cr2',
+                      'nrw',
+                      'k25',
+                      'arw',
+                      'heif',
+                      'hevc',
+                      'heic',
                       'svg',
+                      'psd',
                       'pdf',
                       'doc',
                       'docx',
@@ -274,6 +300,10 @@ class JobAttachments extends StatelessWidget {
                       'ppt',
                       'pptx',
                       'txt',
+                      'rtf',
+                      'odt',
+                      'pub',
+                      'pages',
                       'html',
                     ],
                   );
@@ -297,7 +327,7 @@ class JobAttachments extends StatelessWidget {
 }
 
 Future<void> _launchUrl(String _url) async {
-  if (!await launchUrl(Uri.parse(_url),mode:LaunchMode.externalApplication )) {
+  if (!await launchUrl(Uri.parse(_url), mode: LaunchMode.externalApplication)) {
     throw 'Could not launch $_url';
   }
 }

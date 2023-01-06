@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:nn_portal/constants/enums.dart';
 import 'package:nn_portal/models/job_model.dart';
 import 'package:nn_portal/models/job_type_model.dart';
-import 'package:nn_portal/presentation/screens/job_list.dart';
 import 'package:nn_portal/utils/http_api_calls.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class JobsProvider extends ChangeNotifier {
   PageStatus pageStatus = PageStatus.initialState;
@@ -13,41 +11,46 @@ class JobsProvider extends ChangeNotifier {
   int pageSize = 15;
   String searchString = '';
   List<JobModel> models = [];
-  bool isRefresh=false;
+  bool isRefresh = false;
   ScrollController scrollController = ScrollController();
 
-  double scrollPosition=0.0;
+  double scrollPosition = 0.0;
   List<JobTypeModel> jobTypeModels = [
     JobTypeModel(displayName: 'All', keyName: 'All', isSelected: true),
     JobTypeModel(displayName: 'Assigned', keyName: 'Assigned'),
-    JobTypeModel(displayName: 'Open', keyName: 'Open'),
-    JobTypeModel(displayName: 'Pending', keyName: 'Pending'),
-    JobTypeModel(displayName: 'Completed', keyName: 'Completed'),
-    JobTypeModel(displayName: 'Closed', keyName: 'Closed'),
+    JobTypeModel(displayName: 'Open Ticket', keyName: 'OpenSite'),
+    JobTypeModel(displayName: 'Open Project', keyName: 'OpenProject'),
+    JobTypeModel(displayName: 'Pend Ticket', keyName: 'PendingSite'),
+    JobTypeModel(displayName: 'Pend Project', keyName: 'PendingProject'),
+    JobTypeModel(displayName: 'Comp Ticket', keyName: 'CompletedSite'),
+    JobTypeModel(displayName: 'Comp Project', keyName: 'CompletedProject'),
+    JobTypeModel(displayName: 'Closed Jobs', keyName: 'Closed'),
   ];
 
   getInitialJob() {
     pageStatus = PageStatus.loading;
     notifyListeners();
-    isRefresh=false;
+    isRefresh = false;
     pageIndex = 1;
     models.clear();
     getJobCounts();
     getJobs();
   }
-  resetToAllJobs(){
+
+  resetToAllJobs() {
     changeJobType(jobTypeModels[0]);
   }
-  refresh(){
-    scrollPosition=scrollController.offset;
-    isRefresh=true;
+
+  refresh() {
+    scrollPosition = scrollController.offset;
+    isRefresh = true;
     getJobs();
     getJobCounts();
   }
 
   searchJobs(String text) {
     if (searchString != text) {
-      isRefresh=false;
+      isRefresh = false;
       searchString = text;
       pageStatus = PageStatus.loading;
       notifyListeners();
@@ -56,7 +59,6 @@ class JobsProvider extends ChangeNotifier {
       models.clear();
       getJobs();
     }
-
   }
 
   changeJobType(JobTypeModel jobTypeModel) {
@@ -68,7 +70,7 @@ class JobsProvider extends ChangeNotifier {
     }
     pageStatus = PageStatus.loading;
     notifyListeners();
-    isRefresh=false;
+    isRefresh = false;
 
     pageIndex = 1;
     models.clear();
@@ -77,7 +79,7 @@ class JobsProvider extends ChangeNotifier {
 
   loadMore() {
     if (totalPages > pageIndex) {
-      isRefresh=false;
+      isRefresh = false;
       pageStatus = PageStatus.loadMore;
       notifyListeners();
       pageIndex++;
@@ -87,16 +89,18 @@ class JobsProvider extends ChangeNotifier {
 
   Future getJobs() async {
     notifyListeners();
-if(isRefresh){
-  models.clear();
-}
+    if (isRefresh) {
+      models.clear();
+    }
     try {
       var response = await postDataRequest(
           urlAddress: 'Jobs/GetStaffJobs',
           requestBody: {
             'filterText': searchString,
-            'pageIndex':isRefresh?'1':pageIndex.toString(),
-            'pageSize': isRefresh?((pageIndex*pageSize).toString()):pageSize.toString(),
+            'pageIndex': isRefresh ? '1' : pageIndex.toString(),
+            'pageSize': isRefresh
+                ? ((pageIndex * pageSize).toString())
+                : pageSize.toString(),
             'status': jobTypeModels
                 .singleWhere((element) => element.isSelected)
                 .keyName
@@ -109,11 +113,11 @@ if(isRefresh){
 
       pageStatus = PageStatus.loaded;
       notifyListeners();
-      if(isRefresh){
+      if (isRefresh) {
         await Future.delayed(const Duration(milliseconds: 100));
-       scrollController.animateTo(scrollPosition, duration: const Duration(milliseconds: 1), curve: Curves.ease);
+        scrollController.animateTo(scrollPosition,
+            duration: const Duration(milliseconds: 1), curve: Curves.ease);
       }
-
     } catch (e) {
       print(e);
       pageStatus = PageStatus.failed;
@@ -130,16 +134,21 @@ if(isRefresh){
 
       jobTypeModels[0].count = response['totalJobs'] ?? 0;
       jobTypeModels[1].count = response['assignedJobs'] ?? 0;
-      jobTypeModels[2].count = response['openJobs'] ?? 0;
-      jobTypeModels[3].count = response['pendingJobs'] ?? 0;
-      jobTypeModels[4].count = response['completedJobs'] ?? 0;
-      jobTypeModels[5].count = response['closedJobs'] ?? 0;
+      // jobTypeModels[2].count = response['openJobs'] ?? 0;
+      // jobTypeModels[3].count = response['pendingJobs'] ?? 0;
+      // jobTypeModels[4].count = response['completedJobs'] ?? 0;
+      // jobTypeModels[5].count = response['closedJobs'] ?? 0;
+      jobTypeModels[2].count = response['openSites'] ?? 0;
+      jobTypeModels[3].count = response['openProjects'] ?? 0;
+      jobTypeModels[4].count = response['pendingSites'] ?? 0;
+      jobTypeModels[5].count = response['pendingProjects'] ?? 0;
+      jobTypeModels[6].count = response['completedSites'] ?? 0;
+      jobTypeModels[7].count = response['completedProjects'] ?? 0;
+      jobTypeModels[8].count = response['closedJobs'] ?? 0;
 
       notifyListeners();
     } catch (e) {
       notifyListeners();
     }
   }
-
-
 }

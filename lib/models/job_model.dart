@@ -39,6 +39,7 @@ class JobModel {
 
   String? assignedStaff;
   String? completedOn;
+  String? pendingOn;
 
   JobModel(
       {this.id,
@@ -78,6 +79,7 @@ class JobModel {
         this.jobStaffs,
         this.jobVehicles,
         this.completedOn,
+        this.pendingOn,
         this.logs,this.assignedStaff});
 
   JobModel.fromJson(Map<String, dynamic> json) {
@@ -114,6 +116,7 @@ class JobModel {
     submitBy = json['submitBy'];
     submitOn = json['submitOn'];
     completedOn = json['completedOn'];
+    pendingOn = json['pendingOn'];
     if (json['jobComments'] != null) {
       jobComments = <JobComments>[];
       json['jobComments'].forEach((v) {
@@ -176,6 +179,7 @@ class JobModel {
     data['submitBy'] = this.submitBy;
     data['submitOn'] = this.submitOn;
     data['completedOn'] = this.completedOn;
+    data['pendingOn'] = this.pendingOn;
     if (this.jobComments != null) {
       data['jobComments'] = this.jobComments!.map((v) => v.toJson()).toList();
     }
