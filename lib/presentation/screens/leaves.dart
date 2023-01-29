@@ -62,6 +62,7 @@ class _LeavesState extends State<Leaves> {
                       children: [
                         Expanded(
                           child: DatePickerTextField(
+                            startDate: DateTime.now().subtract(const Duration(days: 365)),
                             dateTime: value.fromDate,
                             label: 'Leave From',
                             callback: (date) {
@@ -77,6 +78,7 @@ class _LeavesState extends State<Leaves> {
                         ),
                         Expanded(
                           child: DatePickerTextField(
+                            startDate: DateTime.now().subtract(const Duration(days: 365)),
                             dateTime: value.tillDate,
                             label: 'Leave till',
                             callback: (date) {
