@@ -14,6 +14,8 @@ class StaffLogModel {
   bool? isMain;
   int? submitBy;
   String? submitOn;
+  String? comment;
+  bool? isDailyLog;
 
   StaffLogModel(
       {this.id,
@@ -30,7 +32,7 @@ class StaffLogModel {
         this.checkOut,
         this.isMain,
         this.submitBy,
-        this.submitOn});
+        this.submitOn,this.comment,this.isDailyLog});
 
   StaffLogModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -48,6 +50,8 @@ class StaffLogModel {
     isMain = json['isMain'];
     submitBy = json['submitBy'];
     submitOn = json['submitOn'];
+    comment = json['comment']??'';
+    isDailyLog = json['isDailyLog']??false;
   }
 
   Map<String, dynamic> toJson() {
@@ -67,6 +71,8 @@ class StaffLogModel {
     data['isMain'] = this.isMain;
     data['submitBy'] = this.submitBy;
     data['submitOn'] = this.submitOn;
+    data['comment'] = this.comment;
+    data['isDailyLog'] = this.isDailyLog;
     return data;
   }
 }

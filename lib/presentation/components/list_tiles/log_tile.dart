@@ -167,7 +167,24 @@ class _LogTileState extends State<LogTile> {
                 ),
             ],
           ),
-          if (widget.logModel.logType != LogType.workLog) const Divider(),
+          if (widget.logModel.logType != LogType.workLog ||
+              (widget.logModel.logType == LogType.workLog &&
+                  (widget.logModel.staffLogModel!.isDailyLog ?? false)))
+            const Divider(),
+          if (widget.logModel.logType == LogType.workLog &&
+              (widget.logModel.staffLogModel!.isDailyLog ?? false))
+            Text.rich(
+              TextSpan(
+                children: [
+                  const TextSpan(
+                      text: 'Comment     : ',
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  TextSpan(
+                    text: widget.logModel.staffLogModel!.comment ?? '',
+                  ),
+                ],
+              ),
+            ),
           if (widget.logModel.logType == LogType.vehicleLog)
             Row(
               children: [

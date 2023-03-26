@@ -33,7 +33,7 @@ class _ProfileState extends State<Profile> {
   bool isAdmin = false;
 
 
-  String version = '1.0.4';
+  String version = '1.0.7 ';
 
   @override
   Widget build(BuildContext context) {

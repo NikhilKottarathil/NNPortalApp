@@ -15,6 +15,8 @@ import 'package:nn_portal/providers/app_provider.dart';
 import 'package:nn_portal/providers/log_provider.dart';
 import 'package:provider/provider.dart';
 
+import '../../components/text_fields/text_field_custom.dart';
+
 class AddLog extends StatefulWidget {
   LogModel? logModel;
   LogType logType;
@@ -41,6 +43,8 @@ class _AddLogState extends State<AddLog> {
   GlobalKey<AutoCompleteTextFieldState<JobModel>> jobKey =
       GlobalKey<AutoCompleteTextFieldState<JobModel>>();
   TextEditingController jobTextEditController = TextEditingController();
+  bool isDailyLog=false;
+  TextEditingController commentTextEditController = TextEditingController();
 
   @override
   void initState() {
@@ -62,7 +66,10 @@ class _AddLogState extends State<AddLog> {
             hour: DateTime.now().hour,
             minute: DateTime.now().minute);
       }
-      if (widget.logType == LogType.siteLog) {
+      if (widget.logType == LogType.workLog) {
+        commentTextEditController.text=widget.logModel!.staffLogModel!.comment!;
+        isDailyLog=widget.logModel!.staffLogModel!.isDailyLog!;
+      } if (widget.logType == LogType.siteLog) {
         selectedJobModel = JobModel(
             id: widget.logModel!.staffLogModel!.jobId,
             code: widget.logModel!.staffLogModel!.jobCode,
@@ -127,6 +134,7 @@ class _AddLogState extends State<AddLog> {
                 TimePickerTextField(
                     timeOfDay: checkOutTime,
                     label: 'Check Out Time',
+                    isShowCloseIcon:true,
                     callback: (time) {
                       checkOutTime = time;
                     },
@@ -135,7 +143,34 @@ class _AddLogState extends State<AddLog> {
                               ? 'Select Proper Time'
                               : null;
                     }),
-
+             if(widget.logType==LogType.workLog)
+                Padding(
+                  padding: EdgeInsets.only(top: 15),
+                  child: Row(
+                    children: [
+                      SizedBox(height:24,width:24,child: Checkbox(value: isDailyLog, onChanged: (bool? value) {
+                        setState(() {
+                          isDailyLog=value!;
+                        });
+                      },)),
+                      const SizedBox(width: 10,),
+                      const  Text('Daily Log')
+                    ],
+                  ),
+                ),
+                if(isDailyLog)
+                Padding(
+                  padding: EdgeInsets.only(top: 15),
+                  child: TextFieldCustom(
+                    label: 'Comment',
+                    minLines: 5,
+                    maxLines: 100,
+                    hint: 'Enter your comment',
+                    textEditingController: commentTextEditController,
+                    validator: (val) =>
+                    val!.isEmpty ? 'Please enter comment' : null,
+                  ),
+                ),
                 selectJob(),
                 selectVehicle(),
                 selectTool(),
@@ -182,7 +217,7 @@ class _AddLogState extends State<AddLog> {
                                   toolId: selectedToolModel != null
                                       ? selectedToolModel!.id.toString()
                                       : null,
-                                  logModel: widget.logModel).then((value) {
+                                  logModel: widget.logModel,isDailyLog: isDailyLog,comment: commentTextEditController.text).then((value) {
                             Navigator.of(context).pop();
 
                           });

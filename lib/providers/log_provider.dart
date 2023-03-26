@@ -138,7 +138,7 @@ class LogProvider extends ChangeNotifier {
       String? vehicleId,
       String? jobId,
       String? toolId,
-      LogModel? logModel}) async {
+      LogModel? logModel,bool isDailyLog=false,required String comment}) async {
     pageStatus = PageStatus.loading;
     notifyListeners();
 
@@ -164,7 +164,7 @@ class LogProvider extends ChangeNotifier {
       String apiUrl = 'Staffs/PostStaffLog';
       if (logType == LogType.workLog || logType == LogType.siteLog) {
         if (logType == LogType.workLog) {
-          requestBody.addAll({'isMain': true});
+          requestBody.addAll({'isMain': true,'isDailyLog':isDailyLog,'comment':comment});
         } else {
           requestBody.addAll({
             'jobId': jobId,

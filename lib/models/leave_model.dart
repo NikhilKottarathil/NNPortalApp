@@ -6,6 +6,7 @@ class LeaveModel {
   String? leaveTo;
   String? reason;
   bool? isApproved;
+  bool? isAnnualLeave;
   int? approvedBy;
   String? approvedOn;
   bool? isActive;
@@ -20,6 +21,7 @@ class LeaveModel {
     this.leaveTo,
     this.reason,
     this.isApproved,
+    this.isAnnualLeave,
     this.approvedBy,
     this.approvedOn,
     this.isActive,
@@ -34,6 +36,7 @@ class LeaveModel {
     leaveTo = json['leaveTo'];
     reason = json['reason'];
     isApproved = json['isApproved'];
+    isAnnualLeave = json['isAnnualLeave'];
     approvedBy = json['approvedBy'];
     approvedOn = json['approvedOn'];
     isActive = json['isActive'];
@@ -51,6 +54,7 @@ class LeaveModel {
     data['leaveTo'] = this.leaveTo;
     data['reason'] = this.reason;
     data['isApproved'] = this.isApproved;
+    data['isAnnualLeave'] = this.isAnnualLeave;
     data['approvedBy'] = this.approvedBy;
     data['approvedOn'] = this.approvedOn;
     data['isActive'] = this.isActive;

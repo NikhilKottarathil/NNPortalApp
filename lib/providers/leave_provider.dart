@@ -16,9 +16,9 @@ class LeaveProvider extends ChangeNotifier {
   List<LeaveModel> models = [];
 
   TextEditingController reasonTextEditController = TextEditingController();
-
   DateTime? fromDate;
   DateTime? tillDate;
+  bool isAnnualLeave=false;
   int? selectedLeaveId;
 
   getInitialData() {
@@ -67,6 +67,10 @@ class LeaveProvider extends ChangeNotifier {
     }
   }
 
+  onAnnualLeaveChanged(value){
+    isAnnualLeave=value;
+    notifyListeners();
+  }
   Future addOrEditData() async {
     notifyListeners();
 
@@ -75,6 +79,7 @@ class LeaveProvider extends ChangeNotifier {
         'leaveFrom': DateFormat('yyyy-MM-dd').format(fromDate!),
         'leaveTo': DateFormat('yyyy-MM-dd').format(tillDate!),
         'reason': reasonTextEditController.text,
+        'isAnnualLeave':isAnnualLeave
       };
       String url='StaffLeaves';
       if (selectedLeaveId != null) {
@@ -136,6 +141,7 @@ class LeaveProvider extends ChangeNotifier {
     fromDate = null;
     tillDate = null;
     selectedLeaveId = null;
+    isAnnualLeave=false;
     FocusManager.instance.primaryFocus?.unfocus();
 
     notifyListeners();

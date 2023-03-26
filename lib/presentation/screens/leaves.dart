@@ -104,7 +104,14 @@ class _LeavesState extends State<Leaves> {
                           val!.isEmpty ? 'Please enter reason' : null,
                     ),
                     const SizedBox(
-                      height: 20,
+                      height: 15,
+                    ),
+                    Row(
+                      children: [
+                        SizedBox(height:24,width:24,child: Checkbox(value: value.isAnnualLeave, onChanged:(val)=> value.onAnnualLeaveChanged(val))),
+                     const SizedBox(width: 10,),
+                     const  Text('Annual Leave')
+                      ],
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,

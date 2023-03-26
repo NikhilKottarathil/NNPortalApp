@@ -112,6 +112,17 @@ class LeaveTile extends StatelessWidget {
             ],
           ),
          const Divider(),
+          if(leaveModel.isAnnualLeave!=null )
+            Text.rich(
+              TextSpan(
+                children: [
+                  const  TextSpan(text: 'Annual Leave     : ',style: TextStyle(fontWeight: FontWeight.bold)),
+                  TextSpan(
+                    text:leaveModel.isAnnualLeave!?'Yes':'No',
+                  ),
+                ],
+              ),
+            ),
           Text.rich(
             TextSpan(
               children: [
