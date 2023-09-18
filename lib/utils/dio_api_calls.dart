@@ -15,6 +15,7 @@ Future fileUploadWithDio(
     required List<File> files,
     required List<String> fileAddresses,
     CancelToken? cancelToken,
+      bool isTestApi=false,
     Function? onUploadProgress,String method='post'}) async {
   if (await checkInternetConnectivity()) {
     try {
@@ -39,12 +40,14 @@ Future fileUploadWithDio(
           i++;
         }
       }
-      print(AppStrings.apiAddress+urlAddress);
+      String endPoint=(isTestApi?AppStrings.textApi:AppStrings.apiAddress )+ urlAddress;
+
+      print(endPoint);
       print(formData.fields);
       var response;
       try {
         if(method=='post') {
-          response = await dio.post(AppStrings.apiAddress + urlAddress,
+          response = await dio.post(endPoint,
               cancelToken: cancelToken,
               data: formData, onSendProgress: (send, total) {
                 onUploadProgress!(send, total);

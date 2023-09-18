@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:nn_portal/constants/enums.dart';
@@ -7,6 +9,9 @@ import 'package:nn_portal/models/leave_model.dart';
 import 'package:nn_portal/presentation/screens/job_list.dart';
 import 'package:nn_portal/utils/http_api_calls.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../presentation/components/pop_ups_loaders/file_upload_pop_up.dart';
+import '../utils/dio_api_calls.dart';
 
 class LeaveProvider extends ChangeNotifier {
   PageStatus pageStatus = PageStatus.initialState;
@@ -18,8 +23,10 @@ class LeaveProvider extends ChangeNotifier {
   TextEditingController reasonTextEditController = TextEditingController();
   DateTime? fromDate;
   DateTime? tillDate;
-  bool isAnnualLeave=false;
+  bool isAnnualLeave = false;
   int? selectedLeaveId;
+  DateTime? joiningDate;
+  File? attachment;
 
   getInitialData() {
     pageStatus = PageStatus.loading;
@@ -46,15 +53,16 @@ class LeaveProvider extends ChangeNotifier {
     try {
       var response = await postDataRequest(
           urlAddress: 'StaffLeaves/GetStaffLeaves',
+          isTestApi: true,
           requestBody: {
-            'filterText':'',
+            'filterText': '',
             'pageIndex': pageIndex.toString(),
             'pageSize': pageSize.toString(),
           },
           isShowLoader: false);
       totalPages = (response['totalCount'] / pageSize).ceil();
       for (var json in response['items']) {
-      // for (var json in response) {
+        // for (var json in response) {
         models.add(LeaveModel.fromJson(json));
       }
 
@@ -67,30 +75,41 @@ class LeaveProvider extends ChangeNotifier {
     }
   }
 
-  onAnnualLeaveChanged(value){
-    isAnnualLeave=value;
+  onAnnualLeaveChanged(value) {
+    isAnnualLeave = value;
     notifyListeners();
   }
+
   Future addOrEditData() async {
     notifyListeners();
 
     try {
-      var requestBody = {
-        'leaveFrom': DateFormat('yyyy-MM-dd').format(fromDate!),
+      Map<String, String> requestBody = {
+        'leaveFrom': DateFormat('yyyy-MM-dd').format(fromDate!).toString(),
         'leaveTo': DateFormat('yyyy-MM-dd').format(tillDate!),
+        'joiningDate':DateFormat('yyyy-MM-dd').format(joiningDate!),
         'reason': reasonTextEditController.text,
-        'isAnnualLeave':isAnnualLeave
+        'isAnnualLeave': isAnnualLeave.toString()
       };
-      String url='StaffLeaves';
+      String url = 'StaffLeaves';
       if (selectedLeaveId != null) {
         requestBody.addAll({'id': selectedLeaveId!.toString()});
-        url='StaffLeaves/$selectedLeaveId';
+        url = 'StaffLeaves/$selectedLeaveId';
       }
-      var response = await postDataRequest(
+      // var response = await postDataRequest(
+      //     urlAddress: url,
+      //     requestBody: requestBody,
+      //     method: selectedLeaveId != null ? 'put' : 'post',
+      //     isShowLoader: true);
+      var response = await showUploadFileAlert(
+        isTestApi: true,
           urlAddress: url,
           requestBody: requestBody,
+          files: attachment != null ? [attachment!] : [],
+          fileAddresses: attachment != null ? ['attachmentFile'] : [],
           method: selectedLeaveId != null ? 'put' : 'post',
-          isShowLoader: true);
+          showUploadBytes: true);
+
       if (selectedLeaveId != null) {
         models[models.indexWhere((element) => element.id == selectedLeaveId)] =
             LeaveModel.fromJson(response);
@@ -111,11 +130,21 @@ class LeaveProvider extends ChangeNotifier {
   selectLeaveTileForEdit(int id) {
     selectedLeaveId = id;
     reasonTextEditController.text =
-        models.singleWhere((element) => element.id == id).reason!;
+    models
+        .singleWhere((element) => element.id == id)
+        .reason!;
     fromDate = DateFormat('yyyy-MM-dd')
-        .parse(models.singleWhere((element) => element.id == id).leaveFrom!);
+        .parse(models
+        .singleWhere((element) => element.id == id)
+        .leaveFrom!);
     tillDate = DateFormat('yyyy-MM-dd')
-        .parse(models.singleWhere((element) => element.id == id).leaveTo!);
+        .parse(models
+        .singleWhere((element) => element.id == id)
+        .leaveTo!);
+    joiningDate = DateFormat('yyyy-MM-dd')
+        .parse(models
+        .singleWhere((element) => element.id == id)
+        .joiningDate!);
     notifyListeners();
   }
 
@@ -140,8 +169,10 @@ class LeaveProvider extends ChangeNotifier {
     reasonTextEditController.clear();
     fromDate = null;
     tillDate = null;
+    joiningDate = null;
+    attachment = null;
     selectedLeaveId = null;
-    isAnnualLeave=false;
+    isAnnualLeave = false;
     FocusManager.instance.primaryFocus?.unfocus();
 
     notifyListeners();

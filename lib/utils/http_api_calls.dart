@@ -27,6 +27,7 @@ Future<bool> checkInternetConnectivity() async {
 Future postDataRequest(
     {required String urlAddress,
     required var requestBody,
+      bool isTestApi=false,
       String method='post',
     bool isShowLoader = true}) async {
   debugPrint('============= start $urlAddress post api ===============');
@@ -37,7 +38,7 @@ Future postDataRequest(
         showLoader();
       }
 
-      final uri = Uri.parse(AppStrings.apiAddress + urlAddress);
+      final uri = Uri.parse((isTestApi?AppStrings.textApi:AppStrings.apiAddress) + urlAddress);
       Map<String, String> headers = {"Content-Type": "application/json"};
 
       SharedPreferences sharedPreferences=await SharedPreferences.getInstance();

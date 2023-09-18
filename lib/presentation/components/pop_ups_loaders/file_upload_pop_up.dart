@@ -13,7 +13,8 @@ Future showUploadFileAlert({
 required  Map<String, String> requestBody,
  required List<File> files,
  required List<String> fileAddresses,
-  String method='post'
+  String method='post',
+  bool isTestApi=false,
 }) async {
   double totalByteLength = 0.0, uploadedByteLength = 0.0;
   double progress = 0.0;
@@ -45,6 +46,7 @@ required  Map<String, String> requestBody,
                   fileAddresses: fileAddresses,
                   cancelToken: cancelToken,
                   method: method,
+                  isTestApi: isTestApi,
                   onUploadProgress: (uploaded, total) {
                     try {
                       setState(() {

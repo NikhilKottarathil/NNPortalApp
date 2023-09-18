@@ -7,22 +7,25 @@ class DatePickerTextField extends StatelessWidget {
   String? label;
   String? hint;
   DateTime? startDate;
+  DateTime? lastDate;
+  double? maxHeight;
 
   FormFieldValidator<String> validator;
 
   DateTime? dateTime;
   Function callback;
 
-  DatePickerTextField({
-    Key? key,
-    this.hint,
-    this.label,
-    this.dateTime,
-    required this.callback,
-    required this.validator,
-    this.startDate
-
-  }) : super(key: key);
+  DatePickerTextField(
+      {Key? key,
+      this.hint,
+      this.label,
+      this.dateTime,
+      required this.callback,
+      required this.validator,
+      this.startDate,
+        this.lastDate,
+      this.maxHeight})
+      : super(key: key);
 
   final TextEditingController textEditingController = TextEditingController();
 
@@ -46,12 +49,12 @@ class DatePickerTextField extends StatelessWidget {
             dateTime = await showDatePicker(
                 context: context,
                 initialDate: dateTime ?? DateTime.now(),
-                firstDate: startDate??DateTime.now(),
-                lastDate: DateTime.now().add(const Duration(days: 365)));
+                firstDate: startDate ?? DateTime.now(),
+                lastDate:lastDate?? DateTime.now().add(const Duration(days: 365)));
             if (dateTime != null) {
               callback(dateTime);
-              textEditingController.text = DateFormat('yyyy-MM-dd')
-                  .format(dateTime!);
+              textEditingController.text =
+                  DateFormat('yyyy-MM-dd').format(dateTime!);
             }
           },
           child: TextFormField(
@@ -71,12 +74,15 @@ class DatePickerTextField extends StatelessWidget {
                 color: AppColors.iconColor,
               ),
               hintText: hint,
+              constraints: maxHeight != null
+                  ? BoxConstraints(maxHeight: maxHeight!)
+                  : null,
               contentPadding:
                   const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
               errorStyle: Theme.of(context)
                   .textTheme
                   .bodySmall!
-                  .copyWith(color: Colors.red),
+                  .copyWith(color: Colors.red,decorationThickness: 0,height: 0.3),
               fillColor: AppColors.tertiary,
               filled: true,
               border: OutlineInputBorder(

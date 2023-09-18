@@ -4,6 +4,7 @@ class LeaveModel {
   String? staffName;
   String? leaveFrom;
   String? leaveTo;
+  String? joiningDate;
   String? reason;
   bool? isApproved;
   bool? isAnnualLeave;
@@ -13,12 +14,14 @@ class LeaveModel {
   String? submitBy;
   String? submitOn;
   String? note;
+  String? attachmentUrl;
 
   LeaveModel({this.id,
     this.staffId,
     this.staffName,
     this.leaveFrom,
     this.leaveTo,
+    this.joiningDate,
     this.reason,
     this.isApproved,
     this.isAnnualLeave,
@@ -26,7 +29,7 @@ class LeaveModel {
     this.approvedOn,
     this.isActive,
     this.submitBy,
-    this.submitOn,this.note});
+    this.submitOn,this.note,this.attachmentUrl});
 
   LeaveModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -34,6 +37,7 @@ class LeaveModel {
     staffName = json['staffName'];
     leaveFrom = json['leaveFrom'];
     leaveTo = json['leaveTo'];
+    joiningDate = json['joiningDate'];
     reason = json['reason'];
     isApproved = json['isApproved'];
     isAnnualLeave = json['isAnnualLeave'];
@@ -43,6 +47,7 @@ class LeaveModel {
     submitBy = json['submitBy'];
     submitOn = json['submitOn'];
     note = json['note'];
+    attachmentUrl = json['attachmentUrl'];
   }
 
   Map<String, dynamic> toJson() {
@@ -52,6 +57,7 @@ class LeaveModel {
     data['staffName'] = this.staffName;
     data['leaveFrom'] = this.leaveFrom;
     data['leaveTo'] = this.leaveTo;
+    data['joiningDate'] = this.joiningDate;
     data['reason'] = this.reason;
     data['isApproved'] = this.isApproved;
     data['isAnnualLeave'] = this.isAnnualLeave;
@@ -61,6 +67,7 @@ class LeaveModel {
     data['submitBy'] = this.submitBy;
     data['submitOn'] = this.submitOn;
     data['note'] = this.note;
+    data['attachmentUrl'] = this.attachmentUrl;
     return data;
   }
 }

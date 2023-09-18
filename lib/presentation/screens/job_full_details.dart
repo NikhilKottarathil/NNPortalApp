@@ -50,6 +50,9 @@ class _JobFullDetailsState extends State<JobFullDetails> {
             const SizedBox(height: 8),
             if (widget.jobModel.ticketNo != null)
               FAWidget(field: 'Ticket NO', answer: widget.jobModel.ticketNo!),
+            const SizedBox(height: 8),
+            if (widget.jobModel.ticketNo != null)
+              FAWidget(field: 'Ticket Caller', answer: widget.jobModel.ticketCaller!),
             if (widget.jobModel.ticketNo != null) const SizedBox(height: 8),
             FAWidget(field: 'Status', answer: widget.jobModel.status!),
             const SizedBox(height: 8),
