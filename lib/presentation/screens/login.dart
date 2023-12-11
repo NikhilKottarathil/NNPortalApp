@@ -11,6 +11,7 @@ import 'package:nn_portal/providers/log_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:nn_portal/main.dart';
+
 class Login extends StatefulWidget {
   Login({Key? key}) : super(key: key);
 
@@ -19,14 +20,11 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  TextEditingController emailTextEditingController =
-      TextEditingController();
-      // TextEditingController(text: 'sajo');
-      // TextEditingController(text: 'admin');
-
+  TextEditingController emailTextEditingController = TextEditingController();
   TextEditingController passwordTextEditingController = TextEditingController();
-      // TextEditingController(text: 'sajo1234');
-      // TextEditingController(text: 'admin');
+
+  // TextEditingController emailTextEditingController = TextEditingController(text: 'rajeev');
+  // TextEditingController passwordTextEditingController = TextEditingController(text: 'rajeev1234');
 
   final _formKey = GlobalKey<FormState>();
 
@@ -34,21 +32,23 @@ class _LoginState extends State<Login> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    Provider.of<AuthenticationProvider>(context,listen: false).attemptAutoLogin().then((value) {
-      if(!value){
+    Provider.of<AuthenticationProvider>(context, listen: false)
+        .attemptAutoLogin()
+        .then((value) {
+      if (!value) {
         FlutterNativeSplash.remove();
-      }else{
+      } else {
         FlutterNativeSplash.remove();
-
       }
     });
   }
+
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
     return WillPopScope(
-      onWillPop: () async{
+      onWillPop: () async {
         return false;
       },
       child: SafeArea(
@@ -70,10 +70,10 @@ class _LoginState extends State<Login> {
                 child: ClipPath(
                   clipper: BackgroundClipper(),
                   child: Container(
-                   constraints: BoxConstraints(
-                     maxHeight: height * .6,
-                     maxWidth: width - 60,
-                   ),
+                    constraints: BoxConstraints(
+                      maxHeight: height * .6,
+                      maxWidth: width - 60,
+                    ),
                     decoration: BoxDecoration(
                       color: AppColors.secondaryBase,
                     ),
@@ -100,9 +100,12 @@ class _LoginState extends State<Login> {
                               ),
                               BasicTextField(
                                 label: 'User name',
-                                textEditingController: emailTextEditingController,
+                                textEditingController:
+                                    emailTextEditingController,
                                 validator: (value) {
-                                  return value!.isEmpty ? 'Enter User name' : null;
+                                  return value!.isEmpty
+                                      ? 'Enter User name'
+                                      : null;
                                 },
                                 textInputType: TextInputType.emailAddress,
                               ),
@@ -114,7 +117,9 @@ class _LoginState extends State<Login> {
                                   textEditingController:
                                       passwordTextEditingController,
                                   validator: (value) {
-                                    return value!.isEmpty ? 'Enter password' : null;
+                                    return value!.isEmpty
+                                        ? 'Enter password'
+                                        : null;
                                   },
                                   maxLength: 25,
                                   textInputType: TextInputType.visiblePassword),
@@ -138,9 +143,9 @@ class _LoginState extends State<Login> {
                             child: Consumer<AuthenticationProvider>(
                                 builder: (context, value, child) {
                               if (value.formStatus == FormStatus.loading) {
-                                return const  CustomCircularProgressIndicator();
+                                return const CustomCircularProgressIndicator();
                               }
-                              return const  Icon(
+                              return const Icon(
                                 Icons.arrow_forward_ios,
                                 color: Colors.black,
                               );
@@ -154,6 +159,15 @@ class _LoginState extends State<Login> {
               ),
             ],
           ),
+          bottomNavigationBar: TextButton(
+              onPressed: () {
+                Navigator.of(MyApp.navigatorKey.currentContext!)
+                    .pushReplacementNamed('/home');
+              },
+              child: Text(
+                'Continue as Quest',
+                style: TextStyle(color: Colors.white),
+              )),
         ),
       ),
     );

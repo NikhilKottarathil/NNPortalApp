@@ -98,49 +98,51 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => AuthenticationProvider()),
-        ChangeNotifierProvider(create: (_) => JobsProvider()),
-        ChangeNotifierProvider(create: (_) => AdminJobsProvider()),
-        ChangeNotifierProvider(create: (_) => AssignTeamProvider()),
-        ChangeNotifierProvider(create: (_) => JobsDetailsProvider()),
-        ChangeNotifierProvider(create: (_) => LogProvider()),
-        ChangeNotifierProvider(create: (_) => InHandProvider()),
-        ChangeNotifierProvider(create: (_) => LeaveProvider()),
-        ChangeNotifierProvider(create: (_) => TeamProvider()),
-        ChangeNotifierProvider(create: (_) => AppProvider()),
-      ],
-      child: MaterialApp(
-        navigatorKey: MyApp.navigatorKey,
-        title: 'Netnnet',
-        onGenerateRoute: AppRouter().onGenerateRoute,
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          textTheme: GoogleFonts.interTextTheme(),
-          scaffoldBackgroundColor: Colors.grey.shade100,
-          timePickerTheme: Theme.of(context).timePickerTheme.copyWith(),
-          checkboxTheme: Theme.of(context).checkboxTheme.copyWith(
-            // fillColor: MaterialStateProperty.all(Colors.grey.shade600),
-            fillColor: MaterialStateProperty.all(Colors.grey.shade800),
-             ),
+    return RestartWidget(
+      child: MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => AuthenticationProvider()),
+          ChangeNotifierProvider(create: (_) => JobsProvider()),
+          ChangeNotifierProvider(create: (_) => AdminJobsProvider()),
+          ChangeNotifierProvider(create: (_) => AssignTeamProvider()),
+          ChangeNotifierProvider(create: (_) => JobsDetailsProvider()),
+          ChangeNotifierProvider(create: (_) => LogProvider()),
+          ChangeNotifierProvider(create: (_) => InHandProvider()),
+          ChangeNotifierProvider(create: (_) => LeaveProvider()),
+          ChangeNotifierProvider(create: (_) => TeamProvider()),
+          ChangeNotifierProvider(create: (_) => AppProvider()),
+        ],
+        child: MaterialApp(
+          navigatorKey: MyApp.navigatorKey,
+          title: 'Netnnet',
+          onGenerateRoute: AppRouter().onGenerateRoute,
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            textTheme: GoogleFonts.interTextTheme(),
+            scaffoldBackgroundColor: Colors.grey.shade100,
+            timePickerTheme: Theme.of(context).timePickerTheme.copyWith(),
+            checkboxTheme: Theme.of(context).checkboxTheme.copyWith(
+              // fillColor: MaterialStateProperty.all(Colors.grey.shade600),
+              fillColor: MaterialStateProperty.all(Colors.grey.shade800),
+               ),
 
-          appBarTheme: Theme.of(context).appBarTheme.copyWith(
-              elevation: 0.5,
-              backgroundColor: AppColors.primaryBase,
-              // titleTextStyle: Theme.of(context).textTheme.titleMedium,
-              foregroundColor: Colors.white,
-              systemOverlayStyle: const SystemUiOverlayStyle(
-                  statusBarBrightness: Brightness.light,
-                  statusBarIconBrightness: Brightness.light,
-                  systemNavigationBarIconBrightness: Brightness.light)),
-        ).copyWith(
-            colorScheme: Theme.of(context).colorScheme.copyWith(
-                primary: AppColors.primaryBase,
-                onPrimary: Colors.white,
-                surface: Colors.white,
-                onSurface: AppColors.textDark)),
-        home: Login(),
+            appBarTheme: Theme.of(context).appBarTheme.copyWith(
+                elevation: 0.5,
+                backgroundColor: AppColors.primaryBase,
+                // titleTextStyle: Theme.of(context).textTheme.titleMedium,
+                foregroundColor: Colors.white,
+                systemOverlayStyle: const SystemUiOverlayStyle(
+                    statusBarBrightness: Brightness.light,
+                    statusBarIconBrightness: Brightness.light,
+                    systemNavigationBarIconBrightness: Brightness.light)),
+          ).copyWith(
+              colorScheme: Theme.of(context).colorScheme.copyWith(
+                  primary: AppColors.primaryBase,
+                  onPrimary: Colors.white,
+                  surface: Colors.white,
+                  onSurface: AppColors.textDark)),
+          home: Login(),
+        ),
       ),
     );
   }

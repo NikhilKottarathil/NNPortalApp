@@ -15,19 +15,17 @@ import 'package:provider/provider.dart';
 class JobNotes extends StatelessWidget {
   JobNotes({Key? key}) : super(key: key);
 
-   bool isViewOnly = false;
+  bool isViewOnly = false;
 
   @override
   Widget build(BuildContext context) {
     if (Provider.of<AuthenticationProvider>(context, listen: false)
             .userModel!
             .onLeave! ||
-        Provider.of<AuthenticationProvider>(context,
-                    listen: false)
+        Provider.of<AuthenticationProvider>(context, listen: false)
                 .userModel!
                 .roleId! ==
             1 ||
-
         Provider.of<JobsDetailsProvider>(context, listen: false)
                 .jobModel!
                 .status ==
@@ -59,7 +57,38 @@ class JobNotes extends StatelessWidget {
                               value.jobDescriptionModels[index].comment ?? '',
                               style: const TextStyle(height: 1.5),
                             ),
-                            const SizedBox(height: 2),
+                            if (value
+                                    .jobDescriptionModels[index].adminComment !=
+                                null)
+                              Column(
+                                children: [
+                                  SizedBox(
+                                    height: 8,
+                                  ),
+                                  RichText(
+                                    text: TextSpan(
+                                      style: DefaultTextStyle.of(context)
+                                          .style
+                                          .copyWith(height: 1.5),
+                                      children: <TextSpan>[
+                                        TextSpan(
+                                          text: 'Admin Comment :  ',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .titleSmall!
+                                              .copyWith(
+                                                  fontWeight: FontWeight.bold),
+                                        ),
+                                        TextSpan(
+                                            text: value
+                                                .jobDescriptionModels[index]
+                                                .adminComment!),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            const SizedBox(height: 4),
                             const Divider(),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,

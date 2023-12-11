@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:nn_portal/constants/enums.dart';
 import 'package:nn_portal/main.dart';
+import 'package:nn_portal/models/alert_model.dart';
 import 'package:nn_portal/models/user_model.dart';
+import 'package:nn_portal/presentation/components/pop_ups_loaders/all_alerts.dart';
 import 'package:nn_portal/presentation/components/pop_ups_loaders/show_snack_bar.dart';
 import 'package:nn_portal/presentation/components/pop_ups_loaders/visa_expire_alert.dart';
 import 'package:nn_portal/providers/app_provider.dart';
@@ -20,12 +22,12 @@ import '../utils/firebase_notification.dart';
 
 class AuthenticationProvider extends ChangeNotifier {
   FormStatus formStatus = FormStatus.initialState;
-  UserModel? userModel;
+  UserModel? userModel=UserModel();
 
   int? visaExpiringDays;
   int warningCheckDays = 15;
-  int androidVersion=1;
-  int iosVersion=1;
+  int androidVersion = 1;
+  int iosVersion = 1;
 
   Future<bool> attemptAutoLogin() async {
     try {
@@ -55,7 +57,7 @@ class AuthenticationProvider extends ChangeNotifier {
         .getInitialData();
     Navigator.of(MyApp.navigatorKey.currentContext!)
         .pushReplacementNamed('/home');
-    visaExpiringDays=null;
+    visaExpiringDays = null;
     if (userModel!.visaExpiry != null) {
       DateTime? visaExpireDateTime =
           DateFormat('dd-MM-yyyy').parse(userModel!.visaExpiry!);
@@ -66,19 +68,21 @@ class AuthenticationProvider extends ChangeNotifier {
     }
   }
 
+
+
   Future<bool> login({required email, required password}) async {
     formStatus = FormStatus.loading;
     notifyListeners();
 
     try {
       String? firebaseToken = await getFirebaseMessagingToken();
-      bool isAndroid= Platform.isAndroid;
+      bool isAndroid = Platform.isAndroid;
       var response = await postDataRequest(
           urlAddress: 'Authenticate',
           requestBody: {
             'username': email,
             'password': password,
-            'isAndroid':isAndroid,
+            'isAndroid': isAndroid,
             'firebaseToken': firebaseToken
           },
           isShowLoader: false);
@@ -103,7 +107,7 @@ class AuthenticationProvider extends ChangeNotifier {
   Future logOut() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     sharedPreferences.clear();
-    RestartWidget.restartApp(MyApp.navigatorKey.currentContext!);
+    // RestartWidget.restartApp(MyApp.navigatorKey.currentContext!);
   }
 
   Future<bool> sendNotification(DateTime dateTime) async {

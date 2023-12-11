@@ -12,21 +12,23 @@ class UserModel {
   bool? isActive;
   String? submitBy;
   String? submitOn;
+  bool? isGuest;
 
   UserModel(
       {this.id,
-        this.username,
-        this.password,
-        this.staffId,
-        this.staffName,
-        this.roleId,
-        this.roleName,
-        this.visaExpiry,
-        this.token,
-        this.onLeave,
-        this.isActive,
-        this.submitBy,
-        this.submitOn});
+      this.username,
+      this.password,
+      this.staffId,
+      this.staffName,
+      this.roleId = 420,
+      this.roleName,
+      this.visaExpiry,
+      this.token,
+      this.onLeave,
+      this.isActive,
+      this.submitBy,
+      this.submitOn,
+      this.isGuest = true});
 
   UserModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -42,6 +44,7 @@ class UserModel {
     isActive = json['isActive'];
     submitBy = json['submitBy'];
     submitOn = json['submitOn'];
+    isGuest = false;
   }
 
   Map<String, dynamic> toJson() {

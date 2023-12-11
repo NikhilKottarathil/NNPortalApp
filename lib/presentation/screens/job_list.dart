@@ -7,6 +7,7 @@ import 'package:nn_portal/models/job_type_model.dart';
 import 'package:nn_portal/presentation/components/list_tiles/job_list_tile.dart';
 import 'package:nn_portal/presentation/components/others/no_items_found.dart';
 import 'package:nn_portal/presentation/components/pop_ups_loaders/custom_circular_progress_indicator.dart';
+import 'package:nn_portal/presentation/components/pop_ups_loaders/login_alert.dart';
 import 'package:nn_portal/presentation/components/text_fields/text_field_search.dart';
 import 'package:nn_portal/presentation/drawers/home_drawer.dart';
 import 'package:nn_portal/presentation/screens/job_details.dart';
@@ -25,12 +26,16 @@ class JobList extends StatefulWidget {
 class _JobListState extends State<JobList> {
   TextEditingController searchTextEditingController = TextEditingController();
 
+  bool isGuest = true;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     // Provider.of<JobsProvider>(context, listen: false). scrollController.
-
+    isGuest = Provider.of<AuthenticationProvider>(context, listen: false)
+        .userModel!
+        .isGuest!;
     Provider.of<JobsProvider>(context, listen: false)
         .scrollController
         .addListener(() {
@@ -54,8 +59,9 @@ class _JobListState extends State<JobList> {
         title: const Text('Find your jobs'),
         automaticallyImplyLeading: false,
         centerTitle: true,
-        actions: const [
-          IconButton(onPressed: refresh, icon: Icon(Icons.refresh))
+        actions: [
+          if (!isGuest)
+            const IconButton(onPressed: refresh, icon: Icon(Icons.refresh))
         ],
       ),
       // drawer: HomeDrawer(),
@@ -69,10 +75,12 @@ class _JobListState extends State<JobList> {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Provider.of<JobsProvider>(
-                            MyApp.navigatorKey.currentContext!,
-                            listen: false)
-                        .changeJobType(value.jobTypeModels[0]);
+                    if (!isGuest) {
+                      Provider.of<JobsProvider>(
+                              MyApp.navigatorKey.currentContext!,
+                              listen: false)
+                          .changeJobType(value.jobTypeModels[0]);
+                    }
                   },
                   child: Container(
                     width: MediaQuery.of(context).size.width,
@@ -133,7 +141,7 @@ class _JobListState extends State<JobList> {
                             .roleId ==
                         2)
                   jobTypeTile(
-                      jobTypeModel: value.jobTypeModels[1], isCenter: true),
+                      jobTypeModel: value.jobTypeModels[1],isGuest:isGuest, isCenter: true),
                 const SizedBox(
                   height: 5,
                 ),
@@ -141,13 +149,13 @@ class _JobListState extends State<JobList> {
                   children: [
                     Expanded(
                         child:
-                            jobTypeTile(jobTypeModel: value.jobTypeModels[2])),
+                            jobTypeTile(jobTypeModel: value.jobTypeModels[2],isGuest:isGuest)),
                     const SizedBox(
                       width: 5,
                     ),
                     Expanded(
                         child:
-                            jobTypeTile(jobTypeModel: value.jobTypeModels[3]))
+                            jobTypeTile(jobTypeModel: value.jobTypeModels[3],isGuest:isGuest))
                   ],
                 ),
                 const SizedBox(
@@ -157,13 +165,13 @@ class _JobListState extends State<JobList> {
                   children: [
                     Expanded(
                         child:
-                            jobTypeTile(jobTypeModel: value.jobTypeModels[4])),
+                            jobTypeTile(jobTypeModel: value.jobTypeModels[4],isGuest:isGuest)),
                     const SizedBox(
                       width: 5,
                     ),
                     Expanded(
                         child:
-                            jobTypeTile(jobTypeModel: value.jobTypeModels[5]))
+                            jobTypeTile(jobTypeModel: value.jobTypeModels[5],isGuest:isGuest))
                   ],
                 ),
                 const SizedBox(
@@ -173,20 +181,20 @@ class _JobListState extends State<JobList> {
                   children: [
                     Expanded(
                         child:
-                            jobTypeTile(jobTypeModel: value.jobTypeModels[6])),
+                            jobTypeTile(jobTypeModel: value.jobTypeModels[6],isGuest:isGuest)),
                     const SizedBox(
                       width: 5,
                     ),
                     Expanded(
                         child:
-                            jobTypeTile(jobTypeModel: value.jobTypeModels[7]))
+                            jobTypeTile(jobTypeModel: value.jobTypeModels[7],isGuest:isGuest))
                   ],
                 ),
                 const SizedBox(
                   height: 5,
                 ),
-
-                        jobTypeTile(jobTypeModel: value.jobTypeModels[8],isCenter: true),
+                jobTypeTile(
+                    jobTypeModel: value.jobTypeModels[8], isCenter: true,isGuest:isGuest),
                 const SizedBox(
                   height: 10,
                 ),
@@ -194,8 +202,12 @@ class _JobListState extends State<JobList> {
                   searchTextEditingController: searchTextEditingController,
                   hintText: 'Search ',
                   searchAction: () {
-                    Provider.of<JobsProvider>(context, listen: false)
-                        .searchJobs(searchTextEditingController.text);
+                    if (!isGuest) {
+                      Provider.of<JobsProvider>(context, listen: false)
+                          .searchJobs(searchTextEditingController.text);
+                    } else {
+                      showLoginAlert();
+                    }
                   },
                 ),
                 const SizedBox(
@@ -214,20 +226,23 @@ class _JobListState extends State<JobList> {
                               itemBuilder: (BuildContext context, int index) {
                                 return GestureDetector(
                                     onTap: () {
-                                      Provider.of<JobsDetailsProvider>(context,
-                                              listen: false)
-                                          .setJobModel(
-                                              jobId: value.models[index].id!);
-                                      Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (_) =>
-                                                      const JobDetails()))
-                                          .then((value) {
-                                        Provider.of<JobsProvider>(context,
+                                      if (!isGuest) {
+                                        Provider.of<JobsDetailsProvider>(
+                                                context,
                                                 listen: false)
-                                            .refresh();
-                                      });
+                                            .setJobModel(
+                                                jobId: value.models[index].id!);
+                                        Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (_) =>
+                                                        const JobDetails()))
+                                            .then((value) {
+                                          Provider.of<JobsProvider>(context,
+                                                  listen: false)
+                                              .refresh();
+                                        });
+                                      }
                                     },
                                     child: JobListTile(
                                         jobModel: value.models[index]));
@@ -264,12 +279,14 @@ Future refresh() async {
 }
 
 Widget jobTypeTile(
-    {required JobTypeModel jobTypeModel, bool isCenter = false}) {
+    {required JobTypeModel jobTypeModel, bool isCenter = false,required bool isGuest}) {
   return GestureDetector(
     onTap: () {
-      Provider.of<JobsProvider>(MyApp.navigatorKey.currentContext!,
-              listen: false)
-          .changeJobType(jobTypeModel);
+      if(!isGuest) {
+        Provider.of<JobsProvider>(MyApp.navigatorKey.currentContext!,
+            listen: false)
+            .changeJobType(jobTypeModel);
+      }
     },
     child: Container(
         decoration: BoxDecoration(
