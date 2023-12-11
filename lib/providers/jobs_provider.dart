@@ -4,6 +4,9 @@ import 'package:nn_portal/models/job_model.dart';
 import 'package:nn_portal/models/job_type_model.dart';
 import 'package:nn_portal/utils/http_api_calls.dart';
 
+import '../models/alert_model.dart';
+import '../presentation/components/pop_ups_loaders/all_alerts.dart';
+
 class JobsProvider extends ChangeNotifier {
   PageStatus pageStatus = PageStatus.initialState;
   int totalPages = 0;
@@ -13,7 +16,7 @@ class JobsProvider extends ChangeNotifier {
   List<JobModel> models = [];
   bool isRefresh = false;
   ScrollController scrollController = ScrollController();
-
+  bool isGetAppDashboardWarningsShowed = false;
   double scrollPosition = 0.0;
   List<JobTypeModel> jobTypeModels = [
     JobTypeModel(displayName: 'All', keyName: 'All', isSelected: true),
@@ -118,13 +121,31 @@ class JobsProvider extends ChangeNotifier {
         scrollController.animateTo(scrollPosition,
             duration: const Duration(milliseconds: 1), curve: Curves.ease);
       }
+      if(!isGetAppDashboardWarningsShowed){
+        checkForAlerts();
+      }
     } catch (e) {
       print(e);
       pageStatus = PageStatus.failed;
       notifyListeners();
     }
   }
-
+  checkForAlerts() async {
+    try {
+      isGetAppDashboardWarningsShowed=true;
+      List<AlertModel> alertModels = [];
+      var response = await getDataRequest(
+          urlAddress: 'CustomNotifications/GetAppDashboardWarnings',
+          isShowLoader: false,
+          isShowSnackBar: false);
+      for (var json in response) {
+        alertModels.add(AlertModel.fromJson(json));
+      }
+      if (alertModels.isNotEmpty) {
+        showAllAlerts(alertModels);
+      }
+    } catch (e) {}
+  }
   Future getJobCounts() async {
     notifyListeners();
 

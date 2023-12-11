@@ -6,6 +6,7 @@ class JobDescriptionModel {
   String? comment;
   String? status;
   String? commentOn;
+  String? adminComment;
   bool? isActive;
   Null? submitBy;
   Null? submitOn;
@@ -18,6 +19,7 @@ class JobDescriptionModel {
         this.comment,
         this.status,
         this.commentOn,
+        this.adminComment,
         this.isActive,
         this.submitBy,
         this.submitOn});
@@ -30,6 +32,7 @@ class JobDescriptionModel {
     comment = json['comment'];
     status = json['status'];
     commentOn = json['commentOn'];
+    adminComment = json['adminComment'];
     isActive = json['isActive'];
     submitBy = json['submitBy'];
     submitOn = json['submitOn'];
@@ -44,6 +47,7 @@ class JobDescriptionModel {
     data['comment'] = this.comment;
     data['status'] = this.status;
     data['commentOn'] = this.commentOn;
+    data['adminComment'] = this.adminComment;
     data['isActive'] = this.isActive;
     data['submitBy'] = this.submitBy;
     data['submitOn'] = this.submitOn;

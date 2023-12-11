@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:nn_portal/constants/app_colors.dart';
 import 'package:nn_portal/main.dart';
 import 'package:nn_portal/presentation/components/others/no_items_found.dart';
+import 'package:nn_portal/presentation/components/pop_ups_loaders/login_alert.dart';
 import 'package:nn_portal/presentation/drawers/home_drawer.dart';
 import 'package:nn_portal/presentation/screens/job_list.dart';
 import 'package:nn_portal/presentation/screens/profile.dart';
@@ -29,15 +30,21 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   }
 
   void _onItemTapped(int index) {
-    if(_tabController?.index !=0 && index==0 ){
-    Provider.of<JobsProvider>(
-    MyApp.navigatorKey.currentContext!,
-    listen: false)
-        .resetToAllJobs();
+    if (Provider.of<AuthenticationProvider>(context, listen: false)
+        .userModel!
+        .isGuest!) {
+      showLoginAlert();
+
+    } else {
+      if (_tabController?.index != 0 && index == 0) {
+        Provider.of<JobsProvider>(MyApp.navigatorKey.currentContext!,
+                listen: false)
+            .resetToAllJobs();
+      }
+      setState(() {
+        _tabController!.animateTo(index);
+      });
     }
-    setState(() {
-      _tabController!.animateTo(index);
-    });
   }
 
   @override
@@ -56,8 +63,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                       .roleId! ==
                   1
               ? TeamList()
-              :const Logs(),
-           Profile(),
+              : const Logs(),
+          Profile(),
         ],
         controller: _tabController,
       ),

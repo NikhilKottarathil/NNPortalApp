@@ -347,10 +347,19 @@ class _LeavesState extends State<Leaves> {
                                       message:
                                           'From date must be less than till date');
                                 }
+                                if (value.tillDate!
+                                        .difference(value.joiningDate!)
+                                        .inDays >
+                                    1) {
+                                  isReady = false;
+                                  showSnackBar(
+                                      message:
+                                          'Till date must be less than Date of joining');
+                                }
                                 if (isReady) {
-                                  Provider.of<LeaveProvider>(context,
-                                          listen: false)
-                                      .addOrEditData();
+                                  // Provider.of<LeaveProvider>(context,
+                                  //         listen: false)
+                                  //     .addOrEditData();
                                 }
                               }else{
                                 value.notifyListeners();

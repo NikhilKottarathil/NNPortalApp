@@ -164,6 +164,9 @@ class JobsDetailsProvider extends ChangeNotifier {
       );
 
       for (var json in response) {
+        print('Job note=== $json');
+        print('Job note=== ${json['adminComment']}');
+
         jobDescriptionModels.add(JobDescriptionModel.fromJson(json));
       }
 

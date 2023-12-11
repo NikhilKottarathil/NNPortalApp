@@ -33,7 +33,7 @@ class _ProfileState extends State<Profile> {
   bool isAdmin = false;
 
 
-  String version = '1.0.8 ';
+  String version = '1.1.0 ';
 
   @override
   Widget build(BuildContext context) {
@@ -69,6 +69,9 @@ class _ProfileState extends State<Profile> {
               padding: const EdgeInsets.all(14),
               child: Consumer<AuthenticationProvider>(
                   builder: (context, value, child) {
+                    if(value.userModel!.isGuest!){
+                      return SizedBox();
+                    }
                 return Column(
                   children: [
                     Icon(
