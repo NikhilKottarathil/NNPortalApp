@@ -357,9 +357,9 @@ class _LeavesState extends State<Leaves> {
                                           'Till date must be less than Date of joining');
                                 }
                                 if (isReady) {
-                                  // Provider.of<LeaveProvider>(context,
-                                  //         listen: false)
-                                  //     .addOrEditData();
+                                  Provider.of<LeaveProvider>(context,
+                                          listen: false)
+                                      .addOrEditData();
                                 }
                               }else{
                                 value.notifyListeners();
