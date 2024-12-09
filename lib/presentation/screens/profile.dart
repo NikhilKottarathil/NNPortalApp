@@ -21,6 +21,7 @@ import 'package:nn_portal/utils/date_time_conversions.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Profile extends StatefulWidget {
   Profile({Key? key}) : super(key: key);
@@ -37,14 +38,15 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
-
-    if (Provider.of<AuthenticationProvider>(context, listen: false)
-                .userModel!
-                .roleId !=
-            null &&
-        Provider.of<AuthenticationProvider>(context, listen: false)
-                .userModel!
-                .roleId ==
+    if (Provider
+        .of<AuthenticationProvider>(context, listen: false)
+        .userModel!
+        .roleId !=
+        null &&
+        Provider
+            .of<AuthenticationProvider>(context, listen: false)
+            .userModel!
+            .roleId ==
             1) {
       isAdmin = true;
     }
@@ -69,145 +71,164 @@ class _ProfileState extends State<Profile> {
               padding: const EdgeInsets.all(14),
               child: Consumer<AuthenticationProvider>(
                   builder: (context, value, child) {
-                    if(value.userModel!.isGuest!){
+                    if (value.userModel!.isGuest!) {
                       return SizedBox();
                     }
-                return Column(
-                  children: [
-                    Icon(
-                      CupertinoIcons.person_alt_circle,
-                      size: MediaQuery.of(context).size.width * .2,
-                      color: Colors.white,
-                    ),
-                    const SizedBox(
-                      height: 6,
-                    ),
-                    Text(
-                      value.userModel!.staffName!,
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleMedium!
-                          .copyWith(color: Colors.white),
-                    ),
-                  ],
-                );
-              }),
+                    return Column(
+                      children: [
+                        Icon(
+                          CupertinoIcons.person_alt_circle,
+                          size: MediaQuery
+                              .of(context)
+                              .size
+                              .width * .2,
+                          color: Colors.white,
+                        ),
+                        const SizedBox(
+                          height: 6,
+                        ),
+                        Text(
+                          value.userModel!.staffName!,
+                          style: Theme
+                              .of(context)
+                              .textTheme
+                              .titleMedium!
+                              .copyWith(color: Colors.white),
+                        ),
+                      ],
+                    );
+                  }),
             ),
             if(!isAdmin)
               const SizedBox(
-              height: 20,
-            ),
-            if(!isAdmin)
-            button(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Image.asset(
-                      'assets/vehicle_icon.png',
-                      height: 24,
-                      width: 24,
-                    ),
-                    const SizedBox(
-                      width: 8,
-                    ),
-                    Text(
-                      "In-hand  Vehicles",
-                      style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.textDark),
-                    ),
-                  ],
-                ),
-                onPressed: () {
-                  Provider.of<InHandProvider>(context, listen: false)
-                      .setLogType(LogType.vehicleLog);
-                  Provider.of<InHandProvider>(context, listen: false).getData();
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) =>
-                          const InHand(parentPage: 'In Hand Vehicles'),
-                    ),
-                  );
-                }),
-            if(!isAdmin)
-              const SizedBox(
-              height: 20,
-            ),
+                height: 20,
+              ),
             if(!isAdmin)
               button(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Image.asset(
-                      'assets/tool_icon.png',
-                      height: 24,
-                      width: 24,
-                    ),
-                    const SizedBox(
-                      width: 8,
-                    ),
-                    Text(
-                      "In-hand  Tools",
-                      style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.textDark),
-                    ),
-                  ],
-                ),
-                onPressed: () {
-                  Provider.of<InHandProvider>(context, listen: false)
-                      .setLogType(LogType.toolLog);
-                  Provider.of<InHandProvider>(context, listen: false).getData();
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => const InHand(parentPage: 'In Hand Tools'),
-                    ),
-                  );
-                }),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Image.asset(
+                        'assets/vehicle_icon.png',
+                        height: 24,
+                        width: 24,
+                      ),
+                      const SizedBox(
+                        width: 8,
+                      ),
+                      Text(
+                        "In-hand  Vehicles",
+                        style: Theme
+                            .of(context)
+                            .textTheme
+                            .labelLarge!
+                            .copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.textDark),
+                      ),
+                    ],
+                  ),
+                  onPressed: () {
+                    Provider.of<InHandProvider>(context, listen: false)
+                        .setLogType(LogType.vehicleLog);
+                    Provider.of<InHandProvider>(context, listen: false)
+                        .getData();
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) =>
+                        const InHand(parentPage: 'In Hand Vehicles'),
+                      ),
+                    );
+                  }),
             if(!isAdmin)
               const SizedBox(
-              height: 20,
-            ),
+                height: 20,
+              ),
             if(!isAdmin)
               button(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Image.asset(
-                      'assets/leave.png',
-                      height: 24,
-                      width: 24,
-                    ),
-                    const SizedBox(
-                      width: 8,
-                    ),
-                    Text(
-                      "Apply Leave",
-                      style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.textDark),
-                    ),
-                  ],
-                ),
-                onPressed: () {
-                  Provider.of<LeaveProvider>(context, listen: false)
-                      .getInitialData();
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => Leaves(),
-                    ),
-                  ).then((value) {
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Image.asset(
+                        'assets/tool_icon.png',
+                        height: 24,
+                        width: 24,
+                      ),
+                      const SizedBox(
+                        width: 8,
+                      ),
+                      Text(
+                        "In-hand  Tools",
+                        style: Theme
+                            .of(context)
+                            .textTheme
+                            .labelLarge!
+                            .copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.textDark),
+                      ),
+                    ],
+                  ),
+                  onPressed: () {
+                    Provider.of<InHandProvider>(context, listen: false)
+                        .setLogType(LogType.toolLog);
+                    Provider.of<InHandProvider>(context, listen: false)
+                        .getData();
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) =>
+                        const InHand(parentPage: 'In Hand Tools'),
+                      ),
+                    );
+                  }),
+            if(!isAdmin)
+              const SizedBox(
+                height: 20,
+              ),
+            if(!isAdmin)
+              button(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Image.asset(
+                        'assets/leave.png',
+                        height: 24,
+                        width: 24,
+                      ),
+                      const SizedBox(
+                        width: 8,
+                      ),
+                      Text(
+                        "Apply Leave",
+                        style: Theme
+                            .of(context)
+                            .textTheme
+                            .labelLarge!
+                            .copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.textDark),
+                      ),
+                    ],
+                  ),
+                  onPressed: () {
                     Provider.of<LeaveProvider>(context, listen: false)
-                        .clearLeaveForm();
-                  });
-                }),
+                        .getInitialData();
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => Leaves(),
+                      ),
+                    ).then((value) {
+                      Provider.of<LeaveProvider>(context, listen: false)
+                          .clearLeaveForm();
+                    });
+                  }),
             if(isAdmin)
               const SizedBox(
-              height: 20,
-            ),
+                height: 20,
+              ),
             if (isAdmin)
               button(
                   child: Row(
@@ -223,7 +244,11 @@ class _ProfileState extends State<Profile> {
                       ),
                       Text(
                         "Jobs",
-                        style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                        style: Theme
+                            .of(context)
+                            .textTheme
+                            .labelLarge!
+                            .copyWith(
                             fontWeight: FontWeight.bold,
                             color: AppColors.textDark),
                       ),
@@ -231,8 +256,8 @@ class _ProfileState extends State<Profile> {
                   ),
                   onPressed: () {
                     Provider.of<AdminJobsProvider>(
-                            MyApp.navigatorKey.currentContext!,
-                            listen: false)
+                        MyApp.navigatorKey.currentContext!,
+                        listen: false)
                         .getInitialJob();
 
                     Navigator.push(
@@ -242,10 +267,40 @@ class _ProfileState extends State<Profile> {
                       ),
                     );
                   }),
-            if (isAdmin)
-              const SizedBox(
+            const SizedBox(
               height: 20,
             ),
+            button(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Image.asset(
+                      'assets/file_icon.png',
+                      height: 24,
+                      width: 24,
+                    ),
+                    const SizedBox(
+                      width: 8,
+                    ),
+                    Text(
+                      "Stock Inventory",
+                      style: Theme
+                          .of(context)
+                          .textTheme
+                          .labelLarge!
+                          .copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.textDark),
+                    ),
+                  ],
+                ),
+                onPressed: () {
+                  _launchUrl('https://dashboard.netnnetsolutions.com/');
+                }),
+            if (isAdmin)
+              const SizedBox(
+                height: 20,
+              ),
             // if (isAdmin)
             //   button(
             //       child: Row(
@@ -285,21 +340,27 @@ class _ProfileState extends State<Profile> {
             //     height: 20,
             //   ),
             if (isAdmin)
-            notificationWidget(),
+              notificationWidget(),
             const Spacer(),
-            if (Provider.of<AuthenticationProvider>(context, listen: false)
-                    .visaExpiringDays !=
+            if (Provider
+                .of<AuthenticationProvider>(context, listen: false)
+                .visaExpiringDays !=
                 null)
               Text(
-                (Provider.of<AuthenticationProvider>(context, listen: false)
-                                .visaExpiringDays! >
-                            0
-                        ? 'Visa Expire date : '
-                        : "Visa Expired date : ") +
-                    Provider.of<AuthenticationProvider>(context, listen: false)
+                (Provider
+                    .of<AuthenticationProvider>(context, listen: false)
+                    .visaExpiringDays! >
+                    0
+                    ? 'Visa Expire date : '
+                    : "Visa Expired date : ") +
+                    Provider
+                        .of<AuthenticationProvider>(context, listen: false)
                         .userModel!
                         .visaExpiry!,
-                style: Theme.of(context).textTheme.titleMedium,
+                style: Theme
+                    .of(context)
+                    .textTheme
+                    .titleMedium,
               ),
             const SizedBox(
               height: 20,
@@ -317,7 +378,11 @@ class _ProfileState extends State<Profile> {
                   ),
                   Text(
                     "Log Out",
-                    style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                    style: Theme
+                        .of(context)
+                        .textTheme
+                        .labelLarge!
+                        .copyWith(
                         fontWeight: FontWeight.bold,
                         color: AppColors.textLight),
                   ),
@@ -330,7 +395,7 @@ class _ProfileState extends State<Profile> {
                   positiveButtonText: 'CONFIRM',
                   positiveButtonAction: () async {
                     SharedPreferences sharedPreferences =
-                        await SharedPreferences.getInstance();
+                    await SharedPreferences.getInstance();
                     sharedPreferences.clear();
 
                     Navigator.pushAndRemoveUntil(
@@ -338,7 +403,7 @@ class _ProfileState extends State<Profile> {
                         MaterialPageRoute(
                           builder: (_) => Login(),
                         ),
-                        (route) => false);
+                            (route) => false);
 
                     RestartWidget.restartApp(
                         MyApp.navigatorKey.currentContext!);
@@ -351,7 +416,10 @@ class _ProfileState extends State<Profile> {
             ),
             Text(
               'Version $version',
-              style: Theme.of(context).textTheme.labelMedium,
+              style: Theme
+                  .of(context)
+                  .textTheme
+                  .labelMedium,
             ),
             const SizedBox(
               height: 4,
@@ -365,9 +433,12 @@ class _ProfileState extends State<Profile> {
   Widget notificationWidget() {
     DateTime dateTime = DateTime.now();
     return Container(
-        width: MediaQuery.of(MyApp.navigatorKey.currentContext!).size.width,
+        width: MediaQuery
+            .of(MyApp.navigatorKey.currentContext!)
+            .size
+            .width,
         decoration: BoxDecoration(
-            // color:AppColors.tertiary,
+          // color:AppColors.tertiary,
             borderRadius: BorderRadius.circular(8)),
         // padding: EdgeInsets.only(bottom: 12),
         child: Column(
@@ -375,7 +446,8 @@ class _ProfileState extends State<Profile> {
           children: [
             Text(
               'Notifications',
-              style: Theme.of(MyApp.navigatorKey.currentContext!)
+              style: Theme
+                  .of(MyApp.navigatorKey.currentContext!)
                   .textTheme
                   .titleMedium,
             ),
@@ -384,7 +456,8 @@ class _ProfileState extends State<Profile> {
                 Expanded(
                   child: DatePickerTextField(
                     dateTime: dateTime,
-                    startDate: DateTime.now().subtract(const Duration(days: 365)),
+                    startDate: DateTime.now().subtract(
+                        const Duration(days: 365)),
                     callback: (date) {
                       dateTime = date;
                     },
@@ -399,9 +472,11 @@ class _ProfileState extends State<Profile> {
                 ElevatedButton(
                     style: ElevatedButton.styleFrom(
                         padding:
-                            EdgeInsets.symmetric(vertical: 14, horizontal: 24)),
+                        EdgeInsets.symmetric(vertical: 14, horizontal: 24)),
                     onPressed: () {
-                      Provider.of<AuthenticationProvider>(MyApp.navigatorKey.currentContext!,listen:false ).sendNotification(dateTime);
+                      Provider.of<AuthenticationProvider>(
+                          MyApp.navigatorKey.currentContext!, listen: false)
+                          .sendNotification(dateTime);
                     },
                     child: const Text('SEND'))
               ],
@@ -410,19 +485,21 @@ class _ProfileState extends State<Profile> {
         ));
   }
 
-  Widget button(
-      {required Widget child,
-      required Function onPressed,
-      bool isSecondaryColor = false}) {
+  Widget button({required Widget child,
+    required Function onPressed,
+    bool isSecondaryColor = false}) {
     return GestureDetector(
       onTap: () {
         onPressed();
       },
       child: Container(
-        width: MediaQuery.of(MyApp.navigatorKey.currentContext!).size.width,
+        width: MediaQuery
+            .of(MyApp.navigatorKey.currentContext!)
+            .size
+            .width,
         decoration: BoxDecoration(
             color:
-                isSecondaryColor ? AppColors.secondaryBase : AppColors.tertiary,
+            isSecondaryColor ? AppColors.secondaryBase : AppColors.tertiary,
             borderRadius: BorderRadius.circular(8)),
         padding: const EdgeInsets.all(17),
         child: Center(
@@ -435,10 +512,17 @@ class _ProfileState extends State<Profile> {
   Future<void> getVersion() async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
 
-    version=packageInfo.version;
+    version = packageInfo.version;
     print('version $version');
     setState(() {
 
     });
+  }
+
+  Future<void> _launchUrl(String _url) async {
+    if (!await launchUrl(
+        Uri.parse(_url), mode: LaunchMode.externalApplication)) {
+      throw 'Could not launch $_url';
+    }
   }
 }
