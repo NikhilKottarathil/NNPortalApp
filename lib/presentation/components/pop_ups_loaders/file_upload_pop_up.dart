@@ -132,7 +132,7 @@ required  Map<String, String> requestBody,
                             top: 10, right: 20, left: 20, bottom: 10),
                         child:  Text(
                           'CANCEL',
-                          style:Theme.of(context).textTheme.button,
+                          style:Theme.of(context).textTheme.labelLarge,
                         ),
                       ),
                     ),

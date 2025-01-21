@@ -319,7 +319,7 @@ class JobNotes extends StatelessWidget {
                           Expanded(
                             child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
-                                    primary: AppColors.secondaryBase),
+                                    backgroundColor: AppColors.secondaryBase),
                                 onPressed: () {
                                   showCustomAlertDialog(
                                       message: 'Are you sure?',
@@ -344,7 +344,7 @@ class JobNotes extends StatelessWidget {
                                     'DELETE',
                                     style: Theme.of(context)
                                         .textTheme
-                                        .button!
+                                        .labelLarge!
                                         .apply(color: AppColors.textLight),
                                   ),
                                 )),
@@ -356,7 +356,7 @@ class JobNotes extends StatelessWidget {
                         Expanded(
                           child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                  primary: AppColors.primaryBase),
+                                  backgroundColor: AppColors.primaryBase),
                               onPressed: () {
                                 if (_formKey.currentState!.validate()) {
                                   if (jobDescriptionModel == null) {
@@ -388,7 +388,7 @@ class JobNotes extends StatelessWidget {
                                   'SAVE',
                                   style: Theme.of(context)
                                       .textTheme
-                                      .button!
+                                      .labelLarge!
                                       .apply(color: AppColors.textLight),
                                 ),
                               )),

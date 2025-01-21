@@ -91,7 +91,7 @@ addTeam({TeamModel? teamModel}) async {
                       Expanded(
                         child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                                primary: AppColors.primaryBase),
+                                backgroundColor: AppColors.primaryBase),
                             onPressed: () {
                               if (formKey.currentState!.validate()) {
                                 Provider.of<TeamProvider>(
@@ -118,7 +118,7 @@ addTeam({TeamModel? teamModel}) async {
                                 'SAVE',
                                 style: Theme.of(context)
                                     .textTheme
-                                    .button!
+                                    .labelLarge!
                                     .apply(color: AppColors.textLight),
                               ),
                             )),

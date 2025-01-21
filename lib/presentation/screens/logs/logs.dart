@@ -122,7 +122,7 @@ class _LogsState extends State<Logs> with SingleTickerProviderStateMixin {
           icon: Icons.add,
           titleStyle: Theme.of(context)
               .textTheme
-              .button!
+              . labelLarge!
               .apply(color: AppColors.textLight),
           onPress: () {
             _animationController!.reverse();
@@ -139,7 +139,7 @@ class _LogsState extends State<Logs> with SingleTickerProviderStateMixin {
           icon: Icons.add,
           titleStyle: Theme.of(context)
               .textTheme
-              .button!
+              .labelLarge!
               .apply(color: AppColors.textLight),
           onPress: () {
             _animationController!.reverse();
@@ -156,7 +156,7 @@ class _LogsState extends State<Logs> with SingleTickerProviderStateMixin {
           icon: Icons.add,
           titleStyle: Theme.of(context)
               .textTheme
-              .button!
+              .labelLarge!
               .apply(color: AppColors.textLight),
           onPress: () {
             Navigator.of(context).push(MaterialPageRoute(
@@ -173,7 +173,7 @@ class _LogsState extends State<Logs> with SingleTickerProviderStateMixin {
           icon: Icons.add,
           titleStyle: Theme.of(context)
               .textTheme
-              .button!
+              .labelLarge!
               .apply(color: AppColors.textLight),
           onPress: () {
             _animationController!.reverse();

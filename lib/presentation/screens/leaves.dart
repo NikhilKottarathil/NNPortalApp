@@ -313,7 +313,7 @@ class _LeavesState extends State<Leaves> {
                       children: [
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                              primary: AppColors.secondaryBase,
+                              backgroundColor: AppColors.secondaryBase,
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 30),
                               shape: RoundedRectangleBorder(

@@ -87,7 +87,8 @@ Future<void> _setupFlutterNotifications() async {
 
   final DarwinInitializationSettings initializationSettingsDarwin =
       DarwinInitializationSettings(
-          onDidReceiveLocalNotification: onDidReceiveLocalNotification);
+          // onDidReceiveLocalNotification: onDidReceiveLocalNotification
+      );
   final LinuxInitializationSettings initializationSettingsLinux =
       LinuxInitializationSettings(defaultActionName: 'Open notification');
   final InitializationSettings initializationSettings = InitializationSettings(

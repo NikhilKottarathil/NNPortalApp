@@ -125,7 +125,7 @@ changeJobVehicle({
                             Navigator.pop(context);
                           }
                         },
-                        style: ElevatedButton.styleFrom(primary: selectedVehicleModel==null?AppColors.tertiary:null,onPrimary: selectedVehicleModel==null?AppColors.textDark:null,),
+                        style: ElevatedButton.styleFrom(foregroundColor: selectedVehicleModel==null?AppColors.textDark:null, backgroundColor: selectedVehicleModel==null?AppColors.tertiary:null,),
                         child: SizedBox(
                             height: 48,
                             width: MediaQuery.of(context).size.width,

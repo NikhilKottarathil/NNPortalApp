@@ -121,7 +121,12 @@ class _MyAppState extends State<MyApp> {
             textTheme: GoogleFonts.interTextTheme(),
             scaffoldBackgroundColor: Colors.grey.shade100,
             timePickerTheme: Theme.of(context).timePickerTheme.copyWith(),
-            checkboxTheme: Theme.of(context).checkboxTheme.copyWith(
+            elevatedButtonTheme: ElevatedButtonThemeData(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primaryBase,
+                foregroundColor: Colors.white
+              ),
+            ),            checkboxTheme: Theme.of(context).checkboxTheme.copyWith(
               // fillColor: MaterialStateProperty.all(Colors.grey.shade600),
               fillColor: MaterialStateProperty.all(Colors.grey.shade800),
                ),

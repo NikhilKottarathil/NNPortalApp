@@ -41,7 +41,7 @@ class _TimePickerTextFieldState extends State<TimePickerTextField> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (widget.label != null)
-          Text(widget.label!, style: Theme.of(context).textTheme.subtitle2!),
+          Text(widget.label!, style: Theme.of(context).textTheme.bodyMedium!),
         const SizedBox(
           height: 6,
           width: double.infinity,

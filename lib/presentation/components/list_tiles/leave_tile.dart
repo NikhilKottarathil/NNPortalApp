@@ -70,7 +70,7 @@ class LeaveTile extends StatelessWidget {
                 IconButton(
                   constraints: const BoxConstraints(),
                   padding: const EdgeInsets.only(right: 13),
-                  icon: Image.asset('assets/approved.png'),
+                  icon: Image.asset('assets/approved.png',height: 21,),
                   iconSize: 21,
                   onPressed: () {},
                 ),

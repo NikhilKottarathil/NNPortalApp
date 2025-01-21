@@ -40,7 +40,7 @@ class _BasicTextFieldState extends State<BasicTextField> {
           widget.label,
           style: Theme.of(context)
               .textTheme
-              .subtitle2!
+              .titleSmall!
               .apply(color: AppColors.textLight),
         ),
         const SizedBox(

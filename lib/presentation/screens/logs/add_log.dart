@@ -249,7 +249,7 @@ class _AddLogState extends State<AddLog> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text('Select Job Site',
-                    style: Theme.of(context).textTheme.subtitle2!),
+                    style: Theme.of(context).textTheme.titleSmall!),
                 if(selectedJobModel!=null)
                 GestureDetector(
                     onTap: () {
@@ -367,7 +367,7 @@ class _AddLogState extends State<AddLog> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text('Select Vehicle',
-                    style: Theme.of(context).textTheme.subtitle2!),
+                    style: Theme.of(context).textTheme.bodyMedium!),
                 if(selectedVehicleModel!=null)
 
                   GestureDetector(
@@ -474,7 +474,7 @@ class _AddLogState extends State<AddLog> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text('Select Tool',
-                    style: Theme.of(context).textTheme.subtitle2!),
+                    style: Theme.of(context).textTheme.bodyMedium!),
                 if(selectedToolModel!=null)
 
                   GestureDetector(

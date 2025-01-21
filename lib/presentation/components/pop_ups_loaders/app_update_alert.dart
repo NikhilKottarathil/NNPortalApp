@@ -48,8 +48,7 @@ qppUpdateAlert() async {
               ),
               ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                      primary: AppColors.secondaryBase,
-                      onPrimary: AppColors.textLight),
+                      foregroundColor: AppColors.textLight, backgroundColor: AppColors.secondaryBase),
                   onPressed: () {
                     Navigator.of(context).pop();
                   },

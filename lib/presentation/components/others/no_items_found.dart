@@ -7,7 +7,7 @@ class NoItemsFound extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Text('No Data to Display',style: Theme.of(context).textTheme.subtitle2!.copyWith(color: AppColors.textDarkSecondary),),
+      child: Text('No Data to Display',style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: AppColors.textDarkSecondary),),
     );
   }
 }

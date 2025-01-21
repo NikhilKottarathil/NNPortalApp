@@ -92,7 +92,7 @@ class _LoginState extends State<Login> {
                                 'Login',
                                 style: Theme.of(context)
                                     .textTheme
-                                    .headline5!
+                                    .headlineSmall!
                                     .apply(color: AppColors.textLight),
                               ),
                               SizedBox(

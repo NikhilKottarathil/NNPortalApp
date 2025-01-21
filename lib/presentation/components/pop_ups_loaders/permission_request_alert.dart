@@ -53,7 +53,7 @@ Future showStoragePermissionRequest() async {
                      const  EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                       child: Text(
                         "CANCEL",
-                        style: Theme.of(context).textTheme.button,
+                        style: Theme.of(context).textTheme.labelLarge,
                       )),
                 ),
                const  SizedBox(
@@ -70,7 +70,7 @@ Future showStoragePermissionRequest() async {
                     const  EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                       child: Text(
                         "CONTINUE",
-                        style:  Theme.of(context).textTheme.button,
+                        style:  Theme.of(context).textTheme.labelLarge,
                       )),
                 ),
                const SizedBox(

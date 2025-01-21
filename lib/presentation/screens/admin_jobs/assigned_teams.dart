@@ -72,7 +72,7 @@ class _AssignedTeamsState extends State<AssignedTeams> {
                                   'Press "+" button to add ',
                                   style: Theme.of(context)
                                       .textTheme
-                                      .subtitle2!
+                                      .titleSmall!
                                       .copyWith(color: AppColors.textDarkSecondary),
                                 ),
                               ],

@@ -69,45 +69,83 @@ class _CustomAutoCompleteTextFieldState
           const SizedBox(
             height: 4,
           ),
-        TypeAheadFormField(
-          textFieldConfiguration: TextFieldConfiguration(
-            style: Theme.of(context)
-                .textTheme
-                .bodyMedium!
-                .copyWith(decoration: TextDecoration.none),
-            focusNode: focusNode,
-
-            keyboardType: widget.textInputType,
-            onTap: (){
-
-            },
-            decoration: InputDecoration(
-              hintText: widget.hint,
-              suffixIcon: widget.textEditingController.text.isNotEmpty
-                  ? GestureDetector(
-                      onTap: () {
-                        widget.textEditingController.clear();
-                      },
-                      child: const Icon(
-                        Icons.close,
-                      ),
-                    )
-                  : null,
-              hintStyle: Theme.of(context).textTheme.bodyMedium,
-              contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-              fillColor: AppColors.tertiary,
-              filled: true,
-              border: OutlineInputBorder(
-                  // borderSide: BorderSide(color: AppColors.textDarFourth),
-                  borderSide: const BorderSide(
-                    width: 0,
-                    style: BorderStyle.none,
+        TypeAheadField(
+          controller: widget.textEditingController,
+          focusNode: focusNode,
+          builder: (context, controller, focusNode) {
+            return TextField(
+                controller: controller,
+                focusNode: focusNode,
+                keyboardType: widget.textInputType,
+              style: Theme.of(context)
+                    .textTheme
+                    .bodyMedium!
+                    .copyWith(decoration: TextDecoration.none),
+              decoration: InputDecoration(
+                    hintText: widget.hint,
+                    suffixIcon: widget.textEditingController.text.isNotEmpty
+                        ? GestureDetector(
+                            onTap: () {
+                              widget.textEditingController.clear();
+                            },
+                            child: const Icon(
+                              Icons.close,
+                            ),
+                          )
+                        : null,
+                    hintStyle: Theme.of(context).textTheme.bodyMedium,
+                    contentPadding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                    fillColor: AppColors.tertiary,
+                    filled: true,
+                    border: OutlineInputBorder(
+                        // borderSide: BorderSide(color: AppColors.textDarFourth),
+                        borderSide: const BorderSide(
+                          width: 0,
+                          style: BorderStyle.none,
+                        ),
+                        borderRadius: BorderRadius.circular(8)),
                   ),
-                  borderRadius: BorderRadius.circular(8)),
-            ),
-            controller: widget.textEditingController,
-          ),
+            );
+          },
+          // textFieldConfiguration: TextFieldConfiguration(
+          //   style: Theme.of(context)
+          //       .textTheme
+          //       .bodyMedium!
+          //       .copyWith(decoration: TextDecoration.none),
+          //   focusNode: focusNode,
+          //
+          //   keyboardType: widget.textInputType,
+          //   onTap: (){
+          //
+          //   },
+          //   decoration: InputDecoration(
+          //     hintText: widget.hint,
+          //     suffixIcon: widget.textEditingController.text.isNotEmpty
+          //         ? GestureDetector(
+          //             onTap: () {
+          //               widget.textEditingController.clear();
+          //             },
+          //             child: const Icon(
+          //               Icons.close,
+          //             ),
+          //           )
+          //         : null,
+          //     hintStyle: Theme.of(context).textTheme.bodyMedium,
+          //     contentPadding:
+          //         const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+          //     fillColor: AppColors.tertiary,
+          //     filled: true,
+          //     border: OutlineInputBorder(
+          //         // borderSide: BorderSide(color: AppColors.textDarFourth),
+          //         borderSide: const BorderSide(
+          //           width: 0,
+          //           style: BorderStyle.none,
+          //         ),
+          //         borderRadius: BorderRadius.circular(8)),
+          //   ),
+          //   controller: widget.textEditingController,
+          // ),
           suggestionsCallback: (pattern) {
             return getSuggestions(pattern);
           },
@@ -119,10 +157,10 @@ class _CustomAutoCompleteTextFieldState
               ),
             );
           },
-          transitionBuilder: (context, suggestionsBox, controller) {
-            return suggestionsBox;
-          },
-          onSuggestionSelected: (String suggestion) {
+          // transitionBuilder: (context, suggestionsBox, controller) {
+          //   return suggestionsBox;
+          // },
+          onSelected: (String suggestion) {
             widget.textEditingController.text = suggestion;
             if (widget.action != null) {
               widget.action!(suggestion);
@@ -131,15 +169,15 @@ class _CustomAutoCompleteTextFieldState
               widget.onSuggestionSelected!(suggestion);
             }
           },
-          noItemsFoundBuilder: (context) {
-            return ListTile(
-              title: Text(
-                'No matches found',
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-            );
-          },
-          validator: widget.validator,
+          // noItemsFoundBuilder: (context) {
+          //   return ListTile(
+          //     title: Text(
+          //       'No matches found',
+          //       style: Theme.of(context).textTheme.bodyMedium,
+          //     ),
+          //   );
+          // },
+          // validator: widget.validator,
           // onSaved: (value) => this._selectedCity = value,
         ),
       ],

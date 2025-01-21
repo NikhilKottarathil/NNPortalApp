@@ -73,6 +73,7 @@ class _JobDetailsState extends State<JobDetails>
                         padding: EdgeInsets.all(3),
                         child: TabBar(
                             indicatorColor: Colors.grey,
+                            indicatorSize: TabBarIndicatorSize.tab,
                             labelStyle: const TextStyle(
                                 fontSize: 14, fontWeight: FontWeight.w600),
                             indicator: BoxDecoration(

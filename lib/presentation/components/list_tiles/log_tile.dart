@@ -152,7 +152,7 @@ class _LogTileState extends State<LogTile> {
                 IconButton(
                   constraints: const BoxConstraints(),
                   padding: const EdgeInsets.only(right: 0),
-                  icon: Image.asset('assets/delete.png'),
+                  icon: Image.asset('assets/delete.png',height: 21,),
                   iconSize: 21,
                   onPressed: () {
                     showCustomAlertDialog(
