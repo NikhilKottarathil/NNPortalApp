@@ -50,7 +50,7 @@ class TeamListTile extends StatelessWidget {
                   IconButton(
                     constraints: const BoxConstraints(),
                     padding: const EdgeInsets.only(right: 18),
-                    icon: Image.asset('assets/delete.png'),
+                    icon: Image.asset('assets/delete.png',height: 21,),
                     iconSize: 21,
                     onPressed: () {
                       showCustomAlertDialog(
@@ -69,7 +69,7 @@ class TeamListTile extends StatelessWidget {
                   IconButton(
                     constraints: const BoxConstraints(),
                     padding: const EdgeInsets.only(right: 18),
-                    icon: Image.asset('assets/edit.png'),
+                    icon: Image.asset('assets/edit.png',height: 21,),
                     iconSize: 21,
                     onPressed: () {
                       addTeam(teamModel: teamModel);

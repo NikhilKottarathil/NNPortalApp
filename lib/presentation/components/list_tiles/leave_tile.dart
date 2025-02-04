@@ -82,7 +82,7 @@ class LeaveTile extends StatelessWidget {
                     IconButton(
                       constraints: const BoxConstraints(),
                       padding: const EdgeInsets.only(right: 13),
-                      icon: Image.asset('assets/edit.png'),
+                      icon: Image.asset('assets/edit.png',height: 21,),
                       iconSize: 21,
                       onPressed: () {
                         Provider.of<LeaveProvider>(
@@ -94,7 +94,7 @@ class LeaveTile extends StatelessWidget {
                     IconButton(
                       constraints: const BoxConstraints(),
                       padding: EdgeInsets.zero,
-                      icon: Image.asset('assets/delete.png'),
+                      icon: Image.asset('assets/delete.png',height: 21,),
                       iconSize: 21,
                       onPressed: () {
                         showCustomAlertDialog(
